@@ -1,5 +1,6 @@
 import React from "react";
 import { Box, HStack } from "@chakra-ui/react";
+import { FiArrowLeft, FiArrowRight, FiCheck } from "react-icons/fi";
 import type { Status } from "@/types";
 import { AppButton } from "@/ui";
 
@@ -11,30 +12,42 @@ type Props = {
 const CardActions: React.FC<Props> = ({ status, onMove }) => {
   return (
     <>
-      <Box borderTop="1px solid" borderColor="gray.200" my={3} />
+      <Box borderTop="1px solid" borderColor="gray.100" my={3} />
       <HStack gap={2} flexWrap="wrap">
         {status !== "todo" && (
           <AppButton
             size="xs"
             variantStyle="ghost"
-            colorScheme="blue"
+            colorScheme="gray"
             px={2}
-            h="auto"
+            h="28px"
+            fontSize="xs"
+            icon={<FiArrowLeft size={12} />}
             onClick={() => onMove("todo")}
+            _hover={{ bg: "gray.100", color: "gray.800" }}
           >
-            Move to To Do
+            To Do
           </AppButton>
         )}
         {status !== "inprogress" && (
           <AppButton
             size="xs"
             variantStyle="ghost"
-            colorScheme="purple"
+            colorScheme="blue"
             px={2}
-            h="auto"
+            h="28px"
+            fontSize="xs"
+            icon={
+              status === "done" ? (
+                <FiArrowLeft size={12} />
+              ) : (
+                <FiArrowRight size={12} />
+              )
+            }
             onClick={() => onMove("inprogress")}
+            _hover={{ bg: "blue.50", color: "blue.700" }}
           >
-            Move to In Progress
+            In Progress
           </AppButton>
         )}
         {status !== "done" && (
@@ -43,10 +56,13 @@ const CardActions: React.FC<Props> = ({ status, onMove }) => {
             variantStyle="ghost"
             colorScheme="green"
             px={2}
-            h="auto"
+            h="28px"
+            fontSize="xs"
+            icon={<FiCheck size={12} />}
             onClick={() => onMove("done")}
+            _hover={{ bg: "green.50", color: "green.700" }}
           >
-            Move to Complete
+            Complete
           </AppButton>
         )}
       </HStack>
