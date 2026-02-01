@@ -6,8 +6,10 @@ import React, {
   useReducer,
 } from "react";
 import type { Card, Status } from "@/types";
+import { useBoardStore } from "@/state/BoardStore";
 
-const STORAGE_KEY = "keeper-kanban-v1";
+const getStorageKey = (boardId: string | null) =>
+  boardId ? `keeper-cards-${boardId}` : "keeper-cards-default";
 
 type State = {
   cards: Card[];
@@ -34,6 +36,15 @@ const DEFAULT_CARDS: Card[] = [
       .split("T")[0],
     tags: [],
     assigneeId: "",
+    subtasks: [],
+    comments: [],
+    activities: [
+      {
+        id: "activity-1",
+        type: "created",
+        timestamp: new Date().toISOString(),
+      },
+    ],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
@@ -50,6 +61,15 @@ const DEFAULT_CARDS: Card[] = [
       .split("T")[0],
     tags: [],
     assigneeId: "",
+    subtasks: [],
+    comments: [],
+    activities: [
+      {
+        id: "activity-2",
+        type: "created",
+        timestamp: new Date().toISOString(),
+      },
+    ],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
@@ -64,12 +84,22 @@ const DEFAULT_CARDS: Card[] = [
     dueDate: "",
     tags: [],
     assigneeId: "",
+    subtasks: [],
+    comments: [],
+    activities: [
+      {
+        id: "activity-3",
+        type: "created",
+        timestamp: new Date().toISOString(),
+      },
+    ],
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
 ];
 
-const initialState = (): State => {
+const initialState = (boardId: string | null): State => {
+  const STORAGE_KEY = getStorageKey(boardId);
   const stored = localStorage.getItem(STORAGE_KEY);
   if (!stored) return { cards: DEFAULT_CARDS };
   try {
@@ -81,6 +111,15 @@ const initialState = (): State => {
           dueDate: card.dueDate || "",
           tags: card.tags || [],
           assigneeId: card.assigneeId || "",
+          subtasks: card.subtasks || [],
+          comments: card.comments || [],
+          activities: card.activities || [
+            {
+              id: `activity-${Date.now()}`,
+              type: "created" as const,
+              timestamp: card.createdAt || new Date().toISOString(),
+            },
+          ],
           createdAt: card.createdAt || new Date().toISOString(),
           updatedAt: card.updatedAt || new Date().toISOString(),
         }))
@@ -135,9 +174,22 @@ const BoardContext = createContext<BoardContextValue | null>(null);
 export const BoardProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [state, dispatch] = useReducer(reducer, undefined, initialState);
+  const { activeBoardId } = useBoardStore();
+  const [state, dispatch] = useReducer(reducer, undefined, () =>
+    initialState(activeBoardId),
+  );
+
+  // Re-initialize state when active board changes
+  useEffect(() => {
+    const newState = initialState(activeBoardId);
+    dispatch({ type: "CLEAR" });
+    newState.cards.forEach((card) => {
+      dispatch({ type: "ADD", payload: card });
+    });
+  }, [activeBoardId]);
 
   useEffect(() => {
+    const STORAGE_KEY = getStorageKey(activeBoardId);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state.cards));
   }, [state.cards]);
 

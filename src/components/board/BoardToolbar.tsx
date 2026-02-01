@@ -1,9 +1,7 @@
 import React from "react";
 import { Box, Grid, HStack, Text } from "@chakra-ui/react";
 import { FiRotateCcw } from "react-icons/fi";
-import FilterButtons from "@/components/toolbar/FilterButtons";
-import SearchBar from "@/components/toolbar/SearchBar";
-import StatTiles from "@/components/toolbar/StatTiles";
+import { FilterButtons, SearchBar, StatTiles } from "@/components/toolbar";
 import { AppButton } from "@/ui";
 import type { Priority } from "@/types";
 import type { FilterType } from "@/hooks/useCardFilters";

@@ -15,6 +15,7 @@ const SearchBar: React.FC<Props> = ({
   placeholder = "Search tasks, tags, or owners",
 }) => {
   const hasValue = value.trim().length > 0;
+  const [isFocused, setIsFocused] = React.useState(false);
 
   return (
     <HStack
@@ -24,13 +25,15 @@ const SearchBar: React.FC<Props> = ({
       px={4}
       h="40px"
       border="1px solid"
-      borderColor={hasValue ? "blue.400" : "border.muted"}
-      boxShadow={hasValue ? "0 0 0 1px var(--chakra-colors-blue-400)" : "none"}
+      borderColor={
+        isFocused ? "blue.400" : hasValue ? "blue.400" : "border.muted"
+      }
+      boxShadow="none"
       align="center"
       transition="all 0.2s"
     >
       <Box
-        color={hasValue ? "blue.500" : "text.muted"}
+        color={isFocused || hasValue ? "blue.500" : "text.muted"}
         display="flex"
         alignItems="center"
         transition="color 0.2s"
@@ -42,6 +45,8 @@ const SearchBar: React.FC<Props> = ({
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
         bg="transparent"
         border="none"
         px={0}

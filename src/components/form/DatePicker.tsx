@@ -53,7 +53,7 @@ const DatePicker: React.FC<Props> = ({
             }}
             onFocus={(e) => {
               e.target.style.borderColor = "#4299e1";
-              e.target.style.boxShadow = "0 0 0 1px #4299e1";
+              e.target.style.boxShadow = "none";
             }}
             onBlur={(e) => {
               e.target.style.borderColor = isOverdue

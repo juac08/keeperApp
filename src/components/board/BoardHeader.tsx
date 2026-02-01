@@ -1,14 +1,14 @@
 import React from "react";
 import { Flex } from "@chakra-ui/react";
-import HeaderActions from "@/components/header/HeaderActions";
-import ProjectInfo from "@/components/header/ProjectInfo";
+import { HeaderActions, ProjectInfo } from "@/components/header";
 
 type Props = {
   onClear: () => void;
   onAdd: () => void;
+  onCreateBoard: () => void;
 };
 
-const BoardHeader: React.FC<Props> = ({ onClear, onAdd }) => {
+const BoardHeader: React.FC<Props> = ({ onClear, onAdd, onCreateBoard }) => {
   return (
     <Flex
       align="center"
@@ -18,7 +18,11 @@ const BoardHeader: React.FC<Props> = ({ onClear, onAdd }) => {
       mb={8}
     >
       <ProjectInfo />
-      <HeaderActions onClear={onClear} onAdd={onAdd} />
+      <HeaderActions
+        onClear={onClear}
+        onAdd={onAdd}
+        onCreateBoard={onCreateBoard}
+      />
     </Flex>
   );
 };

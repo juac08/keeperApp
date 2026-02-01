@@ -3,13 +3,10 @@ import { Box, Grid } from "@chakra-ui/react";
 import { useBoard } from "@/state/BoardContext";
 import { useCardFilters } from "@/hooks/useCardFilters";
 import type { Card, Priority, Status, TaskForm } from "@/types";
-import { COLUMNS } from "@/components/constants";
-import BoardHeader from "@/components/BoardHeader";
-import BoardToolbar from "@/components/BoardToolbar";
-import BoardColumn from "@/components/BoardColumn";
-import AppToaster, { appToaster } from "@/components/AppToaster";
-import TaskModal from "@/components/TaskModal";
-import TaskDetailsModal from "@/components/TaskDetailsModal";
+import { COLUMNS } from "@/config";
+import { BoardHeader, BoardToolbar, BoardColumn } from "@/components/board";
+import AppToaster, { appToaster } from "@/shared";
+import { TaskModal, TaskDetailsModal, BoardModal } from "@/components/modal";
 
 const emptyForm: TaskForm = {
   title: "",
@@ -21,6 +18,7 @@ const emptyForm: TaskForm = {
   dueDate: "",
   tags: [],
   assigneeId: "",
+  subtasks: [],
 };
 
 const App: React.FC = () => {
@@ -49,6 +47,7 @@ const App: React.FC = () => {
   const [dragOver, setDragOver] = useState<Status | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isBoardModalOpen, setIsBoardModalOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
 
   const openNewTaskModal = () => {
@@ -67,6 +66,14 @@ const App: React.FC = () => {
     setSelectedCard(null);
   };
 
+  const openBoardModal = () => {
+    setIsBoardModalOpen(true);
+  };
+
+  const closeBoardModal = () => {
+    setIsBoardModalOpen(false);
+  };
+
   const openEditModal = (card: Card) => {
     setForm({
       title: card.title,
@@ -78,6 +85,7 @@ const App: React.FC = () => {
       dueDate: card.dueDate || "",
       tags: card.tags || [],
       assigneeId: card.assigneeId || "",
+      subtasks: card.subtasks || [],
     });
     setEditingId(card.id);
     setIsOpen(true);
@@ -85,6 +93,47 @@ const App: React.FC = () => {
 
   const closeModal = () => {
     setIsOpen(false);
+  };
+
+  const handleRemoveCard = (id: string) => {
+    removeCard(id);
+    appToaster.success({ title: "Task deleted successfully", duration: 2000 });
+  };
+
+  const handleAddComment = (cardId: string, text: string) => {
+    const card = cards.find((c) => c.id === cardId);
+    if (!card) return;
+
+    const newComment = {
+      id: `comment-${Date.now()}`,
+      text,
+      authorId: "", // You can set this to current user when auth is added
+      createdAt: new Date().toISOString(),
+    };
+
+    const newActivity = {
+      id: `activity-${Date.now()}`,
+      type: "commented" as const,
+      timestamp: new Date().toISOString(),
+    };
+
+    updateCard({
+      ...card,
+      comments: [...(card.comments || []), newComment],
+      activities: [...(card.activities || []), newActivity],
+      updatedAt: new Date().toISOString(),
+    });
+
+    // Update selectedCard to show the new comment immediately
+    if (selectedCard && selectedCard.id === cardId) {
+      setSelectedCard({
+        ...card,
+        comments: [...(card.comments || []), newComment],
+        activities: [...(card.activities || []), newActivity],
+      });
+    }
+
+    appToaster.success({ title: "Comment added", duration: 2000 });
   };
 
   const updateForm = (
@@ -125,8 +174,22 @@ const App: React.FC = () => {
         dueDate: form.dueDate || "",
         tags: form.tags || [],
         assigneeId: form.assigneeId || "",
+        subtasks: form.subtasks || [],
+        comments: existingCard?.comments || [],
+        activities: [
+          ...(existingCard?.activities || []),
+          {
+            id: `activity-${Date.now()}`,
+            type: "updated" as const,
+            timestamp: new Date().toISOString(),
+          },
+        ],
         createdAt: existingCard?.createdAt || new Date().toISOString(),
         updatedAt: new Date().toISOString(),
+      });
+      appToaster.success({
+        title: "Task updated successfully",
+        duration: 2000,
       });
     } else {
       addCard({
@@ -140,8 +203,21 @@ const App: React.FC = () => {
         dueDate: form.dueDate || "",
         tags: form.tags || [],
         assigneeId: form.assigneeId || "",
+        subtasks: form.subtasks || [],
+        comments: [],
+        activities: [
+          {
+            id: `activity-${Date.now()}`,
+            type: "created" as const,
+            timestamp: new Date().toISOString(),
+          },
+        ],
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
+      });
+      appToaster.success({
+        title: "Task created successfully",
+        duration: 2000,
       });
     }
     setIsOpen(false);
@@ -226,7 +302,11 @@ const App: React.FC = () => {
         px={{ base: 6, md: 10 }}
         py={{ base: 7, md: 9 }}
       >
-        <BoardHeader onClear={clearBoard} onAdd={openNewTaskModal} />
+        <BoardHeader
+          onClear={clearBoard}
+          onAdd={openNewTaskModal}
+          onCreateBoard={openBoardModal}
+        />
         <BoardToolbar
           total={cards.length}
           todo={counts.todo}
@@ -254,7 +334,7 @@ const App: React.FC = () => {
               onDragLeave={handleDragLeave}
               onCardClick={openDetailsModal}
               onEdit={openEditModal}
-              onRemove={removeCard}
+              onRemove={handleRemoveCard}
               onMove={handleMove}
               onDragStart={handleDragStart}
             />
@@ -277,7 +357,10 @@ const App: React.FC = () => {
         isOpen={isDetailsOpen}
         onClose={closeDetailsModal}
         onEdit={openEditModal}
+        onAddComment={handleAddComment}
       />
+
+      <BoardModal isOpen={isBoardModalOpen} onClose={closeBoardModal} />
     </Box>
   );
 };

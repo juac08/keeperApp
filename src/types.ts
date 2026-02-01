@@ -15,6 +15,27 @@ export type Assignee = {
   email?: string;
 };
 
+export type Subtask = {
+  id: string;
+  text: string;
+  completed: boolean;
+};
+
+export type Comment = {
+  id: string;
+  text: string;
+  authorId: string;
+  createdAt: string;
+};
+
+export type Activity = {
+  id: string;
+  type: "created" | "updated" | "moved" | "commented" | "completed_subtask";
+  authorId?: string;
+  timestamp: string;
+  metadata?: Record<string, any>;
+};
+
 export type Card = {
   id: string;
   title: string;
@@ -26,6 +47,9 @@ export type Card = {
   dueDate?: string; // ISO date string
   tags: string[]; // Array of tag IDs
   assigneeId?: string;
+  subtasks: Subtask[];
+  comments: Comment[];
+  activities: Activity[];
   createdAt: string;
   updatedAt: string;
 };
@@ -40,6 +64,7 @@ export type TaskForm = {
   dueDate: string;
   tags: string[];
   assigneeId: string;
+  subtasks: Subtask[];
 };
 
 export type Column = {
@@ -55,3 +80,20 @@ export type SortOption =
   | "createdAt"
   | "updatedAt";
 export type SortDirection = "asc" | "desc";
+
+export type BoardTemplate =
+  | "default"
+  | "software"
+  | "marketing"
+  | "design"
+  | "personal";
+
+export type Board = {
+  id: string;
+  name: string;
+  description?: string;
+  template: BoardTemplate;
+  icon?: string;
+  createdAt: string;
+  updatedAt: string;
+};

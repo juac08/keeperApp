@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import { Box } from "@chakra-ui/react";
 import type { Card, Status } from "@/types";
-import CardActions from "@/components/card/CardActions";
-import CardHeader from "@/components/card/CardHeader";
-import CardMeta from "@/components/card/CardMeta";
+import { CardActions, CardHeader, CardMeta } from "@/components/board/card";
+
+const priorityColors = {
+  High: "red.500",
+  Medium: "orange.400",
+  Low: "blue.400",
+};
 
 type Props = {
   card: Card;
@@ -39,6 +43,8 @@ const BoardCard: React.FC<Props> = ({
       bg="white"
       border="1px solid"
       borderColor="gray.200"
+      borderLeft="3px solid"
+      borderLeftColor={priorityColors[card.priority]}
       borderRadius="md"
       p={3}
       boxShadow="sm"
@@ -48,14 +54,14 @@ const BoardCard: React.FC<Props> = ({
       onClick={() => onCardClick(card)}
       cursor={isDragging ? "grabbing" : "pointer"}
       opacity={isDragging ? 0.5 : 1}
-      transform={isDragging ? "rotate(2deg)" : "none"}
-      transition="all 0.2s ease"
+      position="relative"
+      transform="translateY(0)"
+      transition="all 0.2s cubic-bezier(0.4, 0, 0.2, 1)"
       _hover={{
-        bg: "gray.50",
-        boxShadow: "md",
+        transform: "translateY(-4px)",
+        boxShadow: "lg",
         borderColor: "gray.300",
       }}
-      position="relative"
     >
       <CardHeader card={card} onEdit={onEdit} onRemove={onRemove} />
       <CardMeta card={card} />

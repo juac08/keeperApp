@@ -1,9 +1,8 @@
 import React from "react";
 import { Box, Stack } from "@chakra-ui/react";
 import type { Card, Column, Status } from "@/types";
-import BoardCard from "@/components/BoardCard";
-import ColumnHeader from "@/components/column/ColumnHeader";
-import EmptyColumn from "@/components/column/EmptyColumn";
+import { BoardCard } from "@/components/board";
+import { ColumnHeader, EmptyColumn } from "@/components/board/column";
 
 type Props = {
   column: Column;
@@ -36,15 +35,18 @@ const BoardColumn: React.FC<Props> = ({
 }) => {
   return (
     <Box
-      bg="gray.50"
-      border="1px solid"
-      borderColor={dragOver === column.id ? "blue.300" : "gray.200"}
+      bg={dragOver === column.id ? "blue.50" : "gray.50"}
+      border="2px solid"
+      borderColor={dragOver === column.id ? "blue.400" : "gray.200"}
       borderRadius="2xl"
       p={4}
       minH="560px"
       onDragOver={(event) => onDragOver(event, column.id)}
       onDrop={(event) => onDrop(event, column.id)}
       onDragLeave={onDragLeave}
+      transition="all 0.2s ease"
+      boxShadow={dragOver === column.id ? "lg" : "none"}
+      transform={dragOver === column.id ? "scale(1.02)" : "scale(1)"}
     >
       <ColumnHeader column={column} count={count} />
 

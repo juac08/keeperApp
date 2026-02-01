@@ -51,12 +51,12 @@ const PrioritySelect: React.FC<Props> = ({ value, onChange, size = "md" }) => {
         onClick={() => setIsOpen(!isOpen)}
         cursor="pointer"
         px={4}
-        py={size === "sm" ? 2 : 2.5}
-        borderRadius="md"
-        border="1px solid"
-        borderColor={isOpen ? "blue.400" : "gray.300"}
+        py={2.5}
+        borderRadius="xl"
+        border="2px solid"
+        borderColor={isOpen ? "blue.400" : "gray.200"}
         bg="white"
-        _hover={{ borderColor: "gray.400" }}
+        _hover={{ borderColor: isOpen ? "blue.400" : "gray.300" }}
         transition="all 0.2s"
       >
         <HStack justify="space-between">

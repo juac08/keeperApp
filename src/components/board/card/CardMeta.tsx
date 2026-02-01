@@ -7,6 +7,7 @@ import {
   FiArrowDown,
   FiCalendar,
   FiUser,
+  FiCheckSquare,
 } from "react-icons/fi";
 import type { Card } from "@/types";
 import { useTagsStore } from "@/state/TagsStore";
@@ -72,6 +73,23 @@ const CardMeta: React.FC<Props> = ({ card }) => {
         </Box>
       )}
 
+      {card.subtasks && card.subtasks.length > 0 && (
+        <HStack
+          gap={2}
+          p={2}
+          bg="blue.50"
+          borderRadius="sm"
+          fontSize="xs"
+          mb={2}
+        >
+          <FiCheckSquare color="#3b82f6" />
+          <Text color="blue.700" fontWeight="600">
+            {card.subtasks.filter((st) => st.completed).length}/
+            {card.subtasks.length} subtasks completed
+          </Text>
+        </HStack>
+      )}
+
       <HStack justify="space-between" align="flex-end" mt={3}>
         <HStack gap={1.5} flexWrap="wrap" flex="1">
           {card.tags &&
@@ -98,6 +116,46 @@ const CardMeta: React.FC<Props> = ({ card }) => {
             <Text fontSize="xs" color="gray.500">
               +{card.tags.length - 2}
             </Text>
+          )}
+          {dueDateStatus && (
+            <Badge
+              bg={
+                dueDateStatus.color === "red"
+                  ? "red.50"
+                  : dueDateStatus.color === "orange"
+                    ? "orange.50"
+                    : dueDateStatus.color === "yellow"
+                      ? "yellow.50"
+                      : "gray.50"
+              }
+              color={
+                dueDateStatus.color === "red"
+                  ? "red.700"
+                  : dueDateStatus.color === "orange"
+                    ? "orange.700"
+                    : dueDateStatus.color === "yellow"
+                      ? "yellow.700"
+                      : "gray.600"
+              }
+              px={2}
+              py={0.5}
+              borderRadius="sm"
+              fontSize="10px"
+              fontWeight="600"
+              border="1px solid"
+              borderColor={
+                dueDateStatus.color === "red"
+                  ? "red.200"
+                  : dueDateStatus.color === "orange"
+                    ? "orange.200"
+                    : dueDateStatus.color === "yellow"
+                      ? "yellow.200"
+                      : "gray.200"
+              }
+            >
+              <FiCalendar style={{ display: "inline", marginRight: "4px" }} />
+              {dueDateStatus.label}
+            </Badge>
           )}
         </HStack>
 

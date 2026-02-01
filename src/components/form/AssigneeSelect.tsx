@@ -63,7 +63,6 @@ const AssigneeSelect: React.FC<Props> = ({
           bg="white"
           _hover={{ borderColor: isOpen ? "blue.400" : "gray.300" }}
           transition="all 0.2s"
-          boxShadow={isOpen ? "0 0 0 3px rgba(66, 153, 225, 0.15)" : "none"}
           flex="1"
         >
           <HStack gap={2}>

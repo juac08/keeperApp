@@ -3,3 +3,4 @@ export { default as StatusSelect } from "./StatusSelect";
 export { default as DatePicker } from "./DatePicker";
 export { default as TagInput } from "./TagInput";
 export { default as AssigneeSelect } from "./AssigneeSelect";
+export { default as SubtaskList } from "./SubtaskList";
