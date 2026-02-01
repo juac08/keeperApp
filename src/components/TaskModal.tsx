@@ -77,10 +77,9 @@ const TaskModal: React.FC<Props> = ({
                 display="flex"
                 alignItems="center"
                 justifyContent="center"
-                fontSize="lg"
                 flexShrink={0}
               >
-                <FiColumns />
+                <FiColumns size={22} />
               </Box>
               <Box flex="1">
                 <Text
