@@ -267,15 +267,7 @@ const TaskModal: React.FC<Props> = ({
                   zIndex={1}
                 >
                   <Field.Root>
-                    <HStack justify="space-between" mb={3}>
-                      <Field.Label
-                        fontSize="sm"
-                        color="gray.700"
-                        fontWeight="600"
-                        mb={0}
-                      >
-                        Blocked Status
-                      </Field.Label>
+                    <Stack justify="space-between" mb={3}>
                       <AppButton
                         size="sm"
                         variantStyle={form.blocked ? "primary" : "outline"}
@@ -290,7 +282,7 @@ const TaskModal: React.FC<Props> = ({
                       >
                         {form.blocked ? "🚫 Blocked" : "✅ Not blocked"}
                       </AppButton>
-                    </HStack>
+                    </Stack>
                     {form.blocked && (
                       <AppInput
                         name="blockedReason"
