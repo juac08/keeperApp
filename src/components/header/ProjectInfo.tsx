@@ -20,15 +20,6 @@ const ProjectInfo: React.FC = () => {
         <Box as={FiColumns} fontSize="24px" />
       </Box>
       <Box>
-        <Text
-          fontSize="xs"
-          textTransform="uppercase"
-          letterSpacing="0.24em"
-          color="gray.500"
-          fontWeight="700"
-        >
-          Project
-        </Text>
         <Heading size="lg">Product Board</Heading>
         <Text color="gray.500">
           Track work, move cards, and ship updates with clarity.

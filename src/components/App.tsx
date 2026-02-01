@@ -165,14 +165,21 @@ const App: React.FC = () => {
   };
 
   const handleMove = (id: string, status: Status) => {
+    const card = cards.find((c) => c.id === id);
+    const oldStatus = card?.status;
+
     moveCard(id, status);
-    const label =
-      status === "todo"
-        ? "To Do"
-        : status === "inprogress"
-          ? "In Progress"
-          : "Complete";
-    appToaster.info({ title: `Moved to ${label}.`, duration: 1500 });
+
+    // Only show toast if the status actually changed
+    if (oldStatus && oldStatus !== status) {
+      const label =
+        status === "todo"
+          ? "To Do"
+          : status === "inprogress"
+            ? "In Progress"
+            : "Complete";
+      appToaster.info({ title: `Moved to ${label}.`, duration: 1500 });
+    }
   };
 
   const handleDrop = (

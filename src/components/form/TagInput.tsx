@@ -129,7 +129,7 @@ const TagInput: React.FC<Props> = ({
         {isOpen && availableTags.length > 0 && (
           <Box
             position="absolute"
-            top="calc(100% + 8px)"
+            bottom="calc(100% + 8px)"
             left="0"
             minW="100%"
             w="max-content"
