@@ -12,7 +12,9 @@ import {
 } from "@chakra-ui/react";
 import { FiColumns } from "react-icons/fi";
 import type { Priority, Status } from "../types";
-import { AppButton, AppInput, AppSelect, AppTextarea } from "@/ui";
+import { AppButton, AppInput, AppTextarea } from "@/ui";
+import PrioritySelect from "@/components/form/PrioritySelect";
+import StatusSelect from "@/components/form/StatusSelect";
 
 type FormState = {
   title: string;
@@ -140,29 +142,27 @@ const TaskModal: React.FC<Props> = ({
                   <Field.Label fontSize="sm" color="gray.600">
                     Priority
                   </Field.Label>
-                  <AppSelect
-                    name="priority"
+                  <PrioritySelect
                     value={form.priority}
-                    onChange={onChange}
-                  >
-                    <option value="Low">Low</option>
-                    <option value="Medium">Medium</option>
-                    <option value="High">High</option>
-                  </AppSelect>
+                    onChange={(priority) =>
+                      onChange({
+                        target: { name: "priority", value: priority },
+                      } as React.ChangeEvent<HTMLSelectElement>)
+                    }
+                  />
                 </Field.Root>
                 <Field.Root>
                   <Field.Label fontSize="sm" color="gray.600">
                     Status
                   </Field.Label>
-                  <AppSelect
-                    name="status"
+                  <StatusSelect
                     value={form.status}
-                    onChange={onChange}
-                  >
-                    <option value="todo">To Do</option>
-                    <option value="inprogress">In Progress</option>
-                    <option value="done">Complete</option>
-                  </AppSelect>
+                    onChange={(status) =>
+                      onChange({
+                        target: { name: "status", value: status },
+                      } as React.ChangeEvent<HTMLSelectElement>)
+                    }
+                  />
                 </Field.Root>
                 <Separator />
                 <Field.Root>

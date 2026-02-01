@@ -11,19 +11,11 @@ type Props = {
 const HeaderActions: React.FC<Props> = ({ onClear, onAdd }) => {
   return (
     <HStack gap={3}>
-      <AppButton
-        variantStyle="outline"
-        onClick={onClear}
-        icon={<FiTrash2 />}
-      >
+      <AppButton variantStyle="outline" onClick={onClear} icon={<FiTrash2 />}>
         Clear board
       </AppButton>
-      <AppButton
-        variantStyle="primary"
-        onClick={onAdd}
-        icon={<FiPlus />}
-      >
-        Add task
+      <AppButton variantStyle="primary" onClick={onAdd} icon={<FiPlus />}>
+        Create task
       </AppButton>
     </HStack>
   );

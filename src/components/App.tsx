@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { Box, Grid } from "@chakra-ui/react";
 import { useBoard } from "@/state/BoardContext";
+import { useCardFilters } from "@/hooks/useCardFilters";
 import type { Card, Priority, Status, TaskForm } from "@/types";
 import { COLUMNS } from "@/components/constants";
 import BoardHeader from "@/components/BoardHeader";
@@ -19,7 +20,26 @@ const emptyForm: TaskForm = {
 };
 
 const App: React.FC = () => {
-  const { cards, counts, addCard, updateCard, removeCard, moveCard, clearBoard } = useBoard();
+  const {
+    cards,
+    counts,
+    addCard,
+    updateCard,
+    removeCard,
+    moveCard,
+    clearBoard,
+  } = useBoard();
+  const {
+    filteredCards,
+    searchQuery,
+    activeFilter,
+    priorityFilter,
+    hasActiveFilters,
+    handleSearch,
+    handleFilterChange,
+    handlePriorityChange,
+    clearFilters,
+  } = useCardFilters(cards);
   const [form, setForm] = useState<TaskForm>(emptyForm);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState<Status | null>(null);
@@ -49,7 +69,9 @@ const App: React.FC = () => {
   };
 
   const updateForm = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    event: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
   ) => {
     const { name, value } = event.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -95,12 +117,18 @@ const App: React.FC = () => {
     setIsOpen(false);
   };
 
-  const handleDragStart = (event: React.DragEvent<HTMLDivElement>, id: string) => {
+  const handleDragStart = (
+    event: React.DragEvent<HTMLDivElement>,
+    id: string,
+  ) => {
     event.dataTransfer.setData("text/plain", id);
     event.dataTransfer.effectAllowed = "move";
   };
 
-  const handleDragOver = (event: React.DragEvent<HTMLDivElement>, status: Status) => {
+  const handleDragOver = (
+    event: React.DragEvent<HTMLDivElement>,
+    status: Status,
+  ) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = "move";
     setDragOver(status);
@@ -108,11 +136,19 @@ const App: React.FC = () => {
 
   const handleMove = (id: string, status: Status) => {
     moveCard(id, status);
-    const label = status === "todo" ? "To Do" : status === "inprogress" ? "In Progress" : "Complete";
+    const label =
+      status === "todo"
+        ? "To Do"
+        : status === "inprogress"
+          ? "In Progress"
+          : "Complete";
     appToaster.info({ title: `Moved to ${label}.`, duration: 1500 });
   };
 
-  const handleDrop = (event: React.DragEvent<HTMLDivElement>, status: Status) => {
+  const handleDrop = (
+    event: React.DragEvent<HTMLDivElement>,
+    status: Status,
+  ) => {
     event.preventDefault();
     const id = event.dataTransfer.getData("text/plain");
     if (!id) return;
@@ -127,15 +163,22 @@ const App: React.FC = () => {
   const cardsByStatus = useMemo(() => {
     return COLUMNS.reduce(
       (acc, column) => {
-        acc[column.id] = cards.filter((card) => card.status === column.id);
+        acc[column.id] = filteredCards.filter(
+          (card) => card.status === column.id,
+        );
         return acc;
       },
-      { todo: [], inprogress: [], done: [] } as Record<Status, Card[]>
+      { todo: [], inprogress: [], done: [] } as Record<Status, Card[]>,
     );
-  }, [cards]);
+  }, [filteredCards]);
 
   return (
-    <Box maxW="1320px" mx="auto" px={{ base: 5, md: 8 }} py={{ base: 9, md: 11 }}>
+    <Box
+      maxW="1320px"
+      mx="auto"
+      px={{ base: 5, md: 8 }}
+      py={{ base: 9, md: 11 }}
+    >
       <AppToaster />
       <Box
         bg="bg.panel"
@@ -152,6 +195,14 @@ const App: React.FC = () => {
           todo={counts.todo}
           inprogress={counts.inprogress}
           done={counts.done}
+          searchQuery={searchQuery}
+          activeFilter={activeFilter}
+          priorityFilter={priorityFilter}
+          hasActiveFilters={hasActiveFilters}
+          onSearch={handleSearch}
+          onFilterChange={handleFilterChange}
+          onPriorityChange={handlePriorityChange}
+          onClearFilters={clearFilters}
         />
         <Grid templateColumns={{ base: "1fr", lg: "repeat(3, 1fr)" }} gap={4}>
           {COLUMNS.map((column) => (
