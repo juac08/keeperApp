@@ -1,0 +1,157 @@
+import React, { createContext, useContext, useEffect, useMemo, useReducer } from "react";
+import type { Card, Status } from "@/types";
+
+const STORAGE_KEY = "keeper-kanban-v1";
+
+type State = {
+  cards: Card[];
+};
+
+type Action =
+  | { type: "ADD"; payload: Card }
+  | { type: "UPDATE"; payload: Card }
+  | { type: "REMOVE"; payload: { id: string } }
+  | { type: "MOVE"; payload: { id: string; status: Status } }
+  | { type: "CLEAR" };
+
+const DEFAULT_CARDS: Card[] = [
+  {
+    id: "card-1",
+    title: "Design kickoff",
+    content: "Define layout, typography, and color system.",
+    status: "todo",
+    priority: "High",
+    blocked: false,
+    blockedReason: "",
+  },
+  {
+    id: "card-2",
+    title: "Build board",
+    content: "Create columns + drag and drop.",
+    status: "inprogress",
+    priority: "Medium",
+    blocked: false,
+    blockedReason: "",
+  },
+  {
+    id: "card-3",
+    title: "Polish",
+    content: "Add modern styling and local storage.",
+    status: "done",
+    priority: "Low",
+    blocked: false,
+    blockedReason: "",
+  },
+];
+
+const initialState = (): State => {
+  const stored = localStorage.getItem(STORAGE_KEY);
+  if (!stored) return { cards: DEFAULT_CARDS };
+  try {
+    const parsed = JSON.parse(stored);
+    return { cards: Array.isArray(parsed) ? parsed : DEFAULT_CARDS };
+  } catch {
+    return { cards: DEFAULT_CARDS };
+  }
+};
+
+const reducer = (state: State, action: Action): State => {
+  switch (action.type) {
+    case "ADD":
+      return { cards: [action.payload, ...state.cards] };
+    case "UPDATE":
+      return {
+        cards: state.cards.map((card) =>
+          card.id === action.payload.id ? action.payload : card
+        ),
+      };
+    case "REMOVE":
+      return { cards: state.cards.filter((card) => card.id !== action.payload.id) };
+    case "MOVE":
+      return {
+        cards: state.cards.map((card) =>
+          card.id === action.payload.id
+            ? { ...card, status: action.payload.status }
+            : card
+        ),
+      };
+    case "CLEAR":
+      return { cards: [] };
+    default:
+      return state;
+  }
+};
+
+type BoardContextValue = {
+  cards: Card[];
+  counts: Record<Status, number>;
+  addCard: (card: Card) => void;
+  updateCard: (card: Card) => void;
+  removeCard: (id: string) => void;
+  moveCard: (id: string, status: Status) => void;
+  clearBoard: () => void;
+};
+
+const BoardContext = createContext<BoardContextValue | null>(null);
+
+export const BoardProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [state, dispatch] = useReducer(reducer, undefined, initialState);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state.cards));
+  }, [state.cards]);
+
+  const counts = useMemo(() => {
+    return state.cards.reduce(
+      (acc, card) => {
+        acc[card.status] += 1;
+        return acc;
+      },
+      { todo: 0, inprogress: 0, done: 0 }
+    );
+  }, [state.cards]);
+
+  const addCard = (card: Card) => {
+    dispatch({ type: "ADD", payload: card });
+  };
+
+  const updateCard = (card: Card) => {
+    dispatch({ type: "UPDATE", payload: card });
+  };
+
+  const removeCard = (id: string) => {
+    dispatch({ type: "REMOVE", payload: { id } });
+  };
+
+  const moveCard = (id: string, status: Status) => {
+    dispatch({ type: "MOVE", payload: { id, status } });
+  };
+
+  const clearBoard = () => {
+    dispatch({ type: "CLEAR" });
+  };
+
+  return (
+    <BoardContext.Provider
+      value={{
+        cards: state.cards,
+        counts,
+        addCard,
+        updateCard,
+        removeCard,
+        moveCard,
+        clearBoard,
+      }}
+    >
+      {children}
+    </BoardContext.Provider>
+  );
+};
+
+export const useBoard = () => {
+  const context = useContext(BoardContext);
+  if (!context) throw new Error("useBoard must be used within BoardProvider");
+  return context;
+};
