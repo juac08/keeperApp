@@ -9,6 +9,7 @@ import BoardToolbar from "@/components/BoardToolbar";
 import BoardColumn from "@/components/BoardColumn";
 import AppToaster, { appToaster } from "@/components/AppToaster";
 import TaskModal from "@/components/TaskModal";
+import TaskDetailsModal from "@/components/TaskDetailsModal";
 
 const emptyForm: TaskForm = {
   title: "",
@@ -17,6 +18,9 @@ const emptyForm: TaskForm = {
   priority: "Medium" as Priority,
   blocked: false,
   blockedReason: "",
+  dueDate: "",
+  tags: [],
+  assigneeId: "",
 };
 
 const App: React.FC = () => {
@@ -44,11 +48,23 @@ const App: React.FC = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState<Status | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [selectedCard, setSelectedCard] = useState<Card | null>(null);
 
   const openNewTaskModal = () => {
     setForm(emptyForm);
     setEditingId(null);
     setIsOpen(true);
+  };
+
+  const openDetailsModal = (card: Card) => {
+    setSelectedCard(card);
+    setIsDetailsOpen(true);
+  };
+
+  const closeDetailsModal = () => {
+    setIsDetailsOpen(false);
+    setSelectedCard(null);
   };
 
   const openEditModal = (card: Card) => {
@@ -59,6 +75,9 @@ const App: React.FC = () => {
       priority: card.priority,
       blocked: card.blocked,
       blockedReason: card.blockedReason,
+      dueDate: card.dueDate || "",
+      tags: card.tags || [],
+      assigneeId: card.assigneeId || "",
     });
     setEditingId(card.id);
     setIsOpen(true);
@@ -94,6 +113,7 @@ const App: React.FC = () => {
     if (form.blocked && !form.blockedReason.trim()) return;
 
     if (editingId) {
+      const existingCard = cards.find((c) => c.id === editingId);
       updateCard({
         id: editingId,
         title: title || "Untitled",
@@ -102,6 +122,11 @@ const App: React.FC = () => {
         priority: form.priority,
         blocked: form.blocked,
         blockedReason: form.blocked ? form.blockedReason.trim() : "",
+        dueDate: form.dueDate || "",
+        tags: form.tags || [],
+        assigneeId: form.assigneeId || "",
+        createdAt: existingCard?.createdAt || new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       });
     } else {
       addCard({
@@ -112,6 +137,11 @@ const App: React.FC = () => {
         priority: form.priority,
         blocked: form.blocked,
         blockedReason: form.blocked ? form.blockedReason.trim() : "",
+        dueDate: form.dueDate || "",
+        tags: form.tags || [],
+        assigneeId: form.assigneeId || "",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       });
     }
     setIsOpen(false);
@@ -215,6 +245,7 @@ const App: React.FC = () => {
               onDragOver={handleDragOver}
               onDrop={handleDrop}
               onDragLeave={handleDragLeave}
+              onCardClick={openDetailsModal}
               onEdit={openEditModal}
               onRemove={removeCard}
               onMove={handleMove}
@@ -232,6 +263,13 @@ const App: React.FC = () => {
         form={form}
         onChange={updateForm}
         onToggleBlocked={toggleBlocked}
+      />
+
+      <TaskDetailsModal
+        card={selectedCard}
+        isOpen={isDetailsOpen}
+        onClose={closeDetailsModal}
+        onEdit={openEditModal}
       />
     </Box>
   );

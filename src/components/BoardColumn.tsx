@@ -13,6 +13,7 @@ type Props = {
   onDragOver: (event: React.DragEvent<HTMLDivElement>, status: Status) => void;
   onDrop: (event: React.DragEvent<HTMLDivElement>, status: Status) => void;
   onDragLeave: () => void;
+  onCardClick: (card: Card) => void;
   onEdit: (card: Card) => void;
   onRemove: (id: string) => void;
   onMove: (id: string, status: Status) => void;
@@ -27,6 +28,7 @@ const BoardColumn: React.FC<Props> = ({
   onDragOver,
   onDrop,
   onDragLeave,
+  onCardClick,
   onEdit,
   onRemove,
   onMove,
@@ -51,6 +53,7 @@ const BoardColumn: React.FC<Props> = ({
           <BoardCard
             key={card.id}
             card={card}
+            onCardClick={onCardClick}
             onEdit={onEdit}
             onRemove={onRemove}
             onMove={onMove}

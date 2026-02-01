@@ -1,7 +1,16 @@
 import React from "react";
-import { Badge, Box, HStack, Text } from "@chakra-ui/react";
-import { FiAlertCircle, FiArrowUp, FiMinus, FiArrowDown } from "react-icons/fi";
+import { Avatar, Badge, Box, HStack, Text, Wrap } from "@chakra-ui/react";
+import {
+  FiAlertCircle,
+  FiArrowUp,
+  FiMinus,
+  FiArrowDown,
+  FiCalendar,
+  FiUser,
+} from "react-icons/fi";
 import type { Card } from "@/types";
+import { useTagsStore } from "@/state/TagsStore";
+import { useAssigneesStore } from "@/state/AssigneesStore";
 
 type Props = {
   card: Card;
@@ -22,93 +31,110 @@ const getPriorityIcon = (priority: string) => {
 
 const CardMeta: React.FC<Props> = ({ card }) => {
   const PriorityIcon = getPriorityIcon(card.priority);
+  const { getTag } = useTagsStore();
+  const { getAssignee } = useAssigneesStore();
+
+  const assignee = card.assigneeId ? getAssignee(card.assigneeId) : null;
+
+  const getDueDateStatus = () => {
+    if (!card.dueDate) return null;
+    const now = new Date();
+    const due = new Date(card.dueDate);
+    const diffDays = Math.ceil(
+      (due.getTime() - now.getTime()) / (1000 * 60 * 60 * 24),
+    );
+
+    if (diffDays < 0) return { label: "Overdue", color: "red" };
+    if (diffDays === 0) return { label: "Due today", color: "orange" };
+    if (diffDays === 1) return { label: "Due tomorrow", color: "yellow" };
+    return { label: `Due in ${diffDays} days`, color: "gray" };
+  };
+
+  const dueDateStatus = getDueDateStatus();
 
   return (
     <>
-      {card.content && (
-        <Text
-          fontSize="sm"
-          color="gray.600"
-          mb={3}
-          lineHeight="1.6"
-          lineClamp={3}
-        >
-          {card.content}
-        </Text>
-      )}
-      <HStack gap={2} mb={3} flexWrap="wrap">
-        <Badge
-          colorScheme={
-            card.priority === "High"
-              ? "red"
-              : card.priority === "Medium"
-                ? "orange"
-                : "blue"
-          }
-          variant="subtle"
-          px={2}
-          py={0.5}
-          borderRadius="md"
-          fontSize="xs"
-          fontWeight="600"
-          border="1px solid"
-          borderColor={
-            card.priority === "High"
-              ? "red.300"
-              : card.priority === "Medium"
-                ? "orange.300"
-                : "blue.300"
-          }
-        >
-          <HStack gap={1} alignItems="center">
-            <Box
-              as={PriorityIcon}
-              fontSize="11px"
-              color={
-                card.priority === "High"
-                  ? "red.600"
-                  : card.priority === "Medium"
-                    ? "orange.600"
-                    : "blue.600"
-              }
-            />
-            <span>{card.priority}</span>
-          </HStack>
-        </Badge>
-        {card.blocked && (
-          <Badge
-            colorScheme="purple"
-            variant="subtle"
-            px={2}
-            py={0.5}
-            borderRadius="md"
-            fontSize="xs"
-            fontWeight="600"
-          >
-            <HStack gap={1}>
-              <Box as={FiAlertCircle} fontSize="10px" />
-              <span>Blocked</span>
-            </HStack>
-          </Badge>
-        )}
-      </HStack>
       {card.blocked && card.blockedReason && (
         <Box
           bg="purple.50"
-          borderLeft="3px solid"
+          borderLeft="2px solid"
           borderColor="purple.400"
-          borderRadius="md"
-          p={2.5}
+          borderRadius="sm"
+          p={2}
           fontSize="xs"
           color="purple.800"
-          lineHeight="1.5"
+          mb={3}
         >
-          <Text fontWeight="600" mb={1}>
-            Block reason:
+          <Text fontWeight="600" mb={0.5}>
+            🚫 Blocked
           </Text>
-          <Text>{card.blockedReason}</Text>
+          <Text fontSize="xs">{card.blockedReason}</Text>
         </Box>
       )}
+
+      <HStack justify="space-between" align="flex-end" mt={3}>
+        <HStack gap={1.5} flexWrap="wrap" flex="1">
+          {card.tags &&
+            card.tags.length > 0 &&
+            card.tags.slice(0, 2).map((tagId) => {
+              const tag = getTag(tagId);
+              if (!tag) return null;
+              return (
+                <Badge
+                  key={tag.id}
+                  bg={`${tag.color}.100`}
+                  color={`${tag.color}.700`}
+                  px={2}
+                  py={0.5}
+                  borderRadius="sm"
+                  fontSize="10px"
+                  fontWeight="600"
+                >
+                  {tag.icon} {tag.label}
+                </Badge>
+              );
+            })}
+          {card.tags && card.tags.length > 2 && (
+            <Text fontSize="xs" color="gray.500">
+              +{card.tags.length - 2}
+            </Text>
+          )}
+        </HStack>
+
+        <HStack gap={2} flexShrink={0}>
+          <Box
+            color={
+              card.priority === "High"
+                ? "red.500"
+                : card.priority === "Medium"
+                  ? "orange.500"
+                  : "blue.500"
+            }
+            fontSize="16px"
+            title={`Priority: ${card.priority}`}
+          >
+            <PriorityIcon />
+          </Box>
+          {assignee && (
+            <Box
+              w="24px"
+              h="24px"
+              borderRadius="full"
+              bg="blue.100"
+              display="flex"
+              alignItems="center"
+              justifyContent="center"
+              fontSize="xs"
+              fontWeight="600"
+              color="blue.700"
+              title={assignee.name}
+              cursor="pointer"
+            >
+              {assignee.avatar || assignee.name.charAt(0).toUpperCase()}
+            </Box>
+          )}
+        </HStack>
+      </HStack>
     </>
   );
 };

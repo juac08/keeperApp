@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useEffect, useMemo, useReducer } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useReducer,
+} from "react";
 import type { Card, Status } from "@/types";
 
 const STORAGE_KEY = "keeper-kanban-v1";
@@ -23,6 +29,13 @@ const DEFAULT_CARDS: Card[] = [
     priority: "High",
     blocked: false,
     blockedReason: "",
+    dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split("T")[0],
+    tags: [],
+    assigneeId: "",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
   {
     id: "card-2",
@@ -32,6 +45,13 @@ const DEFAULT_CARDS: Card[] = [
     priority: "Medium",
     blocked: false,
     blockedReason: "",
+    dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split("T")[0],
+    tags: [],
+    assigneeId: "",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
   {
     id: "card-3",
@@ -41,6 +61,11 @@ const DEFAULT_CARDS: Card[] = [
     priority: "Low",
     blocked: false,
     blockedReason: "",
+    dueDate: "",
+    tags: [],
+    assigneeId: "",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
   },
 ];
 
@@ -49,7 +74,18 @@ const initialState = (): State => {
   if (!stored) return { cards: DEFAULT_CARDS };
   try {
     const parsed = JSON.parse(stored);
-    return { cards: Array.isArray(parsed) ? parsed : DEFAULT_CARDS };
+    // Migrate old cards to include new fields
+    const cards = Array.isArray(parsed)
+      ? parsed.map((card: any) => ({
+          ...card,
+          dueDate: card.dueDate || "",
+          tags: card.tags || [],
+          assigneeId: card.assigneeId || "",
+          createdAt: card.createdAt || new Date().toISOString(),
+          updatedAt: card.updatedAt || new Date().toISOString(),
+        }))
+      : DEFAULT_CARDS;
+    return { cards };
   } catch {
     return { cards: DEFAULT_CARDS };
   }
@@ -62,17 +98,19 @@ const reducer = (state: State, action: Action): State => {
     case "UPDATE":
       return {
         cards: state.cards.map((card) =>
-          card.id === action.payload.id ? action.payload : card
+          card.id === action.payload.id ? action.payload : card,
         ),
       };
     case "REMOVE":
-      return { cards: state.cards.filter((card) => card.id !== action.payload.id) };
+      return {
+        cards: state.cards.filter((card) => card.id !== action.payload.id),
+      };
     case "MOVE":
       return {
         cards: state.cards.map((card) =>
           card.id === action.payload.id
             ? { ...card, status: action.payload.status }
-            : card
+            : card,
         ),
       };
     case "CLEAR":
@@ -109,7 +147,7 @@ export const BoardProvider: React.FC<{ children: React.ReactNode }> = ({
         acc[card.status] += 1;
         return acc;
       },
-      { todo: 0, inprogress: 0, done: 0 }
+      { todo: 0, inprogress: 0, done: 0 },
     );
   }, [state.cards]);
 

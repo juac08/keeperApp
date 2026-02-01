@@ -6,15 +6,19 @@ import {
   Grid,
   Heading,
   HStack,
-  Separator,
   Stack,
   Text,
 } from "@chakra-ui/react";
 import { FiColumns } from "react-icons/fi";
 import type { Priority, Status } from "../types";
 import { AppButton, AppInput, AppTextarea } from "@/ui";
-import PrioritySelect from "@/components/form/PrioritySelect";
-import StatusSelect from "@/components/form/StatusSelect";
+import {
+  PrioritySelect,
+  StatusSelect,
+  DatePicker,
+  TagInput,
+  AssigneeSelect,
+} from "@/components/form";
 
 type FormState = {
   title: string;
@@ -23,6 +27,9 @@ type FormState = {
   priority: Priority;
   blocked: boolean;
   blockedReason: string;
+  dueDate: string;
+  tags: string[];
+  assigneeId: string;
 };
 
 type Props = {
@@ -53,59 +60,78 @@ const TaskModal: React.FC<Props> = ({
       open={isOpen}
       onOpenChange={(details) => !details.open && onClose()}
     >
-      <Dialog.Backdrop />
+      <Dialog.Backdrop bg="blackAlpha.600" backdropFilter="blur(8px)" />
       <Dialog.Positioner>
         <Dialog.Content
-          borderRadius="2xl"
+          borderRadius="3xl"
           overflow="hidden"
-          maxW="900px"
-          boxShadow="2xl"
+          maxW="1000px"
+          boxShadow="0 25px 50px -12px rgba(0, 0, 0, 0.25)"
+          border="1px solid"
+          borderColor="gray.100"
         >
           <Dialog.Header
-            bg="white"
-            py={5}
-            px={{ base: 6, md: 8 }}
-            pr={{ base: 14, md: 16 }}
+            bgGradient="linear(to-br, white, gray.50)"
+            py={6}
+            px={{ base: 6, md: 10 }}
+            pr={{ base: 16, md: 18 }}
             borderBottom="1px solid"
-            borderColor="gray.200"
+            borderColor="gray.100"
           >
             <HStack gap={3} alignItems="center">
               <Box
-                w="40px"
-                h="40px"
-                borderRadius="lg"
-                bgGradient="linear(to-br, blue.500, blue.600)"
+                w="52px"
+                h="52px"
+                borderRadius="18px"
+                bg="linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)"
                 color="white"
                 display="flex"
                 alignItems="center"
                 justifyContent="center"
+                boxShadow="lg"
                 flexShrink={0}
               >
-                <FiColumns size={22} />
+                <Box as={FiColumns} fontSize="24px" />
               </Box>
               <Box flex="1">
                 <Text
                   fontSize="xs"
                   color="gray.500"
-                  fontWeight="500"
+                  fontWeight="600"
                   letterSpacing="wider"
                   textTransform="uppercase"
-                  mb={0.5}
+                  mb={1}
                 >
-                  Task editor
+                  Task Editor
                 </Text>
-                <Heading size="lg" fontWeight="600" color="gray.900">
+                <Heading
+                  size="xl"
+                  fontWeight="700"
+                  color="gray.900"
+                  letterSpacing="tight"
+                >
                   {editingId ? "Edit task" : "New task"}
                 </Heading>
               </Box>
             </HStack>
-            <Dialog.CloseTrigger position="absolute" right="16px" top="16px" />
+            <Dialog.CloseTrigger
+              position="absolute"
+              right="20px"
+              top="20px"
+              borderRadius="lg"
+              _hover={{ bg: "gray.100" }}
+            />
           </Dialog.Header>
-          <Dialog.Body bg="white" px={{ base: 6, md: 8 }} pt={6} pb={8}>
-            <Grid templateColumns={{ base: "1fr", md: "3fr 2fr" }} gap={6}>
-              <Stack gap={4}>
+          <Dialog.Body bg="white" px={{ base: 6, md: 10 }} pt={8} pb={10}>
+            <Grid templateColumns={{ base: "1fr", md: "1.8fr 1fr" }} gap={8}>
+              <Stack gap={6}>
                 <Field.Root>
-                  <Field.Label fontSize="sm" color="gray.600">
+                  <Field.Label
+                    fontSize="sm"
+                    color="gray.700"
+                    fontWeight="600"
+                    mb={2.5}
+                  >
                     Title
                   </Field.Label>
                   <AppInput
@@ -113,11 +139,16 @@ const TaskModal: React.FC<Props> = ({
                     value={form.title}
                     onChange={onChange}
                     placeholder="Add a task title"
-                    size="md"
+                    size="lg"
                   />
                 </Field.Root>
                 <Field.Root>
-                  <Field.Label fontSize="sm" color="gray.600">
+                  <Field.Label
+                    fontSize="sm"
+                    color="gray.700"
+                    fontWeight="600"
+                    mb={2.5}
+                  >
                     Description
                   </Field.Label>
                   <AppTextarea
@@ -125,94 +156,180 @@ const TaskModal: React.FC<Props> = ({
                     value={form.content}
                     onChange={onChange}
                     placeholder="Add details, links, or next steps."
-                    rows={7}
-                    size="md"
+                    rows={11}
+                    size="lg"
+                  />
+                </Field.Root>
+                <Field.Root>
+                  <TagInput
+                    selectedTags={form.tags}
+                    onChange={(tags) =>
+                      onChange({
+                        target: { name: "tags", value: tags },
+                      } as any)
+                    }
                   />
                 </Field.Root>
               </Stack>
-              <Stack
-                gap={4}
-                bg="gray.50"
-                borderRadius="xl"
-                p={5}
-                border="1px solid"
-                borderColor="gray.200"
-              >
-                <Field.Root>
-                  <Field.Label fontSize="sm" color="gray.600">
-                    Priority
-                  </Field.Label>
-                  <PrioritySelect
-                    value={form.priority}
-                    onChange={(priority) =>
-                      onChange({
-                        target: { name: "priority", value: priority },
-                      } as React.ChangeEvent<HTMLSelectElement>)
-                    }
-                  />
-                </Field.Root>
-                <Field.Root>
-                  <Field.Label fontSize="sm" color="gray.600">
-                    Status
-                  </Field.Label>
-                  <StatusSelect
-                    value={form.status}
-                    onChange={(status) =>
-                      onChange({
-                        target: { name: "status", value: status },
-                      } as React.ChangeEvent<HTMLSelectElement>)
-                    }
-                  />
-                </Field.Root>
-                <Separator />
-                <Field.Root>
-                  <HStack justify="space-between">
-                    <Field.Label fontSize="sm" color="gray.600" mb={0}>
-                      Blocked
-                    </Field.Label>
-                    <AppButton
-                      size="sm"
-                      variantStyle={form.blocked ? "primary" : "outline"}
-                      colorScheme="purple"
-                      onClick={() =>
-                        onToggleBlocked({
-                          target: {
-                            checked: !form.blocked,
-                          } as HTMLInputElement,
-                        } as React.ChangeEvent<HTMLInputElement>)
-                      }
-                    >
-                      {form.blocked ? "Blocked" : "Not blocked"}
-                    </AppButton>
-                  </HStack>
-                  {form.blocked && (
-                    <AppInput
-                      mt={3}
-                      name="blockedReason"
-                      value={form.blockedReason}
-                      onChange={onChange}
-                      placeholder="Reason"
-                      size="md"
-                    />
-                  )}
-                </Field.Root>
+              <Stack gap={5}>
+                <Box
+                  bg="gradient-to-br"
+                  bgGradient="linear(to-br, blue.50, purple.50)"
+                  borderRadius="2xl"
+                  p={6}
+                  border="1px solid"
+                  borderColor="blue.100"
+                  boxShadow="0 1px 3px 0 rgba(0, 0, 0, 0.05)"
+                >
+                  <Stack gap={5}>
+                    <Field.Root>
+                      <Field.Label
+                        fontSize="sm"
+                        color="gray.700"
+                        fontWeight="600"
+                        mb={2.5}
+                      >
+                        Priority
+                      </Field.Label>
+                      <PrioritySelect
+                        value={form.priority}
+                        onChange={(priority) =>
+                          onChange({
+                            target: { name: "priority", value: priority },
+                          } as React.ChangeEvent<HTMLSelectElement>)
+                        }
+                      />
+                    </Field.Root>
+                    <Field.Root>
+                      <Field.Label
+                        fontSize="sm"
+                        color="gray.700"
+                        fontWeight="600"
+                        mb={2.5}
+                      >
+                        Status
+                      </Field.Label>
+                      <StatusSelect
+                        value={form.status}
+                        onChange={(status) =>
+                          onChange({
+                            target: { name: "status", value: status },
+                          } as React.ChangeEvent<HTMLSelectElement>)
+                        }
+                      />
+                    </Field.Root>
+                    <Field.Root>
+                      <Field.Label
+                        fontSize="sm"
+                        color="gray.700"
+                        fontWeight="600"
+                        mb={2.5}
+                      >
+                        Due Date
+                      </Field.Label>
+                      <DatePicker
+                        value={form.dueDate}
+                        onChange={(date) =>
+                          onChange({
+                            target: { name: "dueDate", value: date },
+                          } as any)
+                        }
+                      />
+                    </Field.Root>
+                    <Field.Root>
+                      <Field.Label
+                        fontSize="sm"
+                        color="gray.700"
+                        fontWeight="600"
+                        mb={2.5}
+                      >
+                        Assignee
+                      </Field.Label>
+                      <AssigneeSelect
+                        value={form.assigneeId}
+                        onChange={(assigneeId) =>
+                          onChange({
+                            target: { name: "assigneeId", value: assigneeId },
+                          } as any)
+                        }
+                      />
+                    </Field.Root>
+                  </Stack>
+                </Box>
+                <Box
+                  bg="purple.50"
+                  borderRadius="2xl"
+                  p={5}
+                  border="1px solid"
+                  borderColor="purple.100"
+                  boxShadow="0 1px 3px 0 rgba(0, 0, 0, 0.05)"
+                  position="relative"
+                  zIndex={1}
+                >
+                  <Field.Root>
+                    <HStack justify="space-between" mb={3}>
+                      <Field.Label
+                        fontSize="sm"
+                        color="gray.700"
+                        fontWeight="600"
+                        mb={0}
+                      >
+                        Blocked Status
+                      </Field.Label>
+                      <AppButton
+                        size="sm"
+                        variantStyle={form.blocked ? "primary" : "outline"}
+                        colorScheme="purple"
+                        onClick={() =>
+                          onToggleBlocked({
+                            target: {
+                              checked: !form.blocked,
+                            } as HTMLInputElement,
+                          } as React.ChangeEvent<HTMLInputElement>)
+                        }
+                      >
+                        {form.blocked ? "🚫 Blocked" : "✅ Not blocked"}
+                      </AppButton>
+                    </HStack>
+                    {form.blocked && (
+                      <AppInput
+                        name="blockedReason"
+                        value={form.blockedReason}
+                        onChange={onChange}
+                        placeholder="What's blocking this task?"
+                        size="md"
+                      />
+                    )}
+                  </Field.Root>
+                </Box>
               </Stack>
             </Grid>
           </Dialog.Body>
           <Dialog.Footer
-            bg="white"
-            pt={4}
+            bgGradient="linear(to-br, gray.50, white)"
+            pt={5}
             pb={6}
-            px={{ base: 6, md: 8 }}
+            px={{ base: 6, md: 10 }}
             borderTop="1px solid"
             borderColor="gray.100"
           >
             <HStack w="100%" justify="flex-end" gap={3}>
-              <AppButton variantStyle="ghost" onClick={onClose}>
+              <AppButton
+                variantStyle="ghost"
+                onClick={onClose}
+                size="lg"
+                px={6}
+              >
                 Cancel
               </AppButton>
-              <AppButton variantStyle="primary" onClick={onSave}>
-                {editingId ? "Save changes" : "Create task"}
+              <AppButton
+                variantStyle="primary"
+                onClick={onSave}
+                size="lg"
+                px={8}
+                boxShadow="0 4px 14px 0 rgba(102, 126, 234, 0.39)"
+              >
+                {editingId ? "💾 Save changes" : "✨ Create task"}
               </AppButton>
             </HStack>
           </Dialog.Footer>

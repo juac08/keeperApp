@@ -5,7 +5,6 @@ import { FiColumns } from "react-icons/fi";
 const ProjectInfo: React.FC = () => {
   return (
     <HStack gap={4} align="center">
-      {" "}
       <Box
         w="52px"
         h="52px"

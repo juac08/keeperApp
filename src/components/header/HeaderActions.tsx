@@ -14,8 +14,8 @@ const HeaderActions: React.FC<Props> = ({ onClear, onAdd }) => {
       <AppButton variantStyle="outline" onClick={onClear} icon={<FiTrash2 />}>
         Clear board
       </AppButton>
-      <AppButton variantStyle="primary" onClick={onAdd} icon={<FiPlus />}>
-        Create task
+      <AppButton variantStyle="primary" onClick={onAdd}>
+        ✨ Create task
       </AppButton>
     </HStack>
   );
