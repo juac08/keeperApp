@@ -30,6 +30,9 @@ const AppToaster: React.FC = () => {
               stiffness: 300,
               damping: 25,
             }}
+            position="fixed"
+            left="50%"
+            transform="translateX(-50%)"
           >
             <Toast.Root
               key={toast.id}
@@ -42,9 +45,9 @@ const AppToaster: React.FC = () => {
               borderRadius="xl"
               fontSize="sm"
               boxShadow="lg"
-              bg="white"
-              border="1px solid"
-              borderColor="gray.200"
+              bg="bg.panel"
+              border="2px solid"
+              borderColor="border.muted"
               backdropFilter="blur(10px)"
             >
               <Box display="flex" alignItems="flex-start" gap={3}>

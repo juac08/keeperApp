@@ -1,10 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import {
-  Box,
-  HStack,
-  Text,
-  Stack,
-} from "@chakra-ui/react";
+import { Box, HStack, Text, Stack } from "@chakra-ui/react";
 import { FiChevronDown, FiPlus } from "react-icons/fi";
 import { useBoardStore } from "@/state/BoardStore";
 import { AppButton } from "@/ui";
@@ -64,22 +59,23 @@ const BoardSelector: React.FC<Props> = ({ onCreateBoard }) => {
         cursor="pointer"
         px={3}
         py={2}
-        bg="white"
+        bg="bg.panel"
         border="1px solid"
         borderColor={isOpen ? "blue.400" : "gray.200"}
+        boxShadow={isOpen ? "0 0 0 1px #4299e1" : "none"}
         borderRadius="md"
         _hover={{ borderColor: isOpen ? "blue.400" : "gray.300" }}
         transition="all 0.2s"
       >
         <HStack gap={2}>
           <Text fontSize="lg">{activeBoard?.icon || "📋"}</Text>
-          <Text fontSize="sm" fontWeight="600" color="gray.900">
+          <Text fontSize="sm" fontWeight="600" color="text.primary">
             {activeBoard?.name || "Select Board"}
           </Text>
           <Box
             as={FiChevronDown}
             fontSize="14px"
-            color="gray.500"
+            color="text.muted"
             transform={isOpen ? "rotate(180deg)" : "rotate(0)"}
             transition="transform 0.2s"
           />
@@ -93,10 +89,10 @@ const BoardSelector: React.FC<Props> = ({ onCreateBoard }) => {
           left="0"
           minW="280px"
           maxW="320px"
-          bg="white"
+          bg="bg.panel"
           borderRadius="lg"
-          border="1px solid"
-          borderColor="gray.200"
+          border="2px solid"
+          borderColor="border.muted"
           boxShadow="0 4px 12px rgba(0, 0, 0, 0.1)"
           p={2}
           zIndex={10}
@@ -111,17 +107,17 @@ const BoardSelector: React.FC<Props> = ({ onCreateBoard }) => {
               py={2.5}
               cursor="pointer"
               _hover={{
-                bg: board.id === activeBoardId ? "blue.100" : "gray.50",
+                bg: board.id === activeBoardId ? "blue.100" : "bg.muted",
               }}
             >
               <HStack gap={2.5} w="100%">
                 <Text fontSize="xl">{board.icon || "📋"}</Text>
                 <Stack gap={0} flex="1" minW="0">
-                  <Text fontSize="sm" fontWeight="600" color="gray.900">
+                  <Text fontSize="sm" fontWeight="600" color="text.primary">
                     {board.name}
                   </Text>
                   {board.description && (
-                    <Text fontSize="xs" color="gray.500" lineClamp={1}>
+                    <Text fontSize="xs" color="text.muted" lineClamp={1}>
                       {board.description}
                     </Text>
                   )}
@@ -129,7 +125,12 @@ const BoardSelector: React.FC<Props> = ({ onCreateBoard }) => {
               </HStack>
             </Box>
           ))}
-          <Box borderTop="1px solid" borderColor="gray.200" mt={1.5} pt={1.5}>
+          <Box
+            borderTop="1px solid"
+            borderColor="border.muted"
+            mt={1.5}
+            pt={1.5}
+          >
             <Box
               onClick={() => {
                 onCreateBoard();

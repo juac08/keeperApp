@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import type { Card, Priority } from "@/types";
+import type { SortOption } from "@/components/toolbar/SortSelect";
 
 export type FilterType = "all" | "priority" | "blocked";
 
@@ -7,12 +8,14 @@ export type FilterState = {
   searchQuery: string;
   activeFilter: FilterType;
   priorityFilter: Priority | null;
+  sortBy: SortOption;
 };
 
 export const useCardFilters = (cards: Card[]) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState<FilterType>("all");
   const [priorityFilter, setPriorityFilter] = useState<Priority | null>(null);
+  const [sortBy, setSortBy] = useState<SortOption>("date-desc");
 
   const filteredCards = useMemo(() => {
     let result = [...cards];
@@ -38,8 +41,33 @@ export const useCardFilters = (cards: Card[]) => {
       result = result.filter((card) => card.priority === priorityFilter);
     }
 
+    // Apply sorting
+    result.sort((a, b) => {
+      switch (sortBy) {
+        case "date-desc":
+          return (
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+        case "date-asc":
+          return (
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+          );
+        case "priority":
+          const priorityOrder = { High: 0, Medium: 1, Low: 2 };
+          return priorityOrder[a.priority] - priorityOrder[b.priority];
+        case "assignee":
+          const aAssignee = a.assigneeId || "";
+          const bAssignee = b.assigneeId || "";
+          return aAssignee.localeCompare(bAssignee);
+        case "title":
+          return a.title.localeCompare(b.title);
+        default:
+          return 0;
+      }
+    });
+
     return result;
-  }, [cards, searchQuery, activeFilter, priorityFilter]);
+  }, [cards, searchQuery, activeFilter, priorityFilter, sortBy]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -59,6 +87,10 @@ export const useCardFilters = (cards: Card[]) => {
     setActiveFilter("priority");
   };
 
+  const handleSortChange = (sort: SortOption) => {
+    setSortBy(sort);
+  };
+
   const clearFilters = () => {
     setSearchQuery("");
     setActiveFilter("all");
@@ -73,10 +105,12 @@ export const useCardFilters = (cards: Card[]) => {
     searchQuery,
     activeFilter,
     priorityFilter,
+    sortBy,
     hasActiveFilters,
     handleSearch,
     handleFilterChange,
     handlePriorityChange,
+    handleSortChange,
     clearFilters,
   };
 };

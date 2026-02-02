@@ -69,17 +69,17 @@ const TaskModal: React.FC<Props> = ({
           overflow="hidden"
           maxW="900px"
           boxShadow="0 20px 40px rgba(0, 0, 0, 0.15)"
-          bg="white"
+          bg="bg.panel"
         >
           <Dialog.Header
-            bg="white"
+            bg="bg.panel"
             py={4}
             px={6}
             borderBottom="1px solid"
-            borderColor="gray.200"
+            borderColor="border.muted"
           >
             <HStack justify="space-between">
-              <Text fontSize="sm" fontWeight="600" color="gray.600">
+              <Text fontSize="sm" fontWeight="600" color="text.secondary">
                 {editingId ? "Edit task" : "Create task"}
               </Text>
               <Dialog.CloseTrigger
@@ -89,7 +89,7 @@ const TaskModal: React.FC<Props> = ({
             </HStack>
           </Dialog.Header>
 
-          <Dialog.Body bg="white" px={6} pt={6} pb={6}>
+          <Dialog.Body bg="bg.panel" px={6} pt={6} pb={6}>
             <Stack gap={5}>
               {/* Title */}
               <Field.Root>
@@ -206,14 +206,6 @@ const TaskModal: React.FC<Props> = ({
                   </Field.Root>
 
                   <Field.Root>
-                    <Field.Label
-                      fontSize="xs"
-                      fontWeight="600"
-                      color="gray.600"
-                      mb={2}
-                    >
-                      TAGS
-                    </Field.Label>
                     <TagInput
                       selectedTags={form.tags}
                       onChange={(tags) =>
@@ -246,7 +238,7 @@ const TaskModal: React.FC<Props> = ({
               </Grid>
 
               {/* Subtasks */}
-              <Box pt={3} borderTop="1px solid" borderColor="gray.200">
+              <Box pt={3} borderTop="1px solid" borderColor="border.muted">
                 <SubtaskList
                   subtasks={form.subtasks}
                   onChange={(subtasks) =>
@@ -277,11 +269,11 @@ const TaskModal: React.FC<Props> = ({
           </Dialog.Body>
 
           <Dialog.Footer
-            bg="gray.50"
+            bg="bg.panel"
             py={4}
             px={6}
             borderTop="1px solid"
-            borderColor="gray.200"
+            borderColor="border.muted"
           >
             <HStack w="100%" justify="flex-end" gap={3}>
               <AppButton variantStyle="ghost" onClick={onClose}>

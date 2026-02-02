@@ -52,10 +52,11 @@ const PrioritySelect: React.FC<Props> = ({ value, onChange, size = "md" }) => {
         cursor="pointer"
         px={4}
         py={2.5}
-        borderRadius="xl"
-        border="2px solid"
-        borderColor={isOpen ? "blue.400" : "gray.200"}
-        bg="white"
+        borderRadius="6px"
+        border="1px solid"
+        borderColor={isOpen ? "blue.400" : "border.muted"}
+        boxShadow={isOpen ? "0 0 0 1px #4299e1" : "none"}
+        bg="bg.panel"
         _hover={{ borderColor: isOpen ? "blue.400" : "gray.300" }}
         transition="all 0.2s"
       >
@@ -76,7 +77,7 @@ const PrioritySelect: React.FC<Props> = ({ value, onChange, size = "md" }) => {
           <Box
             as={FiChevronDown}
             fontSize="16px"
-            color="gray.500"
+            color="text.muted"
             transform={isOpen ? "rotate(180deg)" : "rotate(0)"}
             transition="transform 0.2s"
           />
@@ -89,11 +90,11 @@ const PrioritySelect: React.FC<Props> = ({ value, onChange, size = "md" }) => {
           top="calc(100% + 4px)"
           left="0"
           right="0"
-          bg="white"
+          bg="bg.panel"
           borderRadius="md"
           boxShadow="lg"
           border="1px solid"
-          borderColor="gray.200"
+          borderColor="border.muted"
           py={1}
           zIndex={10}
         >
@@ -103,7 +104,7 @@ const PrioritySelect: React.FC<Props> = ({ value, onChange, size = "md" }) => {
               px={4}
               py={2}
               cursor="pointer"
-              _hover={{ bg: "gray.50" }}
+              _hover={{ bg: "bg.muted" }}
               onClick={() => handleSelect(priority.value)}
             >
               <HStack justify="space-between">

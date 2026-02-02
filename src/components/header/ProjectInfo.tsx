@@ -21,7 +21,7 @@ const ProjectInfo: React.FC = () => {
       </Box>
       <Box>
         <Heading size="lg">Product Board</Heading>
-        <Text color="gray.500">
+        <Text color="text.muted">
           Track work, move cards, and ship updates with clarity.
         </Text>
       </Box>

@@ -6,9 +6,19 @@ type Props = {
   onClear: () => void;
   onAdd: () => void;
   onCreateBoard: () => void;
+  onOpenArchive: () => void;
+  onOpenExportImport: () => void;
+  onOpenTemplates: () => void;
 };
 
-const BoardHeader: React.FC<Props> = ({ onClear, onAdd, onCreateBoard }) => {
+const BoardHeader: React.FC<Props> = ({
+  onClear,
+  onAdd,
+  onCreateBoard,
+  onOpenArchive,
+  onOpenExportImport,
+  onOpenTemplates,
+}) => {
   return (
     <Flex
       align="center"
@@ -22,6 +32,9 @@ const BoardHeader: React.FC<Props> = ({ onClear, onAdd, onCreateBoard }) => {
         onClear={onClear}
         onAdd={onAdd}
         onCreateBoard={onCreateBoard}
+        onOpenArchive={onOpenArchive}
+        onOpenExportImport={onOpenExportImport}
+        onOpenTemplates={onOpenTemplates}
       />
     </Flex>
   );

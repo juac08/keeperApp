@@ -1,6 +1,8 @@
 import React from "react";
 import { Box, HStack, Text } from "@chakra-ui/react";
 import { FiCalendar, FiX } from "react-icons/fi";
+import ReactDatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 type Props = {
   value?: string;
@@ -15,6 +17,8 @@ const DatePicker: React.FC<Props> = ({
   label = "Due Date",
   placeholder = "Select date",
 }) => {
+  const selectedDate = value ? new Date(value) : null;
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
@@ -22,6 +26,14 @@ const DatePicker: React.FC<Props> = ({
       day: "numeric",
       year: "numeric",
     });
+  };
+
+  const handleDateChange = (date: Date | null) => {
+    if (date) {
+      onChange(date.toISOString().split("T")[0]);
+    } else {
+      onChange(undefined);
+    }
   };
 
   const isOverdue = value && new Date(value) < new Date();
@@ -33,52 +45,89 @@ const DatePicker: React.FC<Props> = ({
   return (
     <Box>
       <HStack gap={2}>
-        <Box position="relative" flex="1">
-          <input
-            type="date"
-            value={value || ""}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              onChange(e.target.value || undefined)
-            }
-            style={{
-              width: "100%",
-              padding: "10px 14px",
-              paddingLeft: "38px",
-              borderRadius: "6px",
-              border: `1px solid ${isOverdue ? "#fc8181" : isDueToday ? "#f6ad55" : "#cbd5e0"}`,
-              backgroundColor: "white",
-              fontSize: "14px",
-              outline: "none",
-              transition: "all 0.2s",
-            }}
-            onFocus={(e) => {
-              e.target.style.borderColor = "#4299e1";
-              e.target.style.boxShadow = "none";
-            }}
-            onBlur={(e) => {
-              e.target.style.borderColor = isOverdue
-                ? "#fc8181"
-                : isDueToday
-                  ? "#f6ad55"
-                  : "#cbd5e0";
-              e.target.style.boxShadow = "none";
-            }}
-            onMouseEnter={(e) => {
-              const target = e.target as HTMLInputElement;
-              if (document.activeElement !== target) {
-                target.style.borderColor = "#a0aec0";
+        <Box position="relative" flex="1" className="custom-datepicker-wrapper">
+          <style>
+            {`
+              .custom-datepicker-wrapper .react-datepicker-wrapper {
+                width: 100%;
               }
-            }}
-            onMouseLeave={(e) => {
-              const target = e.target as HTMLInputElement;
-              if (document.activeElement !== target) {
-                target.style.borderColor = isOverdue
-                  ? "#fc8181"
-                  : isDueToday
-                    ? "#f6ad55"
-                    : "#cbd5e0";
+              .custom-datepicker-wrapper input {
+                width: 100%;
+                padding: 10px 14px;
+                padding-left: 38px;
+                border-radius: 6px;
+                border: 1px solid ${isOverdue ? "#fc8181" : isDueToday ? "#f6ad55" : "#cbd5e0"};
+                background-color: var(--chakra-colors-bg-panel);
+                color: var(--chakra-colors-text-primary);
+                font-size: 14px;
+                outline: none;
+                transition: all 0.2s;
               }
-            }}
+              .custom-datepicker-wrapper input:hover {
+                border-color: #a0aec0;
+              }
+              .custom-datepicker-wrapper input:focus {
+                border-color: #4299e1;
+                box-shadow: 0 0 0 1px #4299e1;
+              }
+              .react-datepicker {
+                font-family: inherit;
+                background-color: var(--chakra-colors-bg-panel);
+                border: 1px solid var(--chakra-colors-border-muted);
+                border-radius: 8px;
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+              }
+              .react-datepicker__header {
+                background-color: var(--chakra-colors-bg-muted);
+                border-bottom: 1px solid var(--chakra-colors-border-muted);
+                border-radius: 8px 8px 0 0;
+                padding-top: 8px;
+              }
+              .react-datepicker__current-month {
+                font-size: 14px;
+                font-weight: 600;
+                color: var(--chakra-colors-text-primary);
+              }
+              .react-datepicker__day-name {
+                color: var(--chakra-colors-text-secondary);
+                font-size: 12px;
+                font-weight: 600;
+              }
+              .react-datepicker__day {
+                color: var(--chakra-colors-text-primary);
+                border-radius: 4px;
+              }
+              .react-datepicker__day:hover {
+                background-color: var(--chakra-colors-bg-muted);
+              }
+              .react-datepicker__day--selected {
+                background-color: #4299e1;
+                color: white;
+              }
+              .react-datepicker__day--keyboard-selected {
+                background-color: #bee3f8;
+                color: var(--chakra-colors-text-primary);
+              }
+              .react-datepicker__day--today {
+                font-weight: 600;
+                color: #4299e1;
+              }
+              .react-datepicker__navigation-icon::before {
+                border-color: var(--chakra-colors-text-primary);
+              }
+              .react-datepicker__month-text,
+              .react-datepicker__year-text {
+                color: var(--chakra-colors-text-primary);
+              }
+            `}
+          </style>
+          <ReactDatePicker
+            selected={selectedDate}
+            onChange={handleDateChange}
+            dateFormat="MMM d, yyyy"
+            placeholderText={placeholder}
+            minDate={new Date()}
+            showPopperArrow={false}
           />
           <Box
             position="absolute"
@@ -106,13 +155,13 @@ const DatePicker: React.FC<Props> = ({
             p={2}
             borderRadius="md"
             border="1px solid"
-            borderColor="gray.300"
-            bg="white"
-            color="gray.600"
+            borderColor="border.muted"
+            bg="bg.panel"
+            color="text.secondary"
             _hover={{
-              bg: "gray.50",
-              borderColor: "gray.400",
-              color: "gray.800",
+              bg: "bg.muted",
+              borderColor: "text.muted",
+              color: "text.primary",
             }}
             transition="all 0.2s"
             aria-label="Clear date"
@@ -121,17 +170,11 @@ const DatePicker: React.FC<Props> = ({
           </Box>
         )}
       </HStack>
-      {value && (
+      {value && (isOverdue || isDueToday || isDueSoon) && (
         <Text
           fontSize="xs"
           color={
-            isOverdue
-              ? "red.600"
-              : isDueToday
-                ? "orange.600"
-                : isDueSoon
-                  ? "yellow.700"
-                  : "gray.500"
+            isOverdue ? "red.600" : isDueToday ? "orange.600" : "yellow.700"
           }
           mt={1}
         >
@@ -139,9 +182,7 @@ const DatePicker: React.FC<Props> = ({
             ? `Overdue by ${Math.ceil((Date.now() - new Date(value).getTime()) / (1000 * 60 * 60 * 24))} days`
             : isDueToday
               ? "Due today"
-              : isDueSoon
-                ? `Due in ${Math.ceil((new Date(value).getTime() - Date.now()) / (1000 * 60 * 60 * 24))} days`
-                : `Due ${formatDate(value)}`}
+              : `Due in ${Math.ceil((new Date(value).getTime() - Date.now()) / (1000 * 60 * 60 * 24))} days`}
         </Text>
       )}
     </Box>

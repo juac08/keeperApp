@@ -12,9 +12,11 @@ import {
 import type { Card } from "@/types";
 import { useTagsStore } from "@/state/TagsStore";
 import { useAssigneesStore } from "@/state/AssigneesStore";
+import type { DensityMode } from "@/state/DensityStore";
 
 type Props = {
   card: Card;
+  density?: DensityMode;
 };
 
 const getPriorityIcon = (priority: string) => {
@@ -30,12 +32,21 @@ const getPriorityIcon = (priority: string) => {
   }
 };
 
-const CardMeta: React.FC<Props> = ({ card }) => {
+const CardMeta: React.FC<Props> = ({ card, density = "comfortable" }) => {
   const PriorityIcon = getPriorityIcon(card.priority);
   const { getTag } = useTagsStore();
   const { getAssignee } = useAssigneesStore();
 
   const assignee = card.assigneeId ? getAssignee(card.assigneeId) : null;
+
+  // Density-based spacing
+  const spacingMap = {
+    compact: { mb: 1, mt: 1.5, gap: 1, fontSize: "2xs" },
+    comfortable: { mb: 3, mt: 3, gap: 1.5, fontSize: "xs" },
+    spacious: { mb: 4, mt: 4, gap: 2, fontSize: "sm" },
+  };
+
+  const spacing = spacingMap[density];
 
   const getDueDateStatus = () => {
     if (!card.dueDate) return null;
@@ -61,26 +72,26 @@ const CardMeta: React.FC<Props> = ({ card }) => {
           borderLeft="2px solid"
           borderColor="purple.400"
           borderRadius="sm"
-          p={2}
-          fontSize="xs"
+          p={density === "compact" ? 1.5 : 2}
+          fontSize={spacing.fontSize}
           color="purple.800"
-          mb={3}
+          mb={spacing.mb}
         >
           <Text fontWeight="600" mb={0.5}>
             🚫 Blocked
           </Text>
-          <Text fontSize="xs">{card.blockedReason}</Text>
+          <Text fontSize={spacing.fontSize}>{card.blockedReason}</Text>
         </Box>
       )}
 
       {card.subtasks && card.subtasks.length > 0 && (
         <HStack
-          gap={2}
-          p={2}
+          gap={spacing.gap}
+          p={density === "compact" ? 1.5 : 2}
           bg="blue.50"
           borderRadius="sm"
-          fontSize="xs"
-          mb={2}
+          fontSize={spacing.fontSize}
+          mb={spacing.mb}
         >
           <FiCheckSquare color="#3b82f6" />
           <Text color="blue.700" fontWeight="600">
@@ -90,8 +101,8 @@ const CardMeta: React.FC<Props> = ({ card }) => {
         </HStack>
       )}
 
-      <HStack justify="space-between" align="flex-end" mt={3}>
-        <HStack gap={1.5} flexWrap="wrap" flex="1">
+      <HStack justify="space-between" align="flex-end" mt={spacing.mt}>
+        <HStack gap={spacing.gap} flexWrap="wrap" flex="1">
           {card.tags &&
             card.tags.length > 0 &&
             card.tags.slice(0, 2).map((tagId) => {
@@ -113,7 +124,7 @@ const CardMeta: React.FC<Props> = ({ card }) => {
               );
             })}
           {card.tags && card.tags.length > 2 && (
-            <Text fontSize="xs" color="gray.500">
+            <Text fontSize="xs" color="text.muted">
               +{card.tags.length - 2}
             </Text>
           )}
@@ -142,7 +153,7 @@ const CardMeta: React.FC<Props> = ({ card }) => {
               borderRadius="sm"
               fontSize="10px"
               fontWeight="600"
-              border="1px solid"
+              border="2px solid"
               borderColor={
                 dueDateStatus.color === "red"
                   ? "red.200"

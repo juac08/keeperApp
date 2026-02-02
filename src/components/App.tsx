@@ -2,11 +2,21 @@ import React, { useMemo, useState } from "react";
 import { Box, Grid } from "@chakra-ui/react";
 import { useBoard } from "@/state/BoardContext";
 import { useCardFilters } from "@/hooks/useCardFilters";
+import { useArchiveStore } from "@/state/ArchiveStore";
 import type { Card, Priority, Status, TaskForm } from "@/types";
 import { COLUMNS } from "@/config";
 import { BoardHeader, BoardToolbar, BoardColumn } from "@/components/board";
 import AppToaster, { appToaster } from "@/shared";
-import { TaskModal, TaskDetailsModal, BoardModal } from "@/components/modal";
+import {
+  TaskModal,
+  TaskDetailsModal,
+  BoardModal,
+  ArchiveModal,
+  ExportImportModal,
+  TemplateModal,
+} from "@/components/modal";
+import { useBoardStore } from "@/state/BoardStore";
+import type { CardTemplate } from "@/config/cardTemplates";
 
 const emptyForm: TaskForm = {
   title: "",
@@ -36,10 +46,12 @@ const App: React.FC = () => {
     searchQuery,
     activeFilter,
     priorityFilter,
+    sortBy,
     hasActiveFilters,
     handleSearch,
     handleFilterChange,
     handlePriorityChange,
+    handleSortChange,
     clearFilters,
   } = useCardFilters(cards);
   const [form, setForm] = useState<TaskForm>(emptyForm);
@@ -48,7 +60,12 @@ const App: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isBoardModalOpen, setIsBoardModalOpen] = useState(false);
+  const [isArchiveOpen, setIsArchiveOpen] = useState(false);
+  const [isExportImportOpen, setIsExportImportOpen] = useState(false);
+  const [isTemplateOpen, setIsTemplateOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+  const { archiveCard } = useArchiveStore();
+  const { getActiveBoard } = useBoardStore();
 
   const openNewTaskModal = () => {
     setForm(emptyForm);
@@ -72,6 +89,69 @@ const App: React.FC = () => {
 
   const closeBoardModal = () => {
     setIsBoardModalOpen(false);
+  };
+
+  const openArchiveModal = () => {
+    setIsArchiveOpen(true);
+  };
+
+  const closeArchiveModal = () => {
+    setIsArchiveOpen(false);
+  };
+
+  const handleArchiveCard = (id: string) => {
+    const card = cards.find((c) => c.id === id);
+    if (card && card.status === "done") {
+      archiveCard(card);
+      removeCard(id);
+      appToaster.success({ title: "Task archived", duration: 2000 });
+    }
+  };
+
+  const handleRestoreCard = (card: Card) => {
+    addCard(card);
+    appToaster.success({ title: "Task restored", duration: 2000 });
+    closeArchiveModal();
+  };
+
+  const openExportImportModal = () => {
+    setIsExportImportOpen(true);
+  };
+
+  const closeExportImportModal = () => {
+    setIsExportImportOpen(false);
+  };
+
+  const handleImport = (importedCards: Card[]) => {
+    importedCards.forEach((card) => addCard(card));
+    appToaster.success({
+      title: `Imported ${importedCards.length} tasks`,
+      duration: 2000,
+    });
+  };
+
+  const activeBoard = getActiveBoard();
+  const boardName = activeBoard?.name || "Default Board";
+
+  const openTemplateModal = () => {
+    setIsTemplateOpen(true);
+  };
+
+  const closeTemplateModal = () => {
+    setIsTemplateOpen(false);
+  };
+
+  const handleSelectTemplate = (template: CardTemplate) => {
+    setForm({
+      ...emptyForm,
+      title: template.template.title || "",
+      content: template.template.content || "",
+      priority: template.template.priority || "Medium",
+      tags: template.template.tags || [],
+      status: template.template.status || "todo",
+    });
+    setEditingId(null);
+    setIsOpen(true);
   };
 
   const openEditModal = (card: Card) => {
@@ -287,25 +367,28 @@ const App: React.FC = () => {
 
   return (
     <Box
-      maxW="1320px"
+      maxW="1600px"
       mx="auto"
-      px={{ base: 5, md: 8 }}
-      py={{ base: 9, md: 11 }}
+      px={{ base: 4, md: 6 }}
+      py={{ base: 6, md: 8 }}
     >
       <AppToaster />
       <Box
         bg="bg.panel"
         borderRadius={{ base: "2xl", md: "3xl" }}
-        border="1px solid"
+        border="2px solid"
         borderColor="border.muted"
         boxShadow="soft"
-        px={{ base: 6, md: 10 }}
-        py={{ base: 7, md: 9 }}
+        px={{ base: 5, md: 8 }}
+        py={{ base: 6, md: 8 }}
       >
         <BoardHeader
           onClear={clearBoard}
           onAdd={openNewTaskModal}
           onCreateBoard={openBoardModal}
+          onOpenArchive={openArchiveModal}
+          onOpenExportImport={openExportImportModal}
+          onOpenTemplates={openTemplateModal}
         />
         <BoardToolbar
           total={cards.length}
@@ -315,10 +398,12 @@ const App: React.FC = () => {
           searchQuery={searchQuery}
           activeFilter={activeFilter}
           priorityFilter={priorityFilter}
+          sortBy={sortBy}
           hasActiveFilters={hasActiveFilters}
           onSearch={handleSearch}
           onFilterChange={handleFilterChange}
           onPriorityChange={handlePriorityChange}
+          onSortChange={handleSortChange}
           onClearFilters={clearFilters}
         />
         <Grid templateColumns={{ base: "1fr", lg: "repeat(3, 1fr)" }} gap={4}>
@@ -337,6 +422,7 @@ const App: React.FC = () => {
               onRemove={handleRemoveCard}
               onMove={handleMove}
               onDragStart={handleDragStart}
+              onArchive={handleArchiveCard}
             />
           ))}
         </Grid>
@@ -361,6 +447,27 @@ const App: React.FC = () => {
       />
 
       <BoardModal isOpen={isBoardModalOpen} onClose={closeBoardModal} />
+
+      <ArchiveModal
+        isOpen={isArchiveOpen}
+        onClose={closeArchiveModal}
+        onRestore={handleRestoreCard}
+      />
+
+      <ExportImportModal
+        isOpen={isExportImportOpen}
+        onClose={closeExportImportModal}
+        boardId={activeBoard?.id || "default"}
+        boardName={boardName}
+        cards={cards}
+        onImport={handleImport}
+      />
+
+      <TemplateModal
+        isOpen={isTemplateOpen}
+        onClose={closeTemplateModal}
+        onSelectTemplate={handleSelectTemplate}
+      />
     </Box>
   );
 };

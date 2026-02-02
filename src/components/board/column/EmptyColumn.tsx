@@ -23,11 +23,11 @@ const EmptyColumn: React.FC = () => {
       }}
     >
       <VStack gap={2}>
-        <Box as={FiInbox} fontSize="48px" color="gray.400" mb={1} />
-        <Text fontWeight="600" color="gray.600" fontSize="md">
-          No cards yet
+        <Box as={FiInbox} fontSize="48px" color="text.muted" mb={1} />
+        <Text fontWeight="600" color="text.secondary" fontSize="md">
+          No tasks yet
         </Text>
-        <Text fontSize="sm" color="gray.500">
+        <Text fontSize="sm" color="text.muted">
           Drag cards here or create a new one
         </Text>
       </VStack>

@@ -72,17 +72,17 @@ const BoardModal: React.FC<Props> = ({ isOpen, onClose }) => {
           overflow="hidden"
           maxW="700px"
           boxShadow="0 20px 40px rgba(0, 0, 0, 0.15)"
-          bg="white"
+          bg="bg.panel"
         >
           <Dialog.Header
-            bg="white"
+            bg="bg.panel"
             py={4}
             px={6}
             borderBottom="1px solid"
-            borderColor="gray.200"
+            borderColor="border.muted"
           >
             <HStack justify="space-between">
-              <Text fontSize="md" fontWeight="600" color="gray.900">
+              <Text fontSize="md" fontWeight="600" color="text.primary">
                 Create New Board
               </Text>
               <Dialog.CloseTrigger
@@ -94,14 +94,14 @@ const BoardModal: React.FC<Props> = ({ isOpen, onClose }) => {
             </HStack>
           </Dialog.Header>
 
-          <Dialog.Body bg="white" px={6} py={6}>
+          <Dialog.Body bg="bg.panel" px={6} py={6}>
             <Stack gap={5}>
               {/* Board Name */}
               <Field.Root>
                 <Field.Label
                   fontSize="xs"
                   fontWeight="600"
-                  color="gray.600"
+                  color="text.secondary"
                   mb={2}
                 >
                   BOARD NAME
@@ -118,7 +118,7 @@ const BoardModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 <Field.Label
                   fontSize="xs"
                   fontWeight="600"
-                  color="gray.600"
+                  color="text.secondary"
                   mb={2}
                 >
                   DESCRIPTION (OPTIONAL)
@@ -169,10 +169,18 @@ const BoardModal: React.FC<Props> = ({ isOpen, onClose }) => {
                       <HStack gap={3} align="flex-start">
                         <Text fontSize="2xl">{template.icon}</Text>
                         <Stack gap={1} flex="1">
-                          <Text fontSize="sm" fontWeight="600" color="gray.900">
+                          <Text
+                            fontSize="sm"
+                            fontWeight="600"
+                            color="text.primary"
+                          >
                             {template.name}
                           </Text>
-                          <Text fontSize="xs" color="gray.500" lineHeight="1.4">
+                          <Text
+                            fontSize="xs"
+                            color="text.muted"
+                            lineHeight="1.4"
+                          >
                             {template.description}
                           </Text>
                         </Stack>
@@ -185,11 +193,11 @@ const BoardModal: React.FC<Props> = ({ isOpen, onClose }) => {
           </Dialog.Body>
 
           <Dialog.Footer
-            bg="gray.50"
+            bg="bg.panel"
             py={4}
             px={6}
             borderTop="1px solid"
-            borderColor="gray.200"
+            borderColor="border.muted"
           >
             <HStack justify="flex-end" w="100%" gap={3}>
               <AppButton variantStyle="ghost" onClick={handleClose}>

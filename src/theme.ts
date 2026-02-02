@@ -39,11 +39,27 @@ const config = defineConfig({
     },
     semanticTokens: {
       colors: {
-        "bg.canvas": { value: { _light: "#f6f8fb" } },
-        "bg.panel": { value: { _light: "#ffffff" } },
-        "bg.muted": { value: { _light: "#f1f4f9" } },
-        "border.muted": { value: { _light: "#e2e8f0" } },
-        "text.muted": { value: { _light: "#64748b" } },
+        "bg.canvas": {
+          value: { _light: "#f6f8fb", _dark: "#0f172a" },
+        },
+        "bg.panel": {
+          value: { _light: "#ffffff", _dark: "#1e293b" },
+        },
+        "bg.muted": {
+          value: { _light: "#f1f4f9", _dark: "#334155" },
+        },
+        "border.muted": {
+          value: { _light: "#e2e8f0", _dark: "#475569" },
+        },
+        "text.primary": {
+          value: { _light: "#0f172a", _dark: "#f1f5f9" },
+        },
+        "text.secondary": {
+          value: { _light: "#334155", _dark: "#cbd5e1" },
+        },
+        "text.muted": {
+          value: { _light: "#64748b", _dark: "#94a3b8" },
+        },
       },
     },
   },

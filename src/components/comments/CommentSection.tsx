@@ -39,7 +39,7 @@ const CommentSection: React.FC<Props> = ({ comments, onAddComment }) => {
     <Box>
       <HStack mb={3}>
         <FiMessageSquare size={16} />
-        <Text fontSize="sm" fontWeight="600" color="gray.700">
+        <Text fontSize="sm" fontWeight="600" color="text.primary">
           Comments ({comments.length})
         </Text>
       </HStack>
@@ -50,11 +50,11 @@ const CommentSection: React.FC<Props> = ({ comments, onAddComment }) => {
             p={4}
             textAlign="center"
             borderRadius="md"
-            bg="gray.50"
+            bg="bg.muted"
             border="1px dashed"
-            borderColor="gray.300"
+            borderColor="border.muted"
           >
-            <Text fontSize="sm" color="gray.500">
+            <Text fontSize="sm" color="text.muted">
               No comments yet. Be the first to comment!
             </Text>
           </Box>
@@ -67,7 +67,7 @@ const CommentSection: React.FC<Props> = ({ comments, onAddComment }) => {
               <Box
                 key={comment.id}
                 p={3}
-                bg="gray.50"
+                bg="bg.muted"
                 borderRadius="md"
                 borderLeft="3px solid"
                 borderLeftColor="blue.400"
@@ -88,15 +88,19 @@ const CommentSection: React.FC<Props> = ({ comments, onAddComment }) => {
                     >
                       {author?.name.charAt(0).toUpperCase() || "?"}
                     </Box>
-                    <Text fontSize="sm" fontWeight="600" color="gray.700">
+                    <Text fontSize="sm" fontWeight="600" color="text.primary">
                       {author?.name || "Unknown"}
                     </Text>
                   </HStack>
-                  <Text fontSize="xs" color="gray.500">
+                  <Text fontSize="xs" color="text.muted">
                     {formatTimestamp(comment.createdAt)}
                   </Text>
                 </HStack>
-                <Text fontSize="sm" color="gray.600" whiteSpace="pre-wrap">
+                <Text
+                  fontSize="sm"
+                  color="text.secondary"
+                  whiteSpace="pre-wrap"
+                >
                   {comment.text}
                 </Text>
               </Box>

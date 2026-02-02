@@ -53,18 +53,19 @@ const TagInput: React.FC<Props> = ({
 
   return (
     <Box>
-      <Field.Label fontSize="sm" color="gray.700" fontWeight="600" mb={2.5}>
-        Tags
+      <Field.Label fontSize="sm" color="text.primary" fontWeight="600" mb={2.5}>
+        {label}
       </Field.Label>
       <Box position="relative" ref={dropdownRef}>
         <Box
           px={4}
           py={3}
           minH="52px"
-          borderRadius="xl"
-          border="2px solid"
-          borderColor={isOpen ? "blue.400" : "gray.200"}
-          bg="white"
+          borderRadius="6px"
+          border="1px solid"
+          borderColor={isOpen ? "blue.400" : "border.muted"}
+          boxShadow={isOpen ? "0 0 0 1px #4299e1" : "none"}
+          bg="bg.panel"
           _hover={{ borderColor: isOpen ? "blue.400" : "gray.300" }}
           transition="all 0.2s"
         >
@@ -109,8 +110,8 @@ const TagInput: React.FC<Props> = ({
               px={3}
               py={1.5}
               borderRadius="lg"
-              bg={isOpen ? "blue.50" : "transparent"}
-              color="blue.600"
+              bg={isOpen ? "blue.50" : "bg.muted"}
+              color={isOpen ? "blue.700" : "text.primary"}
               _hover={{ bg: "blue.50", color: "blue.700" }}
               display="flex"
               alignItems="center"
@@ -132,11 +133,11 @@ const TagInput: React.FC<Props> = ({
             left="0"
             minW="100%"
             w="max-content"
-            bg="white"
+            bg="bg.panel"
             borderRadius="xl"
             boxShadow="0 10px 40px rgba(0, 0, 0, 0.15)"
-            border="2px solid"
-            borderColor="blue.100"
+            border="1px solid"
+            borderColor="border.muted"
             py={2}
             zIndex={1000}
             maxH="240px"
@@ -151,7 +152,7 @@ const TagInput: React.FC<Props> = ({
                 mx={2}
                 cursor="pointer"
                 borderRadius="lg"
-                _hover={{ bg: "gray.50", transform: "translateX(4px)" }}
+                _hover={{ bg: "bg.muted", transform: "translateX(4px)" }}
                 transition="all 0.2s"
                 onClick={() => handleAddTag(tag.id)}
               >
@@ -169,10 +170,10 @@ const TagInput: React.FC<Props> = ({
                     {tag.icon}
                   </Box>
                   <Box>
-                    <Text fontSize="sm" fontWeight="600" color="gray.800">
+                    <Text fontSize="sm" fontWeight="600" color="text.primary">
                       {tag.label}
                     </Text>
-                    <Text fontSize="xs" color="gray.500">
+                    <Text fontSize="xs" color="text.muted">
                       {tag.color.charAt(0).toUpperCase() + tag.color.slice(1)}{" "}
                       tag
                     </Text>

@@ -97,14 +97,14 @@ const TaskDetailsModal: React.FC<Props> = ({
           maxW="800px"
           maxH="90vh"
           boxShadow="0 20px 40px rgba(0, 0, 0, 0.15)"
-          bg="white"
+          bg="bg.panel"
         >
           <Dialog.Header
-            bg="white"
+            bg="bg.panel"
             py={4}
             px={6}
             borderBottom="1px solid"
-            borderColor="gray.200"
+            borderColor="border.muted"
           >
             <HStack justify="space-between">
               <HStack gap={3}>
@@ -147,13 +147,13 @@ const TaskDetailsModal: React.FC<Props> = ({
             </HStack>
           </Dialog.Header>
 
-          <Dialog.Body bg="white" px={6} py={6} overflowY="auto">
+          <Dialog.Body bg="bg.panel" px={6} py={6} overflowY="auto">
             <Stack gap={6}>
               {/* Title */}
               <Heading
                 size="lg"
                 fontWeight="600"
-                color="gray.900"
+                color="text.primary"
                 lineHeight="1.3"
               >
                 {card.title}
@@ -162,12 +162,17 @@ const TaskDetailsModal: React.FC<Props> = ({
               {/* Description */}
               {card.content && (
                 <Box>
-                  <Text fontSize="xs" fontWeight="600" color="gray.500" mb={2}>
+                  <Text
+                    fontSize="xs"
+                    fontWeight="600"
+                    color="text.muted"
+                    mb={2}
+                  >
                     DESCRIPTION
                   </Text>
                   <Text
                     fontSize="sm"
-                    color="gray.700"
+                    color="text.secondary"
                     lineHeight="1.6"
                     whiteSpace="pre-wrap"
                   >
@@ -180,7 +185,7 @@ const TaskDetailsModal: React.FC<Props> = ({
               {card.blocked && card.blockedReason && (
                 <Box
                   bg="red.50"
-                  border="1px solid"
+                  border="2px solid"
                   borderColor="red.200"
                   borderRadius="md"
                   p={3}
@@ -204,7 +209,7 @@ const TaskDetailsModal: React.FC<Props> = ({
                     <Text
                       fontSize="xs"
                       fontWeight="600"
-                      color="gray.500"
+                      color="text.muted"
                       mb={2}
                     >
                       ASSIGNEE
@@ -225,7 +230,7 @@ const TaskDetailsModal: React.FC<Props> = ({
                         {assignee.avatar ||
                           assignee.name.charAt(0).toUpperCase()}
                       </Box>
-                      <Text fontSize="sm" fontWeight="500" color="gray.700">
+                      <Text fontSize="sm" fontWeight="500" color="text.primary">
                         {assignee.name}
                       </Text>
                     </HStack>
@@ -237,7 +242,7 @@ const TaskDetailsModal: React.FC<Props> = ({
                     <Text
                       fontSize="xs"
                       fontWeight="600"
-                      color="gray.500"
+                      color="text.muted"
                       mb={2}
                     >
                       DUE DATE
@@ -279,7 +284,12 @@ const TaskDetailsModal: React.FC<Props> = ({
               {/* Tags */}
               {card.tags && card.tags.length > 0 && (
                 <Box>
-                  <Text fontSize="xs" fontWeight="600" color="gray.500" mb={2}>
+                  <Text
+                    fontSize="xs"
+                    fontWeight="600"
+                    color="text.muted"
+                    mb={2}
+                  >
                     TAGS
                   </Text>
                   <Wrap gap={2}>
@@ -307,12 +317,12 @@ const TaskDetailsModal: React.FC<Props> = ({
 
               {/* Subtasks */}
               {card.subtasks && card.subtasks.length > 0 && (
-                <Box pt={4} borderTop="1px solid" borderColor="gray.200">
+                <Box pt={4} borderTop="1px solid" borderColor="border.muted">
                   <HStack justify="space-between" mb={3}>
-                    <Text fontSize="xs" fontWeight="600" color="gray.500">
+                    <Text fontSize="xs" fontWeight="600" color="text.muted">
                       SUBTASKS
                     </Text>
-                    <Text fontSize="xs" color="gray.500" fontWeight="500">
+                    <Text fontSize="xs" color="text.muted" fontWeight="500">
                       {card.subtasks.filter((st) => st.completed).length}/
                       {card.subtasks.length}
                     </Text>
@@ -341,7 +351,7 @@ const TaskDetailsModal: React.FC<Props> = ({
               )}
 
               {/* Comments */}
-              <Box pt={4} borderTop="1px solid" borderColor="gray.200">
+              <Box pt={4} borderTop="1px solid" borderColor="border.muted">
                 <CommentSection
                   comments={card.comments || []}
                   onAddComment={(text) => onAddComment(card.id, text)}
@@ -349,8 +359,8 @@ const TaskDetailsModal: React.FC<Props> = ({
               </Box>
 
               {/* Activity */}
-              <Box pt={4} borderTop="1px solid" borderColor="gray.200">
-                <Text fontSize="xs" fontWeight="600" color="gray.500" mb={3}>
+              <Box pt={4} borderTop="1px solid" borderColor="border.muted">
+                <Text fontSize="xs" fontWeight="600" color="text.muted" mb={3}>
                   ACTIVITY
                 </Text>
                 <ActivityTimeline activities={card.activities || []} />
@@ -359,11 +369,11 @@ const TaskDetailsModal: React.FC<Props> = ({
           </Dialog.Body>
 
           <Dialog.Footer
-            bg="gray.50"
+            bg="bg.panel"
             py={4}
             px={6}
             borderTop="1px solid"
-            borderColor="gray.200"
+            borderColor="border.muted"
           >
             <HStack justify="flex-end" w="100%">
               <AppButton

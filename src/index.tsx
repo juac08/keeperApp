@@ -1,6 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { ChakraProvider } from "@chakra-ui/react";
+import { ColorModeProvider } from "@/components/ui/color-mode";
 import "@fontsource/inter/400.css";
 import "@fontsource/inter/500.css";
 import "@fontsource/inter/600.css";
@@ -22,8 +23,10 @@ if (!rootElement) throw new Error("Root element not found");
 const root = createRoot(rootElement);
 root.render(
   <ChakraProvider value={system}>
-    <BoardProvider>
-      <App />
-    </BoardProvider>
+    <ColorModeProvider>
+      <BoardProvider>
+        <App />
+      </BoardProvider>
+    </ColorModeProvider>
   </ChakraProvider>,
 );

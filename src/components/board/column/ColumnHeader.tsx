@@ -20,13 +20,13 @@ const ColumnHeader: React.FC<Props> = ({ column, count }) => {
               column.id === "todo"
                 ? "blue.400"
                 : column.id === "inprogress"
-                ? "purple.400"
-                : "green.400"
+                  ? "purple.400"
+                  : "green.400"
             }
           />
           <Heading size="sm">{column.title}</Heading>
         </HStack>
-        <Text fontSize="sm" color="gray.500" mt={1}>
+        <Text fontSize="sm" color="text.muted" mt={1}>
           {column.hint}
         </Text>
       </Box>

@@ -7,13 +7,17 @@ const AppInput: React.FC<InputProps> = (props) => {
     <Input
       bg="bg.panel"
       borderColor="border.muted"
-      borderRadius="control"
+      borderRadius="6px"
       h="40px"
       px={3}
       fontSize="sm"
-      color="gray.800"
-      _placeholder={{ color: "gray.400", fontWeight: "400" }}
-      _focusVisible={{ borderColor: "brand.400", boxShadow: "0 0 0 1px #5b85ff" }}
+      color="text.primary"
+      borderWidth={1}
+      _placeholder={{ color: "text.muted", fontWeight: "400" }}
+      _focusVisible={{
+        borderColor: "blue.400",
+        boxShadow: "0 0 0 1px #4299e1",
+      }}
       {...props}
     />
   );

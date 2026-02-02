@@ -1,25 +1,47 @@
 import React from "react";
-import { HStack } from "@chakra-ui/react";
-import { FiPlus, FiTrash2 } from "react-icons/fi";
-import { AppButton } from "@/ui";
+import { HStack, IconButton } from "@chakra-ui/react";
+import { FiPlus } from "react-icons/fi";
 import BoardSelector from "@/components/board/BoardSelector";
+import { SettingsDropdown } from "./SettingsDropdown";
 
 type Props = {
   onClear: () => void;
   onAdd: () => void;
   onCreateBoard: () => void;
+  onOpenArchive: () => void;
+  onOpenExportImport: () => void;
+  onOpenTemplates: () => void;
 };
 
-const HeaderActions: React.FC<Props> = ({ onClear, onAdd, onCreateBoard }) => {
+const HeaderActions: React.FC<Props> = ({
+  onClear,
+  onAdd,
+  onCreateBoard,
+  onOpenArchive,
+  onOpenExportImport,
+  onOpenTemplates,
+}) => {
   return (
     <HStack gap={3}>
       <BoardSelector onCreateBoard={onCreateBoard} />
-      <AppButton variantStyle="outline" onClick={onClear} icon={<FiTrash2 />}>
-        Clear board
-      </AppButton>
-      <AppButton variantStyle="primary" onClick={onAdd}>
-        ✨ Create task
-      </AppButton>
+      <IconButton
+        aria-label="Create task"
+        onClick={onAdd}
+        bg="blue.500"
+        color="white"
+        size="md"
+        borderRadius="lg"
+        _hover={{ bg: "blue.600" }}
+        _active={{ bg: "blue.700" }}
+      >
+        <FiPlus size={20} />
+      </IconButton>
+      <SettingsDropdown
+        onClear={onClear}
+        onOpenArchive={onOpenArchive}
+        onOpenExportImport={onOpenExportImport}
+        onOpenTemplates={onOpenTemplates}
+      />
     </HStack>
   );
 };

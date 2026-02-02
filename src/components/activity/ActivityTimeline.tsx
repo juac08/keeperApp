@@ -92,11 +92,11 @@ const ActivityTimeline: React.FC<Props> = ({ activities }) => {
         p={4}
         textAlign="center"
         borderRadius="md"
-        bg="gray.50"
+        bg="bg.muted"
         border="1px dashed"
-        borderColor="gray.300"
+        borderColor="border.muted"
       >
-        <Text fontSize="sm" color="gray.500">
+        <Text fontSize="sm" color="text.muted">
           No activity yet
         </Text>
       </Box>
@@ -135,15 +135,15 @@ const ActivityTimeline: React.FC<Props> = ({ activities }) => {
                   top="32px"
                   w="2px"
                   h="calc(100% + 12px)"
-                  bg="gray.200"
+                  bg="border.muted"
                 />
               )}
             </Box>
             <Box flex="1" pt={0.5}>
-              <Text fontSize="sm" color="gray.700">
+              <Text fontSize="sm" color="text.primary">
                 {getActivityText(activity)}
               </Text>
-              <Text fontSize="xs" color="gray.500" mt={0.5}>
+              <Text fontSize="xs" color="text.muted" mt={0.5}>
                 {formatTimestamp(activity.timestamp)}
               </Text>
             </Box>

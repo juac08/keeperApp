@@ -9,10 +9,22 @@ type Props = ButtonProps & {
   variantStyle?: VariantStyle;
 };
 
-const AppButton: React.FC<Props> = ({ icon, children, variantStyle = "primary", size, h, px, ...props }) => {
+const AppButton: React.FC<Props> = ({
+  icon,
+  children,
+  variantStyle = "primary",
+  size,
+  h,
+  px,
+  ...props
+}) => {
   const variantMap: Record<VariantStyle, ButtonProps> = {
     primary: { variant: "solid", colorScheme: "blue" },
-    outline: { variant: "outline", colorScheme: "gray", borderColor: "border.muted" },
+    outline: {
+      variant: "outline",
+      colorScheme: "gray",
+      borderColor: "border.muted",
+    },
     ghost: { variant: "ghost", colorScheme: "gray" },
     subtle: { variant: "subtle", colorScheme: "gray" },
   };
@@ -22,7 +34,7 @@ const AppButton: React.FC<Props> = ({ icon, children, variantStyle = "primary", 
 
   return (
     <Button
-      borderRadius="control"
+      borderRadius="6px"
       fontWeight="600"
       boxShadow={variantStyle === "primary" ? "lift" : "none"}
       _hover={{ bg: variantStyle === "primary" ? "blue.600" : "bg.muted" }}

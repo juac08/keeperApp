@@ -21,14 +21,14 @@ const SearchBar: React.FC<Props> = ({
     <HStack
       gap={3}
       bg="bg.panel"
-      borderRadius="control"
+      borderRadius="6px"
       px={4}
       h="40px"
       border="1px solid"
       borderColor={
         isFocused ? "blue.400" : hasValue ? "blue.400" : "border.muted"
       }
-      boxShadow="none"
+      boxShadow={isFocused ? "0 0 0 1px #4299e1" : "none"}
       align="center"
       transition="all 0.2s"
     >
@@ -52,9 +52,9 @@ const SearchBar: React.FC<Props> = ({
         px={0}
         h="40px"
         fontSize="sm"
-        color="gray.700"
+        color="text.primary"
         _focusVisible={{ boxShadow: "none" }}
-        _placeholder={{ color: "gray.400", fontWeight: "400" }}
+        _placeholder={{ color: "text.muted", fontWeight: "400" }}
       />
       {hasValue && (
         <IconButton
@@ -62,8 +62,8 @@ const SearchBar: React.FC<Props> = ({
           size="xs"
           variant="ghost"
           onClick={() => onChange("")}
-          color="gray.500"
-          _hover={{ color: "gray.700", bg: "gray.100" }}
+          color="text.muted"
+          _hover={{ color: "text.primary", bg: "bg.muted" }}
           borderRadius="full"
         >
           <FiX size={16} />

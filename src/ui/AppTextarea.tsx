@@ -7,15 +7,15 @@ const AppTextarea: React.FC<TextareaProps> = (props) => {
     <Textarea
       bg="bg.panel"
       borderColor="border.muted"
-      borderRadius="control"
+      borderRadius="6px"
       px={3}
       py={2}
       fontSize="sm"
-      color="gray.800"
-      _placeholder={{ color: "gray.400", fontWeight: "400" }}
+      color="text.primary"
+      _placeholder={{ color: "text.muted", fontWeight: "400" }}
       _focusVisible={{
-        borderColor: "brand.400",
-        boxShadow: "0 0 0 1px #5b85ff",
+        borderColor: "blue.400",
+        boxShadow: "0 0 0 1px #4299e1",
       }}
       {...props}
     />

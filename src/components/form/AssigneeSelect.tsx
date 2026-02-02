@@ -57,10 +57,11 @@ const AssigneeSelect: React.FC<Props> = ({
           cursor="pointer"
           px={4}
           py={2.5}
-          borderRadius="xl"
-          border="2px solid"
-          borderColor={isOpen ? "blue.400" : "gray.200"}
-          bg="white"
+          borderRadius="6px"
+          border="1px solid"
+          borderColor={isOpen ? "blue.400" : "border.muted"}
+          boxShadow={isOpen ? "0 0 0 1px #4299e1" : "none"}
+          bg="bg.panel"
           _hover={{ borderColor: isOpen ? "blue.400" : "gray.300" }}
           transition="all 0.2s"
           flex="1"
@@ -69,21 +70,14 @@ const AssigneeSelect: React.FC<Props> = ({
             {selectedAssignee ? (
               <>
                 <Box fontSize="lg">{selectedAssignee.avatar || "👤"}</Box>
-                <Box>
-                  <Text fontSize="sm" fontWeight="500">
-                    {selectedAssignee.name}
-                  </Text>
-                  {selectedAssignee.email && (
-                    <Text fontSize="xs" color="gray.500">
-                      {selectedAssignee.email}
-                    </Text>
-                  )}
-                </Box>
+                <Text fontSize="sm" fontWeight="500">
+                  {selectedAssignee.name}
+                </Text>
               </>
             ) : (
               <>
-                <Box as={FiUser} fontSize="16px" color="gray.400" />
-                <Text fontSize="sm" color="gray.500">
+                <Box as={FiUser} fontSize="16px" color="text.muted" />
+                <Text fontSize="sm" color="text.muted">
                   Unassigned
                 </Text>
               </>
@@ -96,10 +90,10 @@ const AssigneeSelect: React.FC<Props> = ({
             onClick={handleClear}
             p={2}
             borderRadius="lg"
-            border="2px solid"
-            borderColor="gray.200"
-            bg="white"
-            color="gray.600"
+            border="1px solid"
+            borderColor="border.muted"
+            bg="bg.panel"
+            color="text.secondary"
             _hover={{
               bg: "red.50",
               borderColor: "red.300",
@@ -120,7 +114,7 @@ const AssigneeSelect: React.FC<Props> = ({
           left="0"
           minW="100%"
           w="max-content"
-          bg="white"
+          bg="bg.panel"
           borderRadius="xl"
           boxShadow="0 10px 40px rgba(0, 0, 0, 0.15)"
           border="2px solid"

@@ -8,7 +8,7 @@ import {
   Text,
   Checkbox,
 } from "@chakra-ui/react";
-import { FiPlus, FiTrash2 } from "react-icons/fi";
+import { FiPlus, FiTrash2, FiEdit2 } from "react-icons/fi";
 import type { Subtask } from "@/types";
 
 type Props = {
@@ -18,6 +18,9 @@ type Props = {
 
 const SubtaskList: React.FC<Props> = ({ subtasks, onChange }) => {
   const [newSubtask, setNewSubtask] = useState("");
+  const [showInput, setShowInput] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editText, setEditText] = useState("");
 
   const addSubtask = () => {
     if (!newSubtask.trim()) return;
@@ -44,6 +47,33 @@ const SubtaskList: React.FC<Props> = ({ subtasks, onChange }) => {
     onChange(subtasks.filter((st) => st.id !== id));
   };
 
+  const startEdit = (subtask: Subtask) => {
+    setEditingId(subtask.id);
+    setEditText(subtask.text);
+  };
+
+  const saveEdit = (id: string) => {
+    if (editText.trim()) {
+      onChange(
+        subtasks.map((st) =>
+          st.id === id ? { ...st, text: editText.trim() } : st,
+        ),
+      );
+    }
+    setEditingId(null);
+    setEditText("");
+  };
+
+  const handleEditKeyPress = (e: React.KeyboardEvent, id: string) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      saveEdit(id);
+    } else if (e.key === "Escape") {
+      setEditingId(null);
+      setEditText("");
+    }
+  };
+
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -56,25 +86,47 @@ const SubtaskList: React.FC<Props> = ({ subtasks, onChange }) => {
   return (
     <Box>
       <HStack justify="space-between" mb={3}>
-        <Text fontSize="sm" fontWeight="600" color="gray.700">
+        <Text fontSize="sm" fontWeight="600" color="text.primary">
           Subtasks
         </Text>
-        {subtasks.length > 0 && (
-          <Text fontSize="xs" color="gray.500" fontWeight="500">
-            {completedCount}/{subtasks.length}
-          </Text>
-        )}
+        <HStack gap={2}>
+          {subtasks.length > 0 && (
+            <Text fontSize="xs" color="text.muted" fontWeight="500">
+              {completedCount}/{subtasks.length}
+            </Text>
+          )}
+          <IconButton
+            aria-label="Add subtask"
+            size="xs"
+            onClick={() => {
+              setShowInput(true);
+              // Focus the input after state updates
+              setTimeout(() => {
+                const input = document.querySelector(
+                  'input[placeholder="Add subtask"]',
+                ) as HTMLInputElement;
+                if (input) input.focus();
+              }, 0);
+            }}
+            bg="blue.500"
+            color="white"
+            _hover={{ bg: "blue.600" }}
+            _active={{ bg: "blue.700" }}
+            borderRadius="md"
+          >
+            <FiPlus size={14} />
+          </IconButton>
+        </HStack>
       </HStack>
 
       <Stack gap={1}>
         {subtasks.map((subtask) => (
           <HStack
             key={subtask.id}
-            role="group"
             py={1.5}
             px={1}
             gap={2}
-            _hover={{ bg: "gray.50" }}
+            _hover={{ bg: "gray.50", "& button": { opacity: 1 } }}
             borderRadius="md"
             transition="all 0.15s"
           >
@@ -86,67 +138,90 @@ const SubtaskList: React.FC<Props> = ({ subtasks, onChange }) => {
               <Checkbox.HiddenInput />
               <Checkbox.Control />
             </Checkbox.Root>
-            <Text
-              flex="1"
-              fontSize="sm"
-              textDecoration={subtask.completed ? "line-through" : "none"}
-              color={subtask.completed ? "gray.400" : "gray.700"}
+            {editingId === subtask.id ? (
+              <Input
+                value={editText}
+                onChange={(e) => setEditText(e.target.value)}
+                onKeyDown={(e) => handleEditKeyPress(e, subtask.id)}
+                onBlur={() => saveEdit(subtask.id)}
+                autoFocus
+                flex="1"
+                size="sm"
+                fontSize="sm"
+                px={2}
+                py={1}
+                h="auto"
+                borderRadius="md"
+                border="1px solid"
+                borderColor="blue.400"
+                _focusVisible={{
+                  borderColor: "blue.400",
+                  boxShadow: "0 0 0 1px #4299e1",
+                }}
+              />
+            ) : (
+              <Text
+                flex="1"
+                fontSize="sm"
+                textDecoration={subtask.completed ? "line-through" : "none"}
+                color={subtask.completed ? "gray.400" : "gray.700"}
+              >
+                {subtask.text}
+              </Text>
+            )}
+            <IconButton
+              aria-label="Edit subtask"
+              size="xs"
+              variant="ghost"
+              onClick={() => startEdit(subtask)}
+              color="text.muted"
+              _hover={{ color: "blue.600", bg: "blue.50" }}
             >
-              {subtask.text}
-            </Text>
+              <FiEdit2 size={14} />
+            </IconButton>
             <IconButton
               aria-label="Delete subtask"
               size="xs"
               variant="ghost"
               onClick={() => removeSubtask(subtask.id)}
-              opacity={0}
-              _groupHover={{ opacity: 1 }}
-              transition="opacity 0.15s"
+              color="text.muted"
+              _hover={{ color: "red.600", bg: "red.50" }}
             >
               <FiTrash2 size={14} />
             </IconButton>
           </HStack>
         ))}
 
-        <HStack mt={2} gap={2}>
-          <Box
-            flex="1"
-            position="relative"
-            _before={{
-              content: '""',
-              position: "absolute",
-              left: 0,
-              top: "50%",
-              transform: "translateY(-50%)",
-              width: "16px",
-              height: "16px",
-              border: "2px solid",
-              borderColor: "gray.300",
-              borderRadius: "3px",
+        {showInput && (
+          <Input
+            placeholder="Add subtask"
+            value={newSubtask}
+            onChange={(e) => setNewSubtask(e.target.value)}
+            onKeyPress={handleKeyPress}
+            onBlur={() => {
+              if (!newSubtask.trim()) {
+                setShowInput(false);
+              }
             }}
-          >
-            <Input
-              placeholder="Add subtask"
-              value={newSubtask}
-              onChange={(e) => setNewSubtask(e.target.value)}
-              onKeyPress={handleKeyPress}
-              pl="28px"
-              pr={3}
-              py={1.5}
-              h="auto"
-              fontSize="sm"
-              border="none"
-              bg="transparent"
-              _hover={{ bg: "gray.50" }}
-              _focusVisible={{
-                bg: "white",
-                outline: "none",
-                boxShadow: "none",
-              }}
-              _placeholder={{ color: "gray.400" }}
-            />
-          </Box>
-        </HStack>
+            px={3}
+            py={1.5}
+            h="auto"
+            fontSize="sm"
+            border="1px solid"
+            borderColor="border.muted"
+            borderRadius="6px"
+            bg="bg.muted"
+            mt={2}
+            _hover={{ bg: "bg.muted", borderColor: "text.muted" }}
+            _focusVisible={{
+              bg: "bg.panel",
+              outline: "none",
+              borderColor: "blue.400",
+              boxShadow: "0 0 0 1px #4299e1",
+            }}
+            _placeholder={{ color: "gray.400" }}
+          />
+        )}
       </Stack>
     </Box>
   );

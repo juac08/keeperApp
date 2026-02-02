@@ -21,11 +21,11 @@ const PriorityFilter: React.FC<Props> = ({ selected, onSelect }) => {
       position="absolute"
       top="calc(100% + 8px)"
       right="0"
-      bg="white"
+      bg="bg.panel"
       borderRadius="lg"
       boxShadow="lg"
       border="1px solid"
-      borderColor="gray.200"
+      borderColor="border.muted"
       py={2}
       minW="160px"
       zIndex={10}
