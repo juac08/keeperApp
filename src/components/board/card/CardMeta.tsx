@@ -119,9 +119,9 @@ const CardMeta: React.FC<Props> = ({ card, density = "comfortable" }) => {
       }
       color={
         dueDateStatus.color === "red"
-          ? "red.700"
+          ? "red.600"
           : dueDateStatus.color === "orange"
-            ? "orange.700"
+            ? "orange.600"
             : dueDateStatus.color === "yellow"
               ? "yellow.700"
               : "gray.600"
@@ -129,20 +129,13 @@ const CardMeta: React.FC<Props> = ({ card, density = "comfortable" }) => {
       px={2}
       py={0.5}
       borderRadius="sm"
-      fontSize="10px"
-      fontWeight="600"
-      border="2px solid"
-      borderColor={
-        dueDateStatus.color === "red"
-          ? "red.200"
-          : dueDateStatus.color === "orange"
-            ? "orange.200"
-            : dueDateStatus.color === "yellow"
-              ? "yellow.200"
-              : "gray.200"
-      }
+      fontSize="11px"
+      fontWeight="500"
+      border="none"
     >
-      <FiCalendar style={{ display: "inline", marginRight: "4px" }} />
+      <FiCalendar
+        style={{ display: "inline", marginRight: "4px", fontSize: "10px" }}
+      />
       {dueDateStatus.label}
     </Badge>
   ) : null;
@@ -168,42 +161,26 @@ const CardMeta: React.FC<Props> = ({ card, density = "comfortable" }) => {
       )}
 
       <HStack justify="space-between" align="flex-end" mt={spacing.mt}>
-        <HStack gap={spacing.gap} flexWrap="wrap" flex="1">
+        <HStack gap={spacing.gap} flexWrap="wrap" flex="1" align="center">
           {visibleTags.map(({ id, meta }) => (
             <Badge
               key={id}
               bg={meta.background}
               color={meta.color}
-              px={2.5}
+              px={2}
               py={0.5}
               borderRadius="sm"
-              fontSize="10px"
-              fontWeight="600"
-              border="1px solid"
-              borderColor={meta.borderColor}
-              letterSpacing="0.04em"
-              textTransform="uppercase"
-              display="flex"
-              alignItems="center"
-              gap={2}
+              fontSize="11px"
+              fontWeight="500"
+              border="none"
+              letterSpacing="normal"
+              textTransform="none"
             >
-              <Box
-                w="16px"
-                h="16px"
-                borderRadius="sm"
-                bg={meta.swatch}
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                color="white"
-              >
-                {renderTagGlyph(meta.glyph)}
-              </Box>
-              <Text as="span">{meta.label}</Text>
+              {meta.label}
             </Badge>
           ))}
           {hiddenTagCount > 0 && (
-            <Text fontSize="10px" color="text.muted" fontWeight="600">
+            <Text fontSize="11px" color="text.muted" fontWeight="500">
               +{hiddenTagCount}
             </Text>
           )}

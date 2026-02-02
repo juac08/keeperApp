@@ -7,17 +7,23 @@ import { AppButton, AppTextarea } from "@/ui";
 
 type Props = {
   comments: Comment[];
-  onAddComment: (text: string) => void;
+  onAddComment: (text: string) => void | Promise<void>;
 };
 
 const CommentSection: React.FC<Props> = ({ comments, onAddComment }) => {
   const [newComment, setNewComment] = useState("");
   const { getAssignee } = useAssigneesStore();
 
-  const handleSubmit = () => {
-    if (!newComment.trim()) return;
-    onAddComment(newComment.trim());
-    setNewComment("");
+  const handleSubmit = async () => {
+    const trimmed = newComment.trim();
+    if (!trimmed) return;
+
+    try {
+      await onAddComment(trimmed);
+      setNewComment("");
+    } catch (error) {
+      console.error("Failed to add comment", error);
+    }
   };
 
   const formatTimestamp = (timestamp: string) => {
@@ -63,6 +69,11 @@ const CommentSection: React.FC<Props> = ({ comments, onAddComment }) => {
             const author = comment.authorId
               ? getAssignee(comment.authorId)
               : null;
+            const displayName = author?.name || comment.authorName || "Unknown";
+            const initialsSource = author?.name || comment.authorName;
+            const initial = initialsSource
+              ? initialsSource.charAt(0).toUpperCase()
+              : "?";
             return (
               <Box
                 key={comment.id}
@@ -86,10 +97,10 @@ const CommentSection: React.FC<Props> = ({ comments, onAddComment }) => {
                       fontWeight="600"
                       color="blue.700"
                     >
-                      {author?.name.charAt(0).toUpperCase() || "?"}
+                      {initial}
                     </Box>
                     <Text fontSize="sm" fontWeight="600" color="text.primary">
-                      {author?.name || "Unknown"}
+                      {displayName}
                     </Text>
                   </HStack>
                   <Text fontSize="xs" color="text.muted">

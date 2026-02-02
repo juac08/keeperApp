@@ -26,6 +26,8 @@ import {
   FiActivity,
   FiFileText,
   FiMessageCircle,
+  FiCheckSquare,
+  FiSquare,
 } from "react-icons/fi";
 import type { Card } from "@/types";
 import { AppButton, AppIconButton } from "@/ui";
@@ -40,7 +42,7 @@ type Props = {
   isOpen: boolean;
   onClose: () => void;
   onEdit: (card: Card) => void;
-  onAddComment: (cardId: string, text: string) => void;
+  onAddComment: (cardId: string, text: string) => void | Promise<void>;
 };
 
 const getPriorityIcon = (priority: string) => {
@@ -371,24 +373,36 @@ const TaskDetailsModal: React.FC<Props> = ({
               {card.subtasks && card.subtasks.length > 0 && (
                 <Box pt={4} borderTop="1px solid" borderColor="border.muted">
                   <HStack justify="space-between" mb={3}>
-                    <Text fontSize="xs" fontWeight="600" color="text.muted">
-                      SUBTASKS
-                    </Text>
-                    <Text fontSize="xs" color="text.muted" fontWeight="500">
-                      {card.subtasks.filter((st) => st.completed).length}/
-                      {card.subtasks.length}
-                    </Text>
+                    <HStack gap={2} align="center">
+                      <Box
+                        as={FiCheckSquare}
+                        color="gray.500"
+                        fontSize="14px"
+                      />
+                      <Text fontSize="sm" fontWeight="600" color="text.primary">
+                        Subtasks
+                        <Text
+                          as="span"
+                          color="text.muted"
+                          ml={1}
+                          fontWeight="500"
+                        >
+                          ({card.subtasks.filter((st) => st.completed).length}/
+                          {card.subtasks.length})
+                        </Text>
+                      </Text>
+                    </HStack>
                   </HStack>
                   <Stack gap={1}>
                     {card.subtasks.map((subtask) => (
-                      <HStack key={subtask.id} py={1} fontSize="sm">
+                      <HStack
+                        key={subtask.id}
+                        py={1.5}
+                        justify="space-between"
+                        align="center"
+                      >
                         <Text
-                          color={subtask.completed ? "green.500" : "gray.400"}
-                          fontWeight="600"
-                        >
-                          {subtask.completed ? "✓" : "○"}
-                        </Text>
-                        <Text
+                          fontSize="sm"
                           color={subtask.completed ? "gray.500" : "gray.700"}
                           textDecoration={
                             subtask.completed ? "line-through" : "none"
@@ -396,6 +410,12 @@ const TaskDetailsModal: React.FC<Props> = ({
                         >
                           {subtask.text}
                         </Text>
+                        <Box
+                          color={subtask.completed ? "gray.500" : "gray.300"}
+                          fontSize="16px"
+                        >
+                          {subtask.completed ? <FiCheckSquare /> : <FiSquare />}
+                        </Box>
                       </HStack>
                     ))}
                   </Stack>

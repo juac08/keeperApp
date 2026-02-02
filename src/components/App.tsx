@@ -25,6 +25,8 @@ import {
   useCreateSubtaskMutation,
   useUpdateSubtaskMutation,
   useDeleteSubtaskMutation,
+  useCreateCommentMutation,
+  useGetTaskQuery,
 } from "@/store";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { setActiveBoard } from "@/store";
@@ -130,6 +132,7 @@ const AuthenticatedApp: React.FC = () => {
   const [createSubtask] = useCreateSubtaskMutation();
   const [updateSubtask] = useUpdateSubtaskMutation();
   const [deleteSubtask] = useDeleteSubtaskMutation();
+  const [createComment] = useCreateCommentMutation();
 
   // Sync with local stores
   const { setAssignees } = useAssigneesStore();
@@ -231,6 +234,13 @@ const AuthenticatedApp: React.FC = () => {
   const { archiveCard } = useArchiveStore();
   const [archiveTask] = useArchiveTaskMutation();
 
+  const { data: detailedTask, refetch: refetchTaskDetails } = useGetTaskQuery(
+    selectedCard?.id ?? "",
+    {
+      skip: !selectedCard?.id,
+    },
+  );
+
   const openNewTaskModal = () => {
     setForm(emptyForm);
     setEditingId(null);
@@ -246,6 +256,12 @@ const AuthenticatedApp: React.FC = () => {
     setIsDetailsOpen(false);
     setSelectedCard(null);
   };
+
+  useEffect(() => {
+    if (isDetailsOpen && selectedCard?.id) {
+      refetchTaskDetails();
+    }
+  }, [isDetailsOpen, selectedCard?.id, refetchTaskDetails]);
 
   const openBoardModal = () => {
     setIsBoardModalOpen(true);
@@ -352,40 +368,40 @@ const AuthenticatedApp: React.FC = () => {
     appToaster.success({ title: "Task deleted successfully", duration: 2000 });
   };
 
-  const handleAddComment = (cardId: string, text: string) => {
-    const card = cards.find((c) => c.id === cardId);
-    if (!card) return;
+  const handleAddComment = async (cardId: string, text: string) => {
+    const trimmed = text.trim();
+    if (!trimmed) return;
 
-    const newComment = {
-      id: `comment-${Date.now()}`,
-      text,
-      authorId: "", // You can set this to current user when auth is added
-      createdAt: new Date().toISOString(),
-    };
+    try {
+      const createdComment = await createComment({
+        taskId: cardId,
+        text: trimmed,
+      }).unwrap();
 
-    const newActivity = {
-      id: `activity-${Date.now()}`,
-      type: "commented" as const,
-      timestamp: new Date().toISOString(),
-    };
+      if (selectedCard?.id === cardId) {
+        setSelectedCard((prev) =>
+          prev && prev.id === cardId
+            ? {
+                ...prev,
+                comments: [...(prev.comments || []), createdComment],
+              }
+            : prev,
+        );
+      }
 
-    updateCard({
-      ...card,
-      comments: [...(card.comments || []), newComment],
-      activities: [...(card.activities || []), newActivity],
-      updatedAt: new Date().toISOString(),
-    });
+      appToaster.success({ title: "Comment added", duration: 2000 });
 
-    // Update selectedCard to show the new comment immediately
-    if (selectedCard && selectedCard.id === cardId) {
-      setSelectedCard({
-        ...card,
-        comments: [...(card.comments || []), newComment],
-        activities: [...(card.activities || []), newActivity],
+      if (selectedCard?.id === cardId) {
+        await refetchTaskDetails();
+      }
+    } catch (error: any) {
+      const description = getErrorMessage(error);
+      appToaster.error({
+        title: "Failed to add comment",
+        description,
+        duration: 3000,
       });
     }
-
-    appToaster.success({ title: "Comment added", duration: 2000 });
   };
 
   const updateForm = (
@@ -494,14 +510,7 @@ const AuthenticatedApp: React.FC = () => {
           assigneeId: form.assigneeId || undefined,
           subtasks: finalSubtasks,
           comments: existingCard.comments || [],
-          activities: [
-            ...(existingCard.activities || []),
-            {
-              id: `activity-${Date.now()}`,
-              type: "updated" as const,
-              timestamp: new Date().toISOString(),
-            },
-          ],
+          activities: existingCard.activities || [],
           createdAt: existingCard.createdAt,
           updatedAt: new Date().toISOString(),
         };
@@ -608,6 +617,15 @@ const AuthenticatedApp: React.FC = () => {
     );
   }, [filteredCards]);
 
+  const detailsCard = useMemo(() => {
+    if (!selectedCard) return null;
+    if (detailedTask && detailedTask.id === selectedCard.id) {
+      return detailedTask;
+    }
+    const latestFromBoard = cards.find((card) => card.id === selectedCard.id);
+    return latestFromBoard ?? selectedCard;
+  }, [selectedCard, detailedTask, cards]);
+
   return (
     <Box
       maxW="1600px"
@@ -682,7 +700,7 @@ const AuthenticatedApp: React.FC = () => {
       />
 
       <TaskDetailsModal
-        card={selectedCard}
+        card={detailsCard}
         isOpen={isDetailsOpen}
         onClose={closeDetailsModal}
         onEdit={openEditModal}

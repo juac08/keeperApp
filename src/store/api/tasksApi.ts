@@ -15,6 +15,36 @@ const normalizePriority = (value: unknown): Priority => {
   return "Medium";
 };
 
+const mapCommentFromApi = (comment: any): Comment => {
+  const createdAt =
+    comment?.createdAt ??
+    comment?.created_at ??
+    comment?.created_at ??
+    new Date().toISOString();
+
+  const authorId =
+    comment?.authorId ??
+    comment?.userId ??
+    comment?.author?.id ??
+    comment?.user?.id ??
+    "";
+
+  const authorName =
+    comment?.authorName ??
+    comment?.author?.name ??
+    comment?.user?.name ??
+    comment?.userName ??
+    undefined;
+
+  return {
+    id: comment?.id ?? String(Date.now()),
+    text: comment?.text ?? comment?.body ?? "",
+    authorId,
+    authorName,
+    createdAt,
+  };
+};
+
 const mapTaskFromApi = (task: any): Card => {
   const normalizeSubtasks = Array.isArray(task?.subtasks)
     ? task.subtasks.map((subtask: any) => ({
@@ -27,12 +57,7 @@ const mapTaskFromApi = (task: any): Card => {
     : [];
 
   const normalizeComments = Array.isArray(task?.comments)
-    ? task.comments.map((comment: any) => ({
-        id: comment.id ?? String(comment?.id ?? Date.now()),
-        text: comment.text ?? "",
-        authorId: comment.authorId ?? "",
-        createdAt: comment.createdAt ?? new Date().toISOString(),
-      }))
+    ? task.comments.map((comment: any) => mapCommentFromApi(comment))
     : [];
 
   const normalizeActivities = Array.isArray(task?.activities)
@@ -163,6 +188,7 @@ export const tasksApi = apiSlice.injectEndpoints({
     }),
     getTask: builder.query<Card, string>({
       query: (id) => `/tasks/${id}`,
+      transformResponse: (response: any) => mapTaskFromApi(response),
       providesTags: (result, error, id) => [{ type: "Task", id }],
     }),
     createTask: builder.mutation<Card, Partial<Card> & { boardId?: string }>({
@@ -262,6 +288,8 @@ export const tasksApi = apiSlice.injectEndpoints({
         method: "POST",
         body: { text },
       }),
+      transformResponse: (response: any): Comment =>
+        mapCommentFromApi(response),
       invalidatesTags: (result, error, { taskId }) => [
         { type: "Task", id: taskId },
       ],

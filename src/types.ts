@@ -25,6 +25,7 @@ export type Comment = {
   text: string;
   authorId: string;
   createdAt: string;
+  authorName?: string;
 };
 
 export type Activity = {
