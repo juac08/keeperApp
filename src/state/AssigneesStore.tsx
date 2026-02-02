@@ -4,22 +4,18 @@ import type { Assignee } from "@/types";
 
 type AssigneesStore = {
   assignees: Assignee[];
+  setAssignees: (assignees: Assignee[]) => void;
   addAssignee: (name: string, email?: string, avatar?: string) => Assignee;
   updateAssignee: (id: string, updates: Partial<Omit<Assignee, "id">>) => void;
   deleteAssignee: (id: string) => void;
   getAssignee: (id: string) => Assignee | undefined;
 };
 
-const defaultAssignees: Assignee[] = [
-  { id: "1", name: "John Doe", email: "john@example.com", avatar: "👨‍💻" },
-  { id: "2", name: "Jane Smith", email: "jane@example.com", avatar: "👩‍💻" },
-  { id: "3", name: "Mike Johnson", email: "mike@example.com", avatar: "👨‍💼" },
-];
-
 export const useAssigneesStore = create<AssigneesStore>()(
   persist(
     (set, get) => ({
-      assignees: defaultAssignees,
+      assignees: [],
+      setAssignees: (assignees: Assignee[]) => set({ assignees }),
       addAssignee: (
         name: string,
         email?: string,

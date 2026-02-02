@@ -10,10 +10,12 @@ import {
   FiSun,
   FiMoon,
   FiLayers,
+  FiLogOut,
 } from "react-icons/fi";
 import { AppIconButton } from "@/ui";
 import { useThemeStore } from "@/state/ThemeStore";
 import { useDensityStore } from "@/state/DensityStore";
+import { useLogoutMutation } from "@/store";
 
 type Props = {
   onClear: () => void;
@@ -30,6 +32,7 @@ export const SettingsDropdown: React.FC<Props> = ({
 }) => {
   const { colorMode, toggleColorMode } = useThemeStore();
   const { density, setDensity } = useDensityStore();
+  const [logout] = useLogoutMutation();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -112,6 +115,15 @@ export const SettingsDropdown: React.FC<Props> = ({
         setIsOpen(false);
       },
       color: "red.600",
+    },
+    {
+      icon: <FiLogOut size={16} />,
+      label: "Logout",
+      onClick: async () => {
+        await logout();
+        window.location.reload();
+      },
+      color: "text.muted",
     },
   ];
 

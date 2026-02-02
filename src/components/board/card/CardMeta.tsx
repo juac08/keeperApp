@@ -1,16 +1,22 @@
 import React from "react";
-import { Avatar, Badge, Box, HStack, Text, Wrap } from "@chakra-ui/react";
+import { Badge, Box, HStack, Text } from "@chakra-ui/react";
 import {
-  FiAlertCircle,
   FiArrowUp,
   FiMinus,
   FiArrowDown,
   FiCalendar,
-  FiUser,
-  FiCheckSquare,
+  FiBookmark,
+  FiCheck,
+  FiCircle,
+  FiLayers,
+  FiStar,
+  FiActivity,
+  FiFileText,
+  FiMessageCircle,
 } from "react-icons/fi";
 import type { Card } from "@/types";
 import { useTagsStore } from "@/state/TagsStore";
+import { getTagMeta } from "@/utils/tagHelpers";
 import { useAssigneesStore } from "@/state/AssigneesStore";
 import type { DensityMode } from "@/state/DensityStore";
 
@@ -61,8 +67,85 @@ const CardMeta: React.FC<Props> = ({ card, density = "comfortable" }) => {
     if (diffDays === 1) return { label: "Due tomorrow", color: "yellow" };
     return { label: `Due in ${diffDays} days`, color: "gray" };
   };
-
   const dueDateStatus = getDueDateStatus();
+
+  const tagEntries = (card.tags ?? [])
+    .map((tagId) => {
+      const tag = getTag(tagId);
+      if (!tag) return null;
+      return { id: tag.id, meta: getTagMeta(tag) };
+    })
+    .filter(
+      (entry): entry is { id: string; meta: ReturnType<typeof getTagMeta> } =>
+        entry !== null,
+    );
+
+  const visibleTags = tagEntries.slice(0, 2);
+  const hiddenTagCount = Math.max(tagEntries.length - visibleTags.length, 0);
+
+  const renderTagGlyph = (glyph: string) => {
+    switch (glyph) {
+      case "bookmark":
+        return <FiBookmark size={12} />;
+      case "check":
+        return <FiCheck size={12} />;
+      case "circle":
+        return <FiCircle size={12} strokeWidth={3} />;
+      case "sparkle":
+        return <FiStar size={12} />;
+      case "diamond":
+        return <FiLayers size={12} />;
+      case "flask":
+        return <FiActivity size={12} />;
+      case "document":
+        return <FiFileText size={12} />;
+      case "comment":
+        return <FiMessageCircle size={12} />;
+      default:
+        return <Box w="6px" h="6px" borderRadius="full" bg="white" />;
+    }
+  };
+
+  const dueDateBadge = dueDateStatus ? (
+    <Badge
+      bg={
+        dueDateStatus.color === "red"
+          ? "red.50"
+          : dueDateStatus.color === "orange"
+            ? "orange.50"
+            : dueDateStatus.color === "yellow"
+              ? "yellow.50"
+              : "gray.50"
+      }
+      color={
+        dueDateStatus.color === "red"
+          ? "red.700"
+          : dueDateStatus.color === "orange"
+            ? "orange.700"
+            : dueDateStatus.color === "yellow"
+              ? "yellow.700"
+              : "gray.600"
+      }
+      px={2}
+      py={0.5}
+      borderRadius="sm"
+      fontSize="10px"
+      fontWeight="600"
+      border="2px solid"
+      borderColor={
+        dueDateStatus.color === "red"
+          ? "red.200"
+          : dueDateStatus.color === "orange"
+            ? "orange.200"
+            : dueDateStatus.color === "yellow"
+              ? "yellow.200"
+              : "gray.200"
+      }
+    >
+      <FiCalendar style={{ display: "inline", marginRight: "4px" }} />
+      {dueDateStatus.label}
+    </Badge>
+  ) : null;
 
   return (
     <>
@@ -84,93 +167,49 @@ const CardMeta: React.FC<Props> = ({ card, density = "comfortable" }) => {
         </Box>
       )}
 
-      {card.subtasks && card.subtasks.length > 0 && (
-        <HStack
-          gap={spacing.gap}
-          p={density === "compact" ? 1.5 : 2}
-          bg="blue.50"
-          borderRadius="sm"
-          fontSize={spacing.fontSize}
-          mb={spacing.mb}
-        >
-          <FiCheckSquare color="#3b82f6" />
-          <Text color="blue.700" fontWeight="600">
-            {card.subtasks.filter((st) => st.completed).length}/
-            {card.subtasks.length} subtasks completed
-          </Text>
-        </HStack>
-      )}
-
       <HStack justify="space-between" align="flex-end" mt={spacing.mt}>
         <HStack gap={spacing.gap} flexWrap="wrap" flex="1">
-          {card.tags &&
-            card.tags.length > 0 &&
-            card.tags.slice(0, 2).map((tagId) => {
-              const tag = getTag(tagId);
-              if (!tag) return null;
-              return (
-                <Badge
-                  key={tag.id}
-                  bg={`${tag.color}.100`}
-                  color={`${tag.color}.700`}
-                  px={2}
-                  py={0.5}
-                  borderRadius="sm"
-                  fontSize="10px"
-                  fontWeight="600"
-                >
-                  {tag.icon} {tag.label}
-                </Badge>
-              );
-            })}
-          {card.tags && card.tags.length > 2 && (
-            <Text fontSize="xs" color="text.muted">
-              +{card.tags.length - 2}
-            </Text>
-          )}
-          {dueDateStatus && (
+          {visibleTags.map(({ id, meta }) => (
             <Badge
-              bg={
-                dueDateStatus.color === "red"
-                  ? "red.50"
-                  : dueDateStatus.color === "orange"
-                    ? "orange.50"
-                    : dueDateStatus.color === "yellow"
-                      ? "yellow.50"
-                      : "gray.50"
-              }
-              color={
-                dueDateStatus.color === "red"
-                  ? "red.700"
-                  : dueDateStatus.color === "orange"
-                    ? "orange.700"
-                    : dueDateStatus.color === "yellow"
-                      ? "yellow.700"
-                      : "gray.600"
-              }
-              px={2}
+              key={id}
+              bg={meta.background}
+              color={meta.color}
+              px={2.5}
               py={0.5}
               borderRadius="sm"
               fontSize="10px"
               fontWeight="600"
-              border="2px solid"
-              borderColor={
-                dueDateStatus.color === "red"
-                  ? "red.200"
-                  : dueDateStatus.color === "orange"
-                    ? "orange.200"
-                    : dueDateStatus.color === "yellow"
-                      ? "yellow.200"
-                      : "gray.200"
-              }
+              border="1px solid"
+              borderColor={meta.borderColor}
+              letterSpacing="0.04em"
+              textTransform="uppercase"
+              display="flex"
+              alignItems="center"
+              gap={2}
             >
-              <FiCalendar style={{ display: "inline", marginRight: "4px" }} />
-              {dueDateStatus.label}
+              <Box
+                w="16px"
+                h="16px"
+                borderRadius="sm"
+                bg={meta.swatch}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                color="white"
+              >
+                {renderTagGlyph(meta.glyph)}
+              </Box>
+              <Text as="span">{meta.label}</Text>
             </Badge>
+          ))}
+          {hiddenTagCount > 0 && (
+            <Text fontSize="10px" color="text.muted" fontWeight="600">
+              +{hiddenTagCount}
+            </Text>
           )}
+          {dueDateBadge}
         </HStack>
-
-        <HStack gap={2} flexShrink={0}>
+        <HStack gap={2} flexShrink={0} align="center">
           <Box
             color={
               card.priority === "High"

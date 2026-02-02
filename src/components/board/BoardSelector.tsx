@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Box, HStack, Text, Stack } from "@chakra-ui/react";
 import { FiChevronDown, FiPlus } from "react-icons/fi";
-import { useBoardStore } from "@/state/BoardStore";
+import { useGetBoardsQuery, setActiveBoard } from "@/store";
+import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { AppButton } from "@/ui";
 
 type Props = {
@@ -9,9 +10,12 @@ type Props = {
 };
 
 const BoardSelector: React.FC<Props> = ({ onCreateBoard }) => {
-  const { boards, activeBoardId, setActiveBoard, getActiveBoard } =
-    useBoardStore();
-  const activeBoard = getActiveBoard();
+  const dispatch = useAppDispatch();
+  const { data: boards = [] } = useGetBoardsQuery();
+  const activeBoardId = useAppSelector(
+    (state) => state.activeBoard.activeBoardId,
+  );
+  const activeBoard = boards.find((b) => b.id === activeBoardId);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -35,7 +39,7 @@ const BoardSelector: React.FC<Props> = ({ onCreateBoard }) => {
   }, [isOpen]);
 
   const handleSelect = (boardId: string) => {
-    setActiveBoard(boardId);
+    dispatch(setActiveBoard(boardId));
     setIsOpen(false);
   };
 

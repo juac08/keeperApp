@@ -1,8 +1,20 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Box, HStack, Badge, Field, Text } from "@chakra-ui/react";
-import { FiX, FiPlus, FiTag } from "react-icons/fi";
+import {
+  FiX,
+  FiPlus,
+  FiBookmark,
+  FiCheck,
+  FiCircle,
+  FiLayers,
+  FiStar,
+  FiActivity,
+  FiFileText,
+  FiMessageCircle,
+} from "react-icons/fi";
 import { useTagsStore } from "@/state/TagsStore";
 import type { Tag } from "@/types";
+import { getTagMeta } from "@/utils/tagHelpers";
 
 type Props = {
   selectedTags: string[];
@@ -22,6 +34,29 @@ const TagInput: React.FC<Props> = ({
   const availableTags = tags.filter(
     (tag: Tag) => !selectedTags.includes(tag.id),
   );
+
+  const renderTagGlyph = (glyph: string) => {
+    switch (glyph) {
+      case "bookmark":
+        return <FiBookmark size={12} />;
+      case "check":
+        return <FiCheck size={12} />;
+      case "circle":
+        return <FiCircle size={12} strokeWidth={3} />;
+      case "sparkle":
+        return <FiStar size={12} />;
+      case "diamond":
+        return <FiLayers size={12} />;
+      case "flask":
+        return <FiActivity size={12} />;
+      case "document":
+        return <FiFileText size={12} />;
+      case "comment":
+        return <FiMessageCircle size={12} />;
+      default:
+        return <Box w="6px" h="6px" borderRadius="full" bg="white" />;
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -73,31 +108,47 @@ const TagInput: React.FC<Props> = ({
             {selectedTags.map((tagId) => {
               const tag = tags.find((t: Tag) => t.id === tagId);
               if (!tag) return null;
+              const meta = getTagMeta(tag);
               return (
                 <Badge
                   key={tag.id}
-                  colorScheme={tag.color}
-                  variant="solid"
+                  bg={meta.background}
+                  color={meta.color}
                   px={3}
                   py={1.5}
                   borderRadius="full"
-                  fontSize="xs"
-                  fontWeight="600"
+                  fontSize="11px"
+                  fontWeight="700"
                   display="flex"
                   alignItems="center"
                   gap={2}
-                  boxShadow="sm"
+                  border="1px solid"
+                  borderColor={meta.borderColor}
+                  letterSpacing="0.04em"
+                  textTransform="uppercase"
                 >
-                  <span>{tag.icon}</span>
-                  <span>{tag.label}</span>
+                  <Box
+                    w="18px"
+                    h="18px"
+                    borderRadius="sm"
+                    bg={meta.swatch}
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    color="white"
+                  >
+                    {renderTagGlyph(meta.glyph)}
+                  </Box>
+                  <span>{meta.label}</span>
                   <Box
                     as="button"
                     onClick={() => handleRemoveTag(tag.id)}
-                    color="whiteAlpha.900"
+                    color={meta.color}
                     opacity={0.8}
                     _hover={{ opacity: 1 }}
                     display="flex"
                     alignItems="center"
+                    ml={1}
                   >
                     <FiX size={14} />
                   </Box>
@@ -144,43 +195,40 @@ const TagInput: React.FC<Props> = ({
             overflowY="auto"
             overflowX="hidden"
           >
-            {availableTags.map((tag: Tag) => (
-              <Box
-                key={tag.id}
-                px={4}
-                py={2.5}
-                mx={2}
-                cursor="pointer"
-                borderRadius="lg"
-                _hover={{ bg: "bg.muted", transform: "translateX(4px)" }}
-                transition="all 0.2s"
-                onClick={() => handleAddTag(tag.id)}
-              >
-                <HStack gap={3}>
-                  <Box
-                    fontSize="20px"
-                    w="32px"
-                    h="32px"
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                    borderRadius="md"
-                    bg={`${tag.color}.50`}
-                  >
-                    {tag.icon}
-                  </Box>
-                  <Box>
+            {availableTags.map((tag: Tag) => {
+              const meta = getTagMeta(tag);
+              return (
+                <Box
+                  key={tag.id}
+                  px={4}
+                  py={2.5}
+                  mx={2}
+                  cursor="pointer"
+                  borderRadius="lg"
+                  _hover={{ bg: "bg.muted", transform: "translateX(4px)" }}
+                  transition="all 0.2s"
+                  onClick={() => handleAddTag(tag.id)}
+                >
+                  <HStack gap={3} align="center">
+                    <Box
+                      w="20px"
+                      h="20px"
+                      borderRadius="sm"
+                      bg={meta.swatch}
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      color="white"
+                    >
+                      {renderTagGlyph(meta.glyph)}
+                    </Box>
                     <Text fontSize="sm" fontWeight="600" color="text.primary">
-                      {tag.label}
+                      {meta.label}
                     </Text>
-                    <Text fontSize="xs" color="text.muted">
-                      {tag.color.charAt(0).toUpperCase() + tag.color.slice(1)}{" "}
-                      tag
-                    </Text>
-                  </Box>
-                </HStack>
-              </Box>
-            ))}
+                  </HStack>
+                </Box>
+              );
+            })}
           </Box>
         )}
       </Box>

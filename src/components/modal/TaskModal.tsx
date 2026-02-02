@@ -37,7 +37,7 @@ type FormState = {
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (event: React.FormEvent) => void;
+  onSave: (event: React.FormEvent) => void | Promise<void>;
   editingId: string | null;
   form: FormState;
   onChange: (

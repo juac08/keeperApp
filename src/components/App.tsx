@@ -1,9 +1,9 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect, useRef } from "react";
 import { Box, Grid } from "@chakra-ui/react";
 import { useBoard } from "@/state/BoardContext";
 import { useCardFilters } from "@/hooks/useCardFilters";
 import { useArchiveStore } from "@/state/ArchiveStore";
-import type { Card, Priority, Status, TaskForm } from "@/types";
+import type { Card, Priority, Status, TaskForm, Subtask } from "@/types";
 import { COLUMNS } from "@/config";
 import { BoardHeader, BoardToolbar, BoardColumn } from "@/components/board";
 import AppToaster, { appToaster } from "@/shared";
@@ -15,8 +15,24 @@ import {
   ExportImportModal,
   TemplateModal,
 } from "@/components/modal";
-import { useBoardStore } from "@/state/BoardStore";
+import {
+  useGetBoardsQuery,
+  useGetMeQuery,
+  useGetTagsQuery,
+  useGetUsersQuery,
+  useArchiveTaskMutation,
+  useCreateTagMutation,
+  useCreateSubtaskMutation,
+  useUpdateSubtaskMutation,
+  useDeleteSubtaskMutation,
+} from "@/store";
+import { useAppSelector, useAppDispatch } from "@/store/hooks";
+import { setActiveBoard } from "@/store";
 import type { CardTemplate } from "@/config/cardTemplates";
+import { LoginForm } from "@/components/auth";
+import { useTagsStore } from "@/state/TagsStore";
+import { useAssigneesStore } from "@/state/AssigneesStore";
+import { CORE_TAG_PRESETS } from "@/utils/tagHelpers";
 
 const emptyForm: TaskForm = {
   title: "",
@@ -31,7 +47,155 @@ const emptyForm: TaskForm = {
   subtasks: [],
 };
 
+const getErrorMessage = (error: any): string => {
+  if (!error) return "";
+
+  const data = error?.data ?? error?.error;
+
+  if (typeof data === "string") {
+    return data;
+  }
+
+  if (data && typeof data === "object") {
+    if (typeof data.message === "string") {
+      return data.message;
+    }
+    if (typeof data.error === "string") {
+      return data.error;
+    }
+    if (data.error && typeof data.error === "object") {
+      if (typeof data.error.message === "string") {
+        return data.error.message;
+      }
+    }
+  }
+
+  if (typeof error?.message === "string") {
+    return error.message;
+  }
+
+  return "";
+};
+
 const App: React.FC = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    !!localStorage.getItem("auth_token"),
+  );
+
+  // Skip auth check if no token
+  const {
+    data: user,
+    error: authError,
+    refetch,
+  } = useGetMeQuery(undefined, {
+    skip: !isAuthenticated,
+  });
+
+  // If auth fails, clear token and show login
+  useEffect(() => {
+    if (authError) {
+      localStorage.removeItem("auth_token");
+      setIsAuthenticated(false);
+    }
+  }, [authError]);
+
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true);
+    refetch();
+  };
+
+  // Show login form if not authenticated
+  if (!isAuthenticated) {
+    return <LoginForm onSuccess={handleLoginSuccess} />;
+  }
+
+  return <AuthenticatedApp />;
+};
+
+const AuthenticatedApp: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const activeBoardId = useAppSelector(
+    (state) => state.activeBoard.activeBoardId,
+  );
+
+  // Fetch boards on mount
+  const { data: boards = [], isLoading: boardsLoading } = useGetBoardsQuery();
+
+  // Fetch users and tags
+  const { data: usersData } = useGetUsersQuery();
+  const { data: tagsData } = useGetTagsQuery(activeBoardId || undefined, {
+    skip: !activeBoardId,
+  });
+  const [createTag] = useCreateTagMutation();
+  const [createSubtask] = useCreateSubtaskMutation();
+  const [updateSubtask] = useUpdateSubtaskMutation();
+  const [deleteSubtask] = useDeleteSubtaskMutation();
+
+  // Sync with local stores
+  const { setAssignees } = useAssigneesStore();
+  const { setTags } = useTagsStore();
+  const tagSeedStatusRef = useRef<Record<string, boolean>>({});
+
+  const users = useMemo(() => usersData ?? [], [usersData]);
+  const tags = useMemo(() => tagsData ?? [], [tagsData]);
+
+  useEffect(() => {
+    if (users.length > 0) {
+      setAssignees(users);
+    }
+  }, [users, setAssignees]);
+
+  useEffect(() => {
+    setTags(tags);
+  }, [tags, setTags]);
+
+  useEffect(() => {
+    if (!activeBoardId) return;
+
+    const normalizedExisting = new Set(
+      tags
+        .map((tag) => tag.name?.trim().toLowerCase())
+        .filter((name): name is string => Boolean(name)),
+    );
+
+    const missingPresets = CORE_TAG_PRESETS.filter(
+      (preset) => !normalizedExisting.has(preset.name.toLowerCase()),
+    );
+
+    if (missingPresets.length === 0) {
+      tagSeedStatusRef.current[activeBoardId] = false;
+      return;
+    }
+
+    if (tagSeedStatusRef.current[activeBoardId]) {
+      return;
+    }
+
+    tagSeedStatusRef.current[activeBoardId] = true;
+
+    const boardId = activeBoardId;
+
+    Promise.all(
+      missingPresets.map((preset) =>
+        createTag({
+          boardId,
+          name: preset.name,
+          color: preset.color,
+        }).unwrap(),
+      ),
+    ).catch((error) => {
+      console.error("Failed to seed default tags", error);
+      tagSeedStatusRef.current[boardId] = false;
+    });
+  }, [activeBoardId, tags, createTag]);
+
+  // Set the first board as active if none is selected
+  useEffect(() => {
+    if (!activeBoardId && boards.length > 0) {
+      dispatch(setActiveBoard(boards[0].id));
+    }
+  }, [activeBoardId, boards, dispatch]);
+
   const {
     cards,
     counts,
@@ -65,7 +229,7 @@ const App: React.FC = () => {
   const [isTemplateOpen, setIsTemplateOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const { archiveCard } = useArchiveStore();
-  const { getActiveBoard } = useBoardStore();
+  const [archiveTask] = useArchiveTaskMutation();
 
   const openNewTaskModal = () => {
     setForm(emptyForm);
@@ -99,19 +263,27 @@ const App: React.FC = () => {
     setIsArchiveOpen(false);
   };
 
-  const handleArchiveCard = (id: string) => {
+  const handleArchiveCard = async (id: string) => {
     const card = cards.find((c) => c.id === id);
-    if (card && card.status === "done") {
+    if (!card || card.status !== "done") return;
+
+    try {
+      await archiveTask({ id, archived: true }).unwrap();
       archiveCard(card);
-      removeCard(id);
       appToaster.success({ title: "Task archived", duration: 2000 });
+    } catch (error) {
+      appToaster.error({ title: "Failed to archive task", duration: 2000 });
     }
   };
 
-  const handleRestoreCard = (card: Card) => {
-    addCard(card);
-    appToaster.success({ title: "Task restored", duration: 2000 });
-    closeArchiveModal();
+  const handleRestoreCard = async (card: Card) => {
+    try {
+      await archiveTask({ id: card.id, archived: false }).unwrap();
+      appToaster.success({ title: "Task restored", duration: 2000 });
+      closeArchiveModal();
+    } catch (error) {
+      appToaster.error({ title: "Failed to restore task", duration: 2000 });
+    }
   };
 
   const openExportImportModal = () => {
@@ -130,7 +302,7 @@ const App: React.FC = () => {
     });
   };
 
-  const activeBoard = getActiveBoard();
+  const activeBoard = boards.find((b) => b.id === activeBoardId);
   const boardName = activeBoard?.name || "Default Board";
 
   const openTemplateModal = () => {
@@ -234,73 +406,144 @@ const App: React.FC = () => {
     }));
   };
 
-  const saveCard = (event: React.FormEvent) => {
+  const saveCard = async (event: React.FormEvent) => {
     event.preventDefault();
     const title = form.title.trim();
     const content = form.content.trim();
     if (!title && !content) return;
     if (form.blocked && !form.blockedReason.trim()) return;
 
-    if (editingId) {
-      const existingCard = cards.find((c) => c.id === editingId);
-      updateCard({
-        id: editingId,
-        title: title || "Untitled",
-        content,
-        status: form.status,
-        priority: form.priority,
-        blocked: form.blocked,
-        blockedReason: form.blocked ? form.blockedReason.trim() : "",
-        dueDate: form.dueDate || "",
-        tags: form.tags || [],
-        assigneeId: form.assigneeId || "",
-        subtasks: form.subtasks || [],
-        comments: existingCard?.comments || [],
-        activities: [
-          ...(existingCard?.activities || []),
-          {
-            id: `activity-${Date.now()}`,
-            type: "updated" as const,
-            timestamp: new Date().toISOString(),
-          },
-        ],
-        createdAt: existingCard?.createdAt || new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      });
-      appToaster.success({
-        title: "Task updated successfully",
-        duration: 2000,
-      });
-    } else {
-      addCard({
-        id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
-        title: title || "Untitled",
-        content,
-        status: form.status,
-        priority: form.priority,
-        blocked: form.blocked,
-        blockedReason: form.blocked ? form.blockedReason.trim() : "",
-        dueDate: form.dueDate || "",
-        tags: form.tags || [],
-        assigneeId: form.assigneeId || "",
-        subtasks: form.subtasks || [],
-        comments: [],
-        activities: [
-          {
-            id: `activity-${Date.now()}`,
-            type: "created" as const,
-            timestamp: new Date().toISOString(),
-          },
-        ],
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      });
-      appToaster.success({
-        title: "Task created successfully",
-        duration: 2000,
+    try {
+      if (editingId) {
+        const existingCard = cards.find((c) => c.id === editingId);
+        if (!existingCard) {
+          throw new Error("Task not found");
+        }
+
+        const incomingSubtasks = form.subtasks || [];
+        const existingSubtasksMap = new Map(
+          (existingCard.subtasks || []).map((subtask) => [subtask.id, subtask]),
+        );
+        const finalSubtasks: Subtask[] = [];
+
+        for (const subtask of incomingSubtasks) {
+          const existing = existingSubtasksMap.get(subtask.id);
+
+          if (!existing) {
+            const created = await createSubtask({
+              taskId: editingId,
+              text: subtask.text,
+            }).unwrap();
+
+            if (subtask.completed) {
+              await updateSubtask({
+                taskId: editingId,
+                subtaskId: created.id,
+                updates: { completed: true },
+              }).unwrap();
+            }
+
+            finalSubtasks.push({
+              id: created.id,
+              text: created.text ?? subtask.text,
+              completed: subtask.completed,
+            });
+          } else {
+            const updates: Partial<Subtask> = {};
+            if (existing.text !== subtask.text) {
+              updates.text = subtask.text;
+            }
+            if (existing.completed !== subtask.completed) {
+              updates.completed = subtask.completed;
+            }
+
+            if (Object.keys(updates).length > 0) {
+              await updateSubtask({
+                taskId: editingId,
+                subtaskId: existing.id,
+                updates,
+              }).unwrap();
+            }
+
+            finalSubtasks.push({
+              id: existing.id,
+              text: subtask.text,
+              completed: subtask.completed,
+            });
+            existingSubtasksMap.delete(subtask.id);
+          }
+        }
+
+        for (const [remainingId] of existingSubtasksMap) {
+          await deleteSubtask({
+            taskId: editingId,
+            subtaskId: remainingId,
+          }).unwrap();
+        }
+
+        const updatedCard: Card = {
+          ...existingCard,
+          title: title || "Untitled",
+          content,
+          status: form.status,
+          priority: form.priority,
+          blocked: form.blocked,
+          blockedReason: form.blocked ? form.blockedReason.trim() : "",
+          dueDate: form.dueDate || "",
+          tags: form.tags || [],
+          assigneeId: form.assigneeId || undefined,
+          subtasks: finalSubtasks,
+          comments: existingCard.comments || [],
+          activities: [
+            ...(existingCard.activities || []),
+            {
+              id: `activity-${Date.now()}`,
+              type: "updated" as const,
+              timestamp: new Date().toISOString(),
+            },
+          ],
+          createdAt: existingCard.createdAt,
+          updatedAt: new Date().toISOString(),
+        };
+
+        await updateCard(updatedCard);
+
+        if (selectedCard && selectedCard.id === editingId) {
+          setSelectedCard({
+            ...updatedCard,
+          });
+        }
+        appToaster.success({
+          title: "Task updated successfully",
+          duration: 2000,
+        });
+      } else {
+        await addCard({
+          title: title || "Untitled",
+          content,
+          status: form.status,
+          priority: form.priority,
+          blocked: form.blocked,
+          blockedReason: form.blocked ? form.blockedReason.trim() : "",
+          dueDate: form.dueDate || "",
+          tags: form.tags || [],
+          assigneeId: form.assigneeId || undefined,
+          subtasks: form.subtasks || [],
+        });
+        appToaster.success({
+          title: "Task created successfully",
+          duration: 2000,
+        });
+      }
+      setIsOpen(false);
+    } catch (error: any) {
+      const description = getErrorMessage(error);
+      appToaster.error({
+        title: editingId ? "Failed to update task" : "Failed to create task",
+        description,
+        duration: 3000,
       });
     }
-    setIsOpen(false);
   };
 
   const handleDragStart = (

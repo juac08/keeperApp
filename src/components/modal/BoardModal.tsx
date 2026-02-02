@@ -10,8 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { FiX } from "react-icons/fi";
 import { AppButton, AppInput, AppTextarea } from "@/ui";
-import { useBoardStore } from "@/state/BoardStore";
-import { useTagsStore } from "@/state/TagsStore";
+import { useCreateBoardMutation, useCreateTagMutation } from "@/store";
 import { BOARD_TEMPLATES, getTemplateConfig } from "@/config/boardTemplates";
 import type { BoardTemplate } from "@/types";
 
@@ -21,36 +20,47 @@ type Props = {
 };
 
 const BoardModal: React.FC<Props> = ({ isOpen, onClose }) => {
-  const { addBoard } = useBoardStore();
-  const { addTag } = useTagsStore();
+  const [createBoard, { isLoading }] = useCreateBoardMutation();
+  const [createTag] = useCreateTagMutation();
   const [selectedTemplate, setSelectedTemplate] =
     useState<BoardTemplate>("default");
   const [boardName, setBoardName] = useState("");
   const [boardDescription, setBoardDescription] = useState("");
 
-  const handleCreate = () => {
+  const handleCreate = async () => {
     if (!boardName.trim()) return;
 
     const template = getTemplateConfig(selectedTemplate);
 
-    // Create the board
-    const newBoard = addBoard({
-      name: boardName.trim(),
-      description: boardDescription.trim(),
-      template: selectedTemplate,
-      icon: template.icon,
-    });
+    try {
+      // Create the board
+      const board = await createBoard({
+        name: boardName.trim(),
+        description: boardDescription.trim(),
+        template: selectedTemplate,
+        icon: template.icon,
+      }).unwrap();
 
-    // Add default tags for the template
-    template.defaultTags.forEach((tag) => {
-      addTag(tag.label, tag.color, tag.icon);
-    });
+      if (template.defaultTags.length > 0) {
+        await Promise.all(
+          template.defaultTags.map((tag) =>
+            createTag({
+              boardId: board.id,
+              name: tag.name,
+              color: tag.color,
+            }).unwrap(),
+          ),
+        );
+      }
 
-    // Reset form and close
-    setBoardName("");
-    setBoardDescription("");
-    setSelectedTemplate("default");
-    onClose();
+      // Reset form and close
+      setBoardName("");
+      setBoardDescription("");
+      setSelectedTemplate("default");
+      onClose();
+    } catch (error) {
+      console.error("Failed to create board:", error);
+    }
   };
 
   const handleClose = () => {

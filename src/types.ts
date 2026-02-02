@@ -3,9 +3,8 @@ export type Priority = "Low" | "Medium" | "High";
 
 export type Tag = {
   id: string;
-  label: string;
-  color: string;
-  icon: string;
+  name: string;
+  color?: string;
 };
 
 export type Assignee = {

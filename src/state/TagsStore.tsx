@@ -2,33 +2,31 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { Tag } from "@/types";
 
+const normalizeTag = (tag: Tag | any): Tag => ({
+  id: tag.id ?? `${Date.now()}-${Math.random().toString(16).slice(2, 8)}`,
+  name: tag.name ?? tag.label ?? "Tag",
+  color: tag.color,
+});
+
 type TagsStore = {
   tags: Tag[];
-  addTag: (label: string, color: string, icon: string) => Tag;
+  setTags: (tags: Tag[]) => void;
+  addTag: (name: string, color?: string) => Tag;
   updateTag: (id: string, updates: Partial<Omit<Tag, "id">>) => void;
   deleteTag: (id: string) => void;
   getTag: (id: string) => Tag | undefined;
 };
 
-const defaultTags: Tag[] = [
-  { id: "1", label: "Bug", color: "red", icon: "🐛" },
-  { id: "2", label: "Feature", color: "blue", icon: "✨" },
-  { id: "3", label: "Enhancement", color: "purple", icon: "🚀" },
-  { id: "4", label: "Documentation", color: "gray", icon: "📚" },
-  { id: "5", label: "Design", color: "pink", icon: "🎨" },
-  { id: "6", label: "Testing", color: "green", icon: "✅" },
-];
-
 export const useTagsStore = create<TagsStore>()(
   persist(
     (set, get) => ({
-      tags: defaultTags,
-      addTag: (label: string, color: string, icon: string): Tag => {
+      tags: [],
+      setTags: (tags: Tag[]) => set({ tags: tags.map(normalizeTag) }),
+      addTag: (name: string, color?: string): Tag => {
         const newTag: Tag = {
           id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
-          label,
+          name,
           color,
-          icon,
         };
         set((state: TagsStore) => ({ tags: [...state.tags, newTag] }));
         return newTag;
@@ -51,6 +49,19 @@ export const useTagsStore = create<TagsStore>()(
     }),
     {
       name: "tags-storage",
+      version: 2,
+      migrate: (persistedState: any) => {
+        if (!persistedState) {
+          return { tags: [] };
+        }
+        const tags = Array.isArray(persistedState.tags)
+          ? persistedState.tags.map(normalizeTag)
+          : [];
+        return {
+          ...persistedState,
+          tags,
+        };
+      },
     },
   ),
 );

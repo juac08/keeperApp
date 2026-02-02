@@ -49,11 +49,13 @@ const AssigneeSelect: React.FC<Props> = ({
     onChange(undefined);
   };
 
+  const filteredAssignees = assignees;
+
   return (
     <Box position="relative" ref={dropdownRef}>
-      <HStack gap={2}>
+      <HStack gap={2} align="stretch">
         <Box
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={() => setIsOpen((prev) => !prev)}
           cursor="pointer"
           px={4}
           py={2.5}
@@ -68,12 +70,9 @@ const AssigneeSelect: React.FC<Props> = ({
         >
           <HStack gap={2}>
             {selectedAssignee ? (
-              <>
-                <Box fontSize="lg">{selectedAssignee.avatar || "👤"}</Box>
-                <Text fontSize="sm" fontWeight="500">
-                  {selectedAssignee.name}
-                </Text>
-              </>
+              <Text fontSize="sm" fontWeight="600" color="text.primary">
+                {selectedAssignee.name}
+              </Text>
             ) : (
               <>
                 <Box as={FiUser} fontSize="16px" color="text.muted" />
@@ -110,22 +109,34 @@ const AssigneeSelect: React.FC<Props> = ({
       {isOpen && (
         <Box
           position="absolute"
-          top="calc(100% + 8px)"
+          bottom="calc(100% + 8px)"
           left="0"
           minW="100%"
-          w="max-content"
+          w="100%"
+          maxW="320px"
           bg="bg.panel"
           borderRadius="xl"
           boxShadow="0 10px 40px rgba(0, 0, 0, 0.15)"
           border="2px solid"
           borderColor="blue.100"
-          py={2}
+          py={3}
           zIndex={1000}
-          maxH="280px"
-          overflowY="auto"
+          maxH="320px"
+          display="flex"
+          flexDirection="column"
           overflowX="hidden"
+          overflowY="auto"
+          overscrollBehavior="contain"
         >
-          {assignees.map((assignee: Assignee) => (
+          {filteredAssignees.length === 0 && (
+            <Box px={4} py={6} textAlign="center" color="text.muted">
+              <Text fontSize="sm" fontWeight="500">
+                No assignees available
+              </Text>
+            </Box>
+          )}
+
+          {filteredAssignees.map((assignee: Assignee) => (
             <Box
               key={assignee.id}
               px={4}
@@ -138,19 +149,9 @@ const AssigneeSelect: React.FC<Props> = ({
               onClick={() => handleSelect(assignee.id)}
             >
               <HStack justify="space-between">
-                <HStack gap={2}>
-                  <Box fontSize="lg">{assignee.avatar || "👤"}</Box>
-                  <Box>
-                    <Text fontSize="sm" fontWeight="500">
-                      {assignee.name}
-                    </Text>
-                    {assignee.email && (
-                      <Text fontSize="xs" color="gray.500">
-                        {assignee.email}
-                      </Text>
-                    )}
-                  </Box>
-                </HStack>
+                <Text fontSize="sm" fontWeight="500">
+                  {assignee.name}
+                </Text>
                 {value === assignee.id && (
                   <Box
                     as={FiCheck}

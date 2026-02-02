@@ -18,10 +18,19 @@ import {
   FiArrowUp,
   FiMinus,
   FiArrowDown,
+  FiBookmark,
+  FiCheck,
+  FiCircle,
+  FiLayers,
+  FiStar,
+  FiActivity,
+  FiFileText,
+  FiMessageCircle,
 } from "react-icons/fi";
 import type { Card } from "@/types";
 import { AppButton, AppIconButton } from "@/ui";
 import { useTagsStore } from "@/state/TagsStore";
+import { getTagMeta } from "@/utils/tagHelpers";
 import { useAssigneesStore } from "@/state/AssigneesStore";
 import { CommentSection } from "@/components/comments";
 import { ActivityTimeline } from "@/components/activity";
@@ -56,6 +65,29 @@ const TaskDetailsModal: React.FC<Props> = ({
 }) => {
   const { getTag } = useTagsStore();
   const { getAssignee } = useAssigneesStore();
+
+  const renderTagGlyph = (glyph: string) => {
+    switch (glyph) {
+      case "bookmark":
+        return <FiBookmark size={12} />;
+      case "check":
+        return <FiCheck size={12} />;
+      case "circle":
+        return <FiCircle size={12} strokeWidth={3} />;
+      case "sparkle":
+        return <FiStar size={12} />;
+      case "diamond":
+        return <FiLayers size={12} />;
+      case "flask":
+        return <FiActivity size={12} />;
+      case "document":
+        return <FiFileText size={12} />;
+      case "comment":
+        return <FiMessageCircle size={12} />;
+      default:
+        return <Box w="6px" h="6px" borderRadius="full" bg="white" />;
+    }
+  };
 
   if (!card) return null;
 
@@ -296,18 +328,38 @@ const TaskDetailsModal: React.FC<Props> = ({
                     {card.tags.map((tagId) => {
                       const tag = getTag(tagId);
                       if (!tag) return null;
+                      const meta = getTagMeta(tag);
                       return (
                         <Badge
                           key={tag.id}
-                          bg={`${tag.color}.100`}
-                          color={`${tag.color}.700`}
-                          px={2}
-                          py={1}
+                          bg={meta.background}
+                          color={meta.color}
+                          px={3}
+                          py={1.5}
                           borderRadius="md"
                           fontSize="xs"
                           fontWeight="600"
+                          border="1px solid"
+                          borderColor={meta.borderColor}
+                          textTransform="uppercase"
+                          letterSpacing="0.04em"
+                          display="flex"
+                          alignItems="center"
+                          gap={2}
                         >
-                          {tag.icon} {tag.label}
+                          <Box
+                            w="18px"
+                            h="18px"
+                            borderRadius="sm"
+                            bg={meta.swatch}
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            color="white"
+                          >
+                            {renderTagGlyph(meta.glyph)}
+                          </Box>
+                          <span>{meta.label}</span>
                         </Badge>
                       );
                     })}
