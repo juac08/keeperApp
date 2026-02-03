@@ -34,10 +34,12 @@ export const authApi = apiSlice.injectEndpoints({
         method: "POST",
         body: credentials,
       }),
-      async onQueryStarted(arg, { queryFulfilled }) {
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
           localStorage.setItem("auth_token", data.token);
+          // Invalidate all cached data after successful login
+          dispatch(apiSlice.util.resetApiState());
         } catch (error) {
           console.error("Login failed:", error);
         }
@@ -49,10 +51,12 @@ export const authApi = apiSlice.injectEndpoints({
         method: "POST",
         body: userData,
       }),
-      async onQueryStarted(arg, { queryFulfilled }) {
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
           localStorage.setItem("auth_token", data.token);
+          // Invalidate all cached data after successful registration
+          dispatch(apiSlice.util.resetApiState());
         } catch (error) {
           console.error("Registration failed:", error);
         }

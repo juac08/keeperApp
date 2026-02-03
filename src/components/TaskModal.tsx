@@ -119,7 +119,8 @@ const TaskModal: React.FC<Props> = ({
               right="20px"
               top="20px"
               borderRadius="lg"
-              _hover={{ bg: "gray.100" }}
+              color="text.muted"
+              _hover={{ bg: "bg.muted" }}
             />
           </Dialog.Header>
           <Dialog.Body bg="bg.panel" px={{ base: 6, md: 10 }} pt={8} pb={10}>

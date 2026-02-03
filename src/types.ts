@@ -30,9 +30,17 @@ export type Comment = {
 
 export type Activity = {
   id: string;
-  type: "created" | "updated" | "moved" | "commented" | "completed_subtask";
+  type: string;
+  field?: string;
+  oldValue?: string;
+  newValue?: string;
+  taskId: string;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+  // Legacy fields for backward compatibility
   authorId?: string;
-  timestamp: string;
+  timestamp?: string;
   metadata?: Record<string, any>;
 };
 

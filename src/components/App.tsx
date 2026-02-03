@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect, useRef } from "react";
-import { Box, Grid } from "@chakra-ui/react";
+import { Box, Grid, HStack, Spinner, Text, VStack } from "@chakra-ui/react";
 import { useBoard } from "@/state/BoardContext";
 import { useCardFilters } from "@/hooks/useCardFilters";
 import { useArchiveStore } from "@/state/ArchiveStore";
@@ -88,6 +88,7 @@ const App: React.FC = () => {
   const {
     data: user,
     error: authError,
+    isLoading: userLoading,
     refetch,
   } = useGetMeQuery(undefined, {
     skip: !isAuthenticated,
@@ -103,12 +104,26 @@ const App: React.FC = () => {
 
   const handleLoginSuccess = () => {
     setIsAuthenticated(true);
-    refetch();
   };
 
   // Show login form if not authenticated
   if (!isAuthenticated) {
     return <LoginForm onSuccess={handleLoginSuccess} />;
+  }
+
+  // Show loading state while checking authentication
+  if (userLoading) {
+    return (
+      <Box
+        minH="100vh"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        bg="bg.muted"
+      >
+        <Spinner size="xl" color="brand.500" />
+      </Box>
+    );
   }
 
   return <AuthenticatedApp />;
@@ -625,6 +640,24 @@ const AuthenticatedApp: React.FC = () => {
     const latestFromBoard = cards.find((card) => card.id === selectedCard.id);
     return latestFromBoard ?? selectedCard;
   }, [selectedCard, detailedTask, cards]);
+
+  // Show loading state while boards are loading
+  if (boardsLoading) {
+    return (
+      <Box
+        minH="100vh"
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        bg="bg.muted"
+      >
+        <VStack gap={4}>
+          <Spinner size="xl" color="brand.500" />
+          <Text color="text.muted">Loading your boards...</Text>
+        </VStack>
+      </Box>
+    );
+  }
 
   return (
     <Box

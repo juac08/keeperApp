@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, HStack, Stack, Text } from "@chakra-ui/react";
+import { Badge, Box, HStack, Stack, Text } from "@chakra-ui/react";
 import {
   FiClock,
   FiCheckCircle,
@@ -52,34 +52,53 @@ const ActivityTimeline: React.FC<Props> = ({ activities }) => {
   };
 
   const getActivityText = (activity: Activity) => {
-    const author = activity.authorId ? getAssignee(activity.authorId) : null;
-    const authorName = author?.name || "Someone";
-
     switch (activity.type) {
       case "created":
-        return `${authorName} created this task`;
+        return "created this task";
       case "updated":
-        return `${authorName} updated the task`;
+        return "updated the task";
       case "moved":
-        return `${authorName} moved to ${activity.metadata?.status || "unknown"}`;
+        return `moved to ${activity.metadata?.status || "unknown"}`;
       case "commented":
-        return `${authorName} added a comment`;
+        return "added a comment";
       case "completed_subtask":
-        return `${authorName} completed a subtask`;
+        return "completed a subtask";
       default:
-        return `${authorName} performed an action`;
+        return "performed an action";
     }
   };
 
+  const getAuthor = (activity: Activity) => {
+    const authorId = activity.userId || activity.authorId;
+    const author = authorId ? getAssignee(authorId) : null;
+    return author?.name || "Someone";
+  };
+
   const formatTimestamp = (timestamp: string) => {
+    if (!timestamp) return "Unknown time";
+
     const date = new Date(timestamp);
+
+    // Check if date is valid
+    if (isNaN(date.getTime())) {
+      return "Invalid date";
+    }
+
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
+
+    // Handle negative or zero differences (timestamps in the future or exact same time)
+    if (diffMs <= 0) {
+      return "Just now";
+    }
+
+    const diffSecs = Math.floor(diffMs / 1000);
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
 
-    if (diffMins < 1) return "Just now";
+    if (diffSecs < 10) return "Just now";
+    if (diffSecs < 60) return `${diffSecs}s ago`;
     if (diffMins < 60) return `${diffMins}m ago`;
     if (diffHours < 24) return `${diffHours}h ago`;
     if (diffDays < 7) return `${diffDays}d ago`;
@@ -103,12 +122,15 @@ const ActivityTimeline: React.FC<Props> = ({ activities }) => {
     );
   }
 
+  console.log(activities);
+
   return (
     <Stack gap={3} position="relative">
       {activities.map((activity, index) => {
         const Icon = getActivityIcon(activity.type);
         const color = getActivityColor(activity.type);
         const isLast = index === activities.length - 1;
+        const authorName = getAuthor(activity);
 
         return (
           <HStack key={activity.id} align="flex-start" gap={3}>
@@ -140,11 +162,25 @@ const ActivityTimeline: React.FC<Props> = ({ activities }) => {
               )}
             </Box>
             <Box flex="1" pt={0.5}>
-              <Text fontSize="sm" color="text.primary">
-                {getActivityText(activity)}
-              </Text>
-              <Text fontSize="xs" color="text.muted" mt={0.5}>
-                {formatTimestamp(activity.timestamp)}
+              <HStack gap={1.5} flexWrap="wrap" align="center">
+                <Badge
+                  fontSize="xs"
+                  px={2}
+                  py={0.5}
+                  borderRadius="md"
+                  colorScheme="blue"
+                  variant="subtle"
+                >
+                  {authorName}
+                </Badge>
+                <Text fontSize="sm" color="text.secondary" display="inline">
+                  {getActivityText(activity)}
+                </Text>
+              </HStack>
+              <Text fontSize="xs" color="text.muted" mt={1}>
+                {formatTimestamp(
+                  activity.createdAt || activity.timestamp || "",
+                )}
               </Text>
             </Box>
           </HStack>

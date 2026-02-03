@@ -49,7 +49,11 @@ const DEFAULT_CARDS: Card[] = [
       {
         id: "activity-1",
         type: "created",
+        taskId: "card-1",
+        userId: "user-1",
         timestamp: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       },
     ],
     createdAt: new Date().toISOString(),
@@ -74,7 +78,11 @@ const DEFAULT_CARDS: Card[] = [
       {
         id: "activity-2",
         type: "created",
+        taskId: "card-2",
+        userId: "user-1",
         timestamp: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       },
     ],
     createdAt: new Date().toISOString(),
@@ -97,7 +105,11 @@ const DEFAULT_CARDS: Card[] = [
       {
         id: "activity-3",
         type: "created",
+        taskId: "card-3",
+        userId: "user-1",
         timestamp: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
       },
     ],
     createdAt: new Date().toISOString(),
@@ -108,14 +120,14 @@ const DEFAULT_CARDS: Card[] = [
 const initialState = (boardId: string | null): State => {
   const STORAGE_KEY = getStorageKey(boardId);
   const stored = localStorage.getItem(STORAGE_KEY);
-  const baseState: State = { 
-    cards: [], 
-    isLoading: false, 
-    error: null 
+  const baseState: State = {
+    cards: [],
+    isLoading: false,
+    error: null,
   };
-  
+
   if (!stored) return { ...baseState, cards: DEFAULT_CARDS };
-  
+
   try {
     const parsed = JSON.parse(stored);
     // Migrate old cards to include new fields
@@ -233,10 +245,10 @@ export const BoardProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const fetchCards = async () => {
     if (!activeBoardId) return;
-    
+
     dispatch({ type: "SET_LOADING", payload: true });
     dispatch({ type: "SET_ERROR", payload: null });
-    
+
     try {
       const cards = await apiClient.get(`/tasks?boardId=${activeBoardId}`);
       dispatch({ type: "SET_CARDS", payload: cards });
