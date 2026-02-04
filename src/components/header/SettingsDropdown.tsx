@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Box, HStack, Text, VStack } from "@chakra-ui/react";
+import { Box, HStack, Text } from "@chakra-ui/react";
 import {
   FiSettings,
-  FiChevronDown,
   FiDownload,
   FiArchive,
   FiTrash2,

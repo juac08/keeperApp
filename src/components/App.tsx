@@ -100,12 +100,7 @@ const App: React.FC = () => {
   );
 
   // Skip auth check if no token
-  const {
-    data: user,
-    error: authError,
-    isLoading: userLoading,
-    refetch,
-  } = useGetMeQuery(undefined, {
+  const { error: authError, isLoading: userLoading } = useGetMeQuery(undefined, {
     skip: !isAuthenticated,
   });
 
@@ -1014,11 +1009,10 @@ const AuthenticatedApp: React.FC = () => {
                 onDragLeave={handleDragLeave}
                 onCardClick={openDetailsModal}
                 onEdit={openEditModal}
-                onRemove={handleRemoveCard}
-                onMove={handleMove}
-                onDragStart={handleDragStart}
-                onArchive={handleArchiveCard}
-              />
+              onRemove={handleRemoveCard}
+              onDragStart={handleDragStart}
+              onArchive={handleArchiveCard}
+            />
             ))}
           </Grid>
         )}

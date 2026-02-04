@@ -23,7 +23,7 @@ type Props = {
 
 const BoardModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const dispatch = useAppDispatch();
-  const [createBoard, { isLoading }] = useCreateBoardMutation();
+  const [createBoard] = useCreateBoardMutation();
   const [createTag] = useCreateTagMutation();
   const [selectedTemplate, setSelectedTemplate] =
     useState<BoardTemplate>("default");

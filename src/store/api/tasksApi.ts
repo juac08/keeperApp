@@ -189,7 +189,7 @@ export const tasksApi = apiSlice.injectEndpoints({
     getTask: builder.query<Card, string>({
       query: (id) => `/tasks/${id}`,
       transformResponse: (response: any) => mapTaskFromApi(response),
-      providesTags: (result, error, id) => [{ type: "Task", id }],
+      providesTags: (_result, _error, id) => [{ type: "Task", id }],
     }),
     createTask: builder.mutation<Card, Partial<Card> & { boardId?: string }>({
       query: (task) => ({
@@ -205,7 +205,7 @@ export const tasksApi = apiSlice.injectEndpoints({
         method: "PUT",
         body: mapCardToApiPayload(updates),
       }),
-      invalidatesTags: (result, error, { id }) => [
+      invalidatesTags: (_result, _error, { id }) => [
         { type: "Task", id },
         { type: "Task", id: "LIST" },
       ],
@@ -223,7 +223,7 @@ export const tasksApi = apiSlice.injectEndpoints({
         method: "PATCH",
         body: { archived },
       }),
-      invalidatesTags: (result, error, { id }) => [
+      invalidatesTags: (_result, _error, { id }) => [
         { type: "Task", id },
         { type: "Task", id: "LIST" },
       ],
@@ -239,7 +239,7 @@ export const tasksApi = apiSlice.injectEndpoints({
         text: response.title ?? response.text ?? "",
         completed: Boolean(response.completed),
       }),
-      invalidatesTags: (result, error, { taskId }) => [
+      invalidatesTags: (_result, _error, { taskId }) => [
         { type: "Task", id: taskId },
       ],
     }),
@@ -266,7 +266,7 @@ export const tasksApi = apiSlice.injectEndpoints({
         text: response.title ?? response.text ?? "",
         completed: Boolean(response.completed),
       }),
-      invalidatesTags: (result, error, { taskId }) => [
+      invalidatesTags: (_result, _error, { taskId }) => [
         { type: "Task", id: taskId },
       ],
     }),
@@ -278,7 +278,7 @@ export const tasksApi = apiSlice.injectEndpoints({
         url: `/tasks/${taskId}/subtasks/${subtaskId}`,
         method: "DELETE",
       }),
-      invalidatesTags: (result, error, { taskId }) => [
+      invalidatesTags: (_result, _error, { taskId }) => [
         { type: "Task", id: taskId },
       ],
     }),
@@ -290,7 +290,7 @@ export const tasksApi = apiSlice.injectEndpoints({
       }),
       transformResponse: (response: any): Comment =>
         mapCommentFromApi(response),
-      invalidatesTags: (result, error, { taskId }) => [
+      invalidatesTags: (_result, _error, { taskId }) => [
         { type: "Task", id: taskId },
       ],
     }),

@@ -11,7 +11,6 @@ import {
   Wrap,
 } from "@chakra-ui/react";
 import {
-  FiX,
   FiEdit2,
   FiCalendar,
   FiAlertCircle,
@@ -31,7 +30,7 @@ import {
   FiPlus,
 } from "react-icons/fi";
 import type { Card } from "@/types";
-import { AppButton, AppIconButton, AvatarCircle } from "@/ui";
+import { AppButton, AvatarCircle } from "@/ui";
 import { useTagsStore } from "@/state/TagsStore";
 import { getTagMeta } from "@/utils/tagHelpers";
 import { useAssigneesStore } from "@/state/AssigneesStore";

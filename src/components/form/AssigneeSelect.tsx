@@ -7,14 +7,9 @@ import type { Assignee } from "@/types";
 type Props = {
   value?: string;
   onChange: (assigneeId: string | undefined) => void;
-  label?: string;
 };
 
-const AssigneeSelect: React.FC<Props> = ({
-  value,
-  onChange,
-  label = "Assignee",
-}) => {
+const AssigneeSelect: React.FC<Props> = ({ value, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { assignees, getAssignee } = useAssigneesStore();

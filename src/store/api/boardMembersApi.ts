@@ -11,7 +11,7 @@ export const boardMembersApi = apiSlice.injectEndpoints({
         // Handle both response formats
         return Array.isArray(response) ? response : response.members;
       },
-      providesTags: (result, error, boardId) => [
+      providesTags: (_result, _error, boardId) => [
         { type: "BoardMember" as const, id: boardId },
       ],
     }),
@@ -24,7 +24,7 @@ export const boardMembersApi = apiSlice.injectEndpoints({
         method: "POST",
         body: { userId, role },
       }),
-      invalidatesTags: (result, error, { boardId }) => [
+      invalidatesTags: (_result, _error, { boardId }) => [
         { type: "BoardMember" as const, id: boardId },
       ],
     }),
@@ -36,7 +36,7 @@ export const boardMembersApi = apiSlice.injectEndpoints({
         url: `/boards/${boardId}/members/${userId}`,
         method: "DELETE",
       }),
-      invalidatesTags: (result, error, { boardId }) => [
+      invalidatesTags: (_result, _error, { boardId }) => [
         { type: "BoardMember" as const, id: boardId },
       ],
     }),
@@ -49,7 +49,7 @@ export const boardMembersApi = apiSlice.injectEndpoints({
         method: "PATCH",
         body: { role },
       }),
-      invalidatesTags: (result, error, { boardId }) => [
+      invalidatesTags: (_result, _error, { boardId }) => [
         { type: "BoardMember" as const, id: boardId },
       ],
     }),

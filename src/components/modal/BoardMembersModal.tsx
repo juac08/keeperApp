@@ -12,7 +12,7 @@ import {
   Skeleton,
   SkeletonText,
 } from "@chakra-ui/react";
-import { FiX, FiUserPlus, FiSearch, FiTrash2 } from "react-icons/fi";
+import { FiUserPlus, FiSearch, FiTrash2 } from "react-icons/fi";
 import { AppButton, AppSelect } from "@/ui";
 import {
   useGetBoardMembersQuery,
@@ -21,7 +21,7 @@ import {
   useUpdateBoardMemberRoleMutation,
   useSearchUsersQuery,
 } from "@/store";
-import type { BoardMember, BoardMemberRole } from "@/types";
+import type { BoardMemberRole } from "@/types";
 import { appToaster } from "@/shared";
 import { useGetMeQuery } from "@/store";
 
@@ -54,8 +54,7 @@ const BoardMembersModal: React.FC<Props> = ({ boardId, isOpen, onClose }) => {
   const [addMember, { isLoading: adding }] = useAddBoardMemberMutation();
   const [removeMember, { isLoading: removing }] =
     useRemoveBoardMemberMutation();
-  const [updateRole, { isLoading: updating }] =
-    useUpdateBoardMemberRoleMutation();
+  const [updateRole] = useUpdateBoardMemberRoleMutation();
 
   const currentMember = members.find((m) => m.userId === currentUser?.id);
   const canManage =

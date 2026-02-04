@@ -1,7 +1,6 @@
 import React from "react";
 import { Box, HStack, Text } from "@chakra-ui/react";
 import { FiCheck } from "react-icons/fi";
-import { AppButton } from "@/ui";
 import type { Priority } from "@/types";
 
 type Props = {

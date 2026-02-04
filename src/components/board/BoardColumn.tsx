@@ -15,7 +15,6 @@ type Props = {
   onCardClick: (card: Card) => void;
   onEdit: (card: Card) => void;
   onRemove: (id: string) => void;
-  onMove: (id: string, status: Status) => void;
   onDragStart: (event: React.DragEvent<HTMLDivElement>, id: string) => void;
   onArchive: (id: string) => void;
 };
@@ -31,7 +30,6 @@ const BoardColumn: React.FC<Props> = ({
   onCardClick,
   onEdit,
   onRemove,
-  onMove,
   onDragStart,
   onArchive,
 }) => {
@@ -60,7 +58,6 @@ const BoardColumn: React.FC<Props> = ({
             onCardClick={onCardClick}
             onEdit={onEdit}
             onRemove={onRemove}
-            onMove={onMove}
             onDragStart={onDragStart}
             onArchive={onArchive}
           />

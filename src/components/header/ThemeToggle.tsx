@@ -1,5 +1,4 @@
 import React from "react";
-import { HStack } from "@chakra-ui/react";
 import { FiMoon, FiSun } from "react-icons/fi";
 import { useThemeStore } from "@/state/ThemeStore";
 import { AppIconButton } from "@/ui";

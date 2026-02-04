@@ -31,7 +31,7 @@ export const organizationsApi = apiSlice.injectEndpoints({
         method: "POST",
         body: { email, role },
       }),
-      invalidatesTags: (result, error) => (error ? [] : ["User"]),
+      invalidatesTags: (_result, _error) => (_error ? [] : ["User"]),
     }),
     updateOrganizationMemberRole: builder.mutation<
       OrganizationMember,

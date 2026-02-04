@@ -9,7 +9,7 @@ export const boardsApi = apiSlice.injectEndpoints({
     }),
     getBoard: builder.query<Board, string>({
       query: (id) => `/boards/${id}`,
-      providesTags: (result, error, id) => [{ type: "Board", id }],
+      providesTags: (_result, _error, id) => [{ type: "Board", id }],
     }),
     createBoard: builder.mutation<
       Board,
@@ -31,7 +31,7 @@ export const boardsApi = apiSlice.injectEndpoints({
         method: "PUT",
         body: updates,
       }),
-      invalidatesTags: (result, error, { id }) => [
+      invalidatesTags: (_result, _error, { id }) => [
         { type: "Board", id },
         "Board",
       ],

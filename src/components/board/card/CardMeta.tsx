@@ -1,19 +1,6 @@
 import React from "react";
 import { Badge, Box, HStack, Text } from "@chakra-ui/react";
-import {
-  FiArrowUp,
-  FiMinus,
-  FiArrowDown,
-  FiCalendar,
-  FiBookmark,
-  FiCheck,
-  FiCircle,
-  FiLayers,
-  FiStar,
-  FiActivity,
-  FiFileText,
-  FiMessageCircle,
-} from "react-icons/fi";
+import { FiArrowUp, FiMinus, FiArrowDown, FiCalendar } from "react-icons/fi";
 import type { Card } from "@/types";
 import { useTagsStore } from "@/state/TagsStore";
 import { getTagMeta } from "@/utils/tagHelpers";
@@ -83,29 +70,6 @@ const CardMeta: React.FC<Props> = ({ card, density = "comfortable" }) => {
 
   const visibleTags = tagEntries.slice(0, 2);
   const hiddenTagCount = Math.max(tagEntries.length - visibleTags.length, 0);
-
-  const renderTagGlyph = (glyph: string) => {
-    switch (glyph) {
-      case "bookmark":
-        return <FiBookmark size={12} />;
-      case "check":
-        return <FiCheck size={12} />;
-      case "circle":
-        return <FiCircle size={12} strokeWidth={3} />;
-      case "sparkle":
-        return <FiStar size={12} />;
-      case "diamond":
-        return <FiLayers size={12} />;
-      case "flask":
-        return <FiActivity size={12} />;
-      case "document":
-        return <FiFileText size={12} />;
-      case "comment":
-        return <FiMessageCircle size={12} />;
-      default:
-        return <Box w="6px" h="6px" borderRadius="full" bg="white" />;
-    }
-  };
 
   const dueDateBadge = dueDateStatus ? (
     <Badge
@@ -187,7 +151,7 @@ const CardMeta: React.FC<Props> = ({ card, density = "comfortable" }) => {
           )}
           {dueDateBadge}
         </HStack>
-        <HStack gap={2} flexShrink={0} align="center">
+        <HStack gap={4} flexShrink={0} align="center" pr={1}>
           <Box
             color={
               card.priority === "High"

@@ -1,21 +1,14 @@
 import React, { useState } from "react";
 import { Box } from "@chakra-ui/react";
-import type { Card, Status } from "@/types";
-import { CardActions, CardHeader, CardMeta } from "@/components/board/card";
+import type { Card } from "@/types";
+import { CardHeader, CardMeta } from "@/components/board/card";
 import { useDensityStore } from "@/state/DensityStore";
-
-const priorityColors = {
-  High: "red.500",
-  Medium: "orange.400",
-  Low: "blue.400",
-};
 
 type Props = {
   card: Card;
   onCardClick: (card: Card) => void;
   onEdit: (card: Card) => void;
   onRemove: (id: string) => void;
-  onMove: (id: string, status: Status) => void;
   onDragStart: (event: React.DragEvent<HTMLDivElement>, id: string) => void;
   onArchive?: (id: string) => void;
 };
@@ -25,7 +18,6 @@ const BoardCard: React.FC<Props> = ({
   onCardClick,
   onEdit,
   onRemove,
-  onMove,
   onDragStart,
   onArchive,
 }) => {
@@ -81,11 +73,6 @@ const BoardCard: React.FC<Props> = ({
         onArchive={onArchive}
       />
       <CardMeta card={card} density={density} />
-      <CardActions
-        status={card.status}
-        onMove={(status: Status) => onMove(card.id, status)}
-        onArchive={() => onArchive?.(card.id)}
-      />
     </Box>
   );
 };

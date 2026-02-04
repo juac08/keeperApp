@@ -4,12 +4,10 @@ import {
   Dialog,
   Field,
   Grid,
-  Heading,
   HStack,
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { FiColumns } from "react-icons/fi";
 import type { Priority, Status, Subtask } from "@/types";
 import { AppButton, AppInput, AppTextarea } from "@/ui";
 import {

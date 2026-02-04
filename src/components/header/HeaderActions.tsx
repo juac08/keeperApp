@@ -1,6 +1,5 @@
 import React from "react";
-import { HStack, IconButton } from "@chakra-ui/react";
-import { FiPlus } from "react-icons/fi";
+import { HStack } from "@chakra-ui/react";
 import BoardSelector from "@/components/board/BoardSelector";
 import { SettingsDropdown } from "./SettingsDropdown";
 import UserDropdown from "./UserDropdown";

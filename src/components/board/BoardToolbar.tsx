@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Grid, HStack, Text } from "@chakra-ui/react";
+import { Box, Grid, HStack } from "@chakra-ui/react";
 import { FiRotateCcw } from "react-icons/fi";
 import { FilterButtons, SearchBar, StatTiles } from "@/components/toolbar";
 import { SortSelect } from "@/components/toolbar/SortSelect";

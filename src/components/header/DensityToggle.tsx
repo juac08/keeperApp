@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Box, HStack, Text } from "@chakra-ui/react";
-import { FiChevronDown } from "react-icons/fi";
 import { useDensityStore, type DensityMode } from "@/state/DensityStore";
 import { AppIconButton } from "@/ui";
 

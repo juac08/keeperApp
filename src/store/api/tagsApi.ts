@@ -27,7 +27,7 @@ export const tagsApi = apiSlice.injectEndpoints({
         method: "PUT",
         body: updates,
       }),
-      invalidatesTags: (result, error, { id }) => [
+      invalidatesTags: (_result, _error, { id }) => [
         { type: "Tag", id },
         { type: "Tag", id: "LIST" },
       ],

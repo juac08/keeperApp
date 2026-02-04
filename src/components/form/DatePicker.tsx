@@ -7,26 +7,15 @@ import "react-datepicker/dist/react-datepicker.css";
 type Props = {
   value?: string;
   onChange: (date: string | undefined) => void;
-  label?: string;
   placeholder?: string;
 };
 
 const DatePicker: React.FC<Props> = ({
   value,
   onChange,
-  label = "Due Date",
   placeholder = "Select date",
 }) => {
   const selectedDate = value ? new Date(value) : null;
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  };
 
   const handleDateChange = (date: Date | null) => {
     if (date) {
