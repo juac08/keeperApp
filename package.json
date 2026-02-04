@@ -36,6 +36,7 @@
     "typescript": "^5.3.3"
   },
   "scripts": {
+    "preinstall": "rm -f node_modules/.bin/uuid",
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
