@@ -115,9 +115,17 @@ const OrganizationMembersModal: React.FC<Props> = ({
         userId,
       }).unwrap();
 
-      appToaster.success({
-        title: "Member removed successfully",
-      });
+      if (userId === currentUser?.id) {
+        appToaster.warning({
+          title: "Account removed",
+          description: "Your access was removed. Please contact an admin.",
+        });
+        localStorage.removeItem("auth_token");
+        window.location.reload();
+        return;
+      }
+
+      appToaster.success({ title: "Member removed successfully" });
     } catch (error: any) {
       appToaster.error({
         title: "Failed to remove member",
@@ -145,28 +153,45 @@ const OrganizationMembersModal: React.FC<Props> = ({
       <Dialog.Backdrop bg="blackAlpha.600" backdropFilter="blur(8px)" />
       <Dialog.Positioner>
         <Dialog.Content
-          borderRadius="lg"
+          borderRadius="2xl"
           overflow="hidden"
-          maxW="600px"
-          boxShadow="0 20px 40px rgba(0, 0, 0, 0.15)"
+          maxW="680px"
+          boxShadow="0 24px 60px rgba(15, 23, 42, 0.2)"
           bg="bg.panel"
         >
           <Dialog.Header
             bg="bg.panel"
-            py={4}
-            px={6}
+            py={5}
+            px={7}
             borderBottom="1px solid"
             borderColor="border.muted"
           >
             <HStack justify="space-between">
               <HStack gap={2}>
-                <FiShield size={20} />
-                <Text fontSize="lg" fontWeight="600" color="text.primary">
+                <Box
+                  w="40px"
+                  h="40px"
+                  borderRadius="12px"
+                  bg="bg.muted"
+                  border="1px solid"
+                  borderColor="border.muted"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <FiShield size={18} />
+                </Box>
+                <Text fontSize="xl" fontWeight="700" color="text.primary">
                   Organization Members
                 </Text>
               </HStack>
               <Dialog.CloseTrigger
-                borderRadius="md"
+                borderRadius="full"
+                w="40px"
+                h="40px"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
                 _hover={{ bg: "bg.muted" }}
               >
                 <FiX size={18} />
@@ -174,7 +199,7 @@ const OrganizationMembersModal: React.FC<Props> = ({
             </HStack>
           </Dialog.Header>
 
-          <Dialog.Body bg="bg.panel" px={6} py={6}>
+          <Dialog.Body bg="bg.panel" px={7} py={6}>
             {!organizationId ? (
               <Box textAlign="center" py={8}>
                 <Text color="text.muted" fontSize="sm">
@@ -182,24 +207,25 @@ const OrganizationMembersModal: React.FC<Props> = ({
                 </Text>
               </Box>
             ) : (
-              <Stack gap={5}>
+              <Stack gap={6}>
                 {canManage && (
                   <Box
-                    p={4}
-                    bg="blue.50"
-                    borderRadius="lg"
+                    p={5}
+                    bg="linear-gradient(180deg, #f5f8ff 0%, #f0f6ff 100%)"
+                    borderRadius="xl"
                     border="1px solid"
                     borderColor="blue.200"
+                    boxShadow="inset 0 0 0 1px rgba(66, 153, 225, 0.08)"
                   >
-                    <Text
-                      fontSize="sm"
-                      fontWeight="600"
-                      color="text.primary"
-                      mb={3}
-                    >
-                      Invite New Member
-                    </Text>
-                    <HStack gap={2}>
+                    <HStack justify="space-between" mb={3}>
+                      <Text fontSize="sm" fontWeight="700" color="text.primary">
+                        Invite New Member
+                      </Text>
+                      <Text fontSize="xs" color="text.muted">
+                        Add teammates by email
+                      </Text>
+                    </HStack>
+                    <HStack gap={3} align="stretch">
                       <Box flex="1">
                         <AppInput
                           type="email"
@@ -211,6 +237,7 @@ const OrganizationMembersModal: React.FC<Props> = ({
                               handleAddMember();
                             }
                           }}
+                          h="44px"
                         />
                       </Box>
                       <Box width="150px" minW="140px">
@@ -233,6 +260,10 @@ const OrganizationMembersModal: React.FC<Props> = ({
                         icon={<FiUserPlus size={16} />}
                         loading={isAdding}
                         disabled={!searchEmail.trim()}
+                        h="44px"
+                        px={5}
+                        boxShadow="0 8px 20px rgba(59, 130, 246, 0.25)"
+                        ml={4}
                       >
                         Add
                       </AppButton>
@@ -312,9 +343,10 @@ const OrganizationMembersModal: React.FC<Props> = ({
                               key={member.id}
                               p={3}
                               bg="bg.muted"
-                              borderRadius="lg"
+                              borderRadius="xl"
                               border="1px solid"
                               borderColor="border.muted"
+                              boxShadow="0 1px 2px rgba(15, 23, 42, 0.04)"
                             >
                               <HStack justify="space-between">
                                 <HStack gap={3} flex="1">
@@ -359,9 +391,9 @@ const OrganizationMembersModal: React.FC<Props> = ({
                                   </Stack>
                                 </HStack>
 
-                                <HStack gap={2}>
+                                <HStack gap={8}>
                                   {canModify ? (
-                                    <Box width="130px" minW="120px">
+                                    <Box>
                                       <AppSelect
                                         name="memberRole"
                                         value={member.role}
@@ -422,8 +454,8 @@ const OrganizationMembersModal: React.FC<Props> = ({
 
           <Dialog.Footer
             bg="bg.panel"
-            py={4}
-            px={6}
+            py={5}
+            px={7}
             borderTop="1px solid"
             borderColor="border.muted"
           >
