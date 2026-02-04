@@ -6,10 +6,17 @@ import {
   Stack,
   Text,
   Badge,
-  Spinner,
+  Skeleton,
+  SkeletonText,
 } from "@chakra-ui/react";
 import { FiX, FiUserPlus, FiTrash2, FiShield } from "react-icons/fi";
-import { AppButton, AppIconButton, AppInput, AppSelect } from "@/ui";
+import {
+  AppButton,
+  AppIconButton,
+  AppInput,
+  AppSelect,
+  AvatarCircle,
+} from "@/ui";
 import {
   useGetOrganizationMembersQuery,
   useAddOrganizationMemberMutation,
@@ -252,9 +259,28 @@ const OrganizationMembersModal: React.FC<Props> = ({
                   </Text>
 
                   {isLoading ? (
-                    <Box textAlign="center" py={8}>
-                      <Spinner size="lg" color="brand.500" />
-                    </Box>
+                    <Stack gap={3}>
+                      {[0, 1, 2].map((row) => (
+                        <HStack
+                          key={row}
+                          p={3}
+                          bg="bg.muted"
+                          borderRadius="lg"
+                          border="1px solid"
+                          borderColor="border.muted"
+                          justify="space-between"
+                        >
+                          <HStack gap={3} flex="1">
+                            <Skeleton w="40px" h="40px" borderRadius="full" />
+                            <Box flex="1">
+                              <Skeleton h="12px" w="160px" mb={2} />
+                              <SkeletonText noOfLines={1} w="220px" />
+                            </Box>
+                          </HStack>
+                          <Skeleton h="36px" w="120px" borderRadius="md" />
+                        </HStack>
+                      ))}
+                    </Stack>
                   ) : members.length === 0 ? (
                     <Box
                       textAlign="center"
@@ -281,7 +307,6 @@ const OrganizationMembersModal: React.FC<Props> = ({
                             member.userId === currentUser?.id;
                           const canModify =
                             canManage && !isSuperAdmin && !isCurrentUser;
-
                           return (
                             <Box
                               key={member.id}
@@ -293,33 +318,13 @@ const OrganizationMembersModal: React.FC<Props> = ({
                             >
                               <HStack justify="space-between">
                                 <HStack gap={3} flex="1">
-                                  <Box
-                                    w="40px"
-                                    h="40px"
-                                    borderRadius="full"
-                                    bg="blue.100"
-                                    display="flex"
-                                    alignItems="center"
-                                    justifyContent="center"
+                                  <AvatarCircle
+                                    name={member.user.name}
+                                    avatar={member.user.avatar}
+                                    seed={member.user.id}
+                                    size="40px"
                                     fontSize="sm"
-                                    fontWeight="600"
-                                    color="blue.700"
-                                  >
-                                    {member.user.avatar ||
-                                      (() => {
-                                        const names = member.user.name
-                                          .trim()
-                                          .split(/\s+/);
-                                        const initials =
-                                          names.length > 1
-                                            ? names[0].charAt(0).toUpperCase() +
-                                              names[names.length - 1]
-                                                .charAt(0)
-                                                .toUpperCase()
-                                            : names[0].charAt(0).toUpperCase();
-                                        return initials;
-                                      })()}
-                                  </Box>
+                                  />
                                   <Stack gap={0} flex="1">
                                     <HStack gap={2}>
                                       <Text

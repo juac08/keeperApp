@@ -4,6 +4,7 @@ import { FiChevronDown, FiPlus } from "react-icons/fi";
 import { useGetBoardsQuery, setActiveBoard, useGetMeQuery } from "@/store";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { AppButton } from "@/ui";
+import { BOARD_TEMPLATES } from "@/config/boardTemplates";
 
 type Props = {
   onCreateBoard: () => void;
@@ -48,6 +49,15 @@ const BoardSelector: React.FC<Props> = ({ onCreateBoard }) => {
     setIsOpen(false);
   };
 
+  const resolveBoardIcon = (board: typeof boards[number] | undefined) => {
+    if (!board) return "📋";
+    if (board.icon) return board.icon;
+    if (board.template && BOARD_TEMPLATES[board.template]) {
+      return BOARD_TEMPLATES[board.template].icon;
+    }
+    return "📋";
+  };
+
   if (boards.length === 0) {
     // Only show create button for admins
     if (canCreateBoard) {
@@ -88,7 +98,7 @@ const BoardSelector: React.FC<Props> = ({ onCreateBoard }) => {
         transition="all 0.2s"
       >
         <HStack gap={2}>
-          <Text fontSize="lg">{activeBoard?.icon || "📋"}</Text>
+          <Text fontSize="lg">{resolveBoardIcon(activeBoard)}</Text>
           <Text fontSize="sm" fontWeight="600" color="text.primary">
             {activeBoard?.name || "Select Board"}
           </Text>
@@ -131,7 +141,7 @@ const BoardSelector: React.FC<Props> = ({ onCreateBoard }) => {
               }}
             >
               <HStack gap={2.5} w="100%">
-                <Text fontSize="xl">{board.icon || "📋"}</Text>
+                <Text fontSize="xl">{resolveBoardIcon(board)}</Text>
                 <Stack gap={0} flex="1" minW="0">
                   <Text fontSize="sm" fontWeight="600" color="text.primary">
                     {board.name}

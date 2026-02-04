@@ -6,23 +6,19 @@ const ProjectInfo: React.FC = () => {
   return (
     <HStack gap={3} align="center">
       <Box
-        w="48px"
-        h="48px"
-        borderRadius="14px"
-        bg="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
-        color="white"
+        w="44px"
+        h="44px"
+        borderRadius="12px"
+        bg="bg.muted"
+        color="text.primary"
         display="flex"
         alignItems="center"
         justifyContent="center"
-        boxShadow="0 4px 12px rgba(102, 126, 234, 0.3)"
         flexShrink={0}
-        transition="all 0.2s"
-        _hover={{
-          transform: "translateY(-2px)",
-          boxShadow: "0 6px 16px rgba(102, 126, 234, 0.4)",
-        }}
+        border="1px solid"
+        borderColor="border.muted"
       >
-        <Box as={FiColumns} fontSize="22px" />
+        <Box as={FiColumns} fontSize="20px" />
       </Box>
       <Box>
         <Heading

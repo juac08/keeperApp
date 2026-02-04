@@ -31,7 +31,7 @@ import {
   FiPlus,
 } from "react-icons/fi";
 import type { Card } from "@/types";
-import { AppButton, AppIconButton } from "@/ui";
+import { AppButton, AppIconButton, AvatarCircle } from "@/ui";
 import { useTagsStore } from "@/state/TagsStore";
 import { getTagMeta } from "@/utils/tagHelpers";
 import { useAssigneesStore } from "@/state/AssigneesStore";
@@ -253,31 +253,13 @@ const TaskDetailsModal: React.FC<Props> = ({
                       ASSIGNEE
                     </Text>
                     <HStack gap={2}>
-                      <Box
-                        w="28px"
-                        h="28px"
-                        borderRadius="full"
-                        bg="blue.100"
-                        display="flex"
-                        alignItems="center"
-                        justifyContent="center"
+                      <AvatarCircle
+                        name={assignee.name}
+                        avatar={assignee.avatar}
+                        seed={assignee.id}
+                        size="28px"
                         fontSize="xs"
-                        fontWeight="600"
-                        color="blue.700"
-                      >
-                        {assignee.avatar ||
-                          (() => {
-                            const names = assignee.name.trim().split(/\s+/);
-                            const initials =
-                              names.length > 1
-                                ? names[0].charAt(0).toUpperCase() +
-                                  names[names.length - 1]
-                                    .charAt(0)
-                                    .toUpperCase()
-                                : names[0].charAt(0).toUpperCase();
-                            return initials;
-                          })()}
-                      </Box>
+                      />
                       <Text fontSize="sm" fontWeight="500" color="text.primary">
                         {assignee.name}
                       </Text>

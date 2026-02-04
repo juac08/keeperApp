@@ -9,6 +9,8 @@ import {
   Badge,
   IconButton,
   Spinner,
+  Skeleton,
+  SkeletonText,
 } from "@chakra-ui/react";
 import { FiX, FiUserPlus, FiSearch, FiTrash2 } from "react-icons/fi";
 import { AppButton, AppSelect } from "@/ui";
@@ -310,9 +312,28 @@ const BoardMembersModal: React.FC<Props> = ({ boardId, isOpen, onClose }) => {
                   )
                 </Text>
                 {loadingMembers ? (
-                  <Box textAlign="center" py={8}>
-                    <Spinner size="lg" color="brand.500" />
-                  </Box>
+                  <Stack gap={3}>
+                    {[0, 1, 2].map((row) => (
+                      <HStack
+                        key={row}
+                        p={3}
+                        bg="bg.muted"
+                        borderRadius="md"
+                        borderWidth="1px"
+                        borderColor="border.muted"
+                        justify="space-between"
+                      >
+                        <HStack gap={3} flex="1">
+                          <Skeleton w="32px" h="32px" borderRadius="full" />
+                          <Box flex="1">
+                            <Skeleton h="12px" w="140px" mb={2} />
+                            <SkeletonText noOfLines={1} w="200px" />
+                          </Box>
+                        </HStack>
+                        <Skeleton h="36px" w="120px" borderRadius="md" />
+                      </HStack>
+                    ))}
+                  </Stack>
                 ) : (
                   <Stack gap={2}>
                     {members

@@ -8,7 +8,7 @@ import {
   Text,
   Checkbox,
 } from "@chakra-ui/react";
-import { FiPlus, FiTrash2, FiEdit2 } from "react-icons/fi";
+import { FiPlus, FiTrash2, FiEdit2, FiCheckSquare } from "react-icons/fi";
 import type { Subtask } from "@/types";
 
 type Props = {
@@ -86,15 +86,13 @@ const SubtaskList: React.FC<Props> = ({ subtasks, onChange }) => {
   return (
     <Box>
       <HStack justify="space-between" mb={3}>
-        <Text fontSize="sm" fontWeight="600" color="text.primary">
-          Subtasks
-        </Text>
+        <HStack gap={2} align="center">
+          <Box as={FiCheckSquare} fontSize="16px" color="gray" />
+          <Text fontSize="sm" fontWeight="600" color="text.primary">
+            Subtasks ({completedCount}/{subtasks.length})
+          </Text>
+        </HStack>
         <HStack gap={2}>
-          {subtasks.length > 0 && (
-            <Text fontSize="xs" color="text.muted" fontWeight="500">
-              {completedCount}/{subtasks.length}
-            </Text>
-          )}
           <IconButton
             aria-label="Add subtask"
             size="xs"

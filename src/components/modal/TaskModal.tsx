@@ -40,6 +40,7 @@ type Props = {
   onSave: (event: React.FormEvent) => void | Promise<void>;
   editingId: string | null;
   form: FormState;
+  isSaving?: boolean;
   onChange: (
     event: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -54,6 +55,7 @@ const TaskModal: React.FC<Props> = ({
   onSave,
   editingId,
   form,
+  isSaving = false,
   onChange,
   onToggleBlocked,
 }) => {
@@ -279,7 +281,12 @@ const TaskModal: React.FC<Props> = ({
               <AppButton variantStyle="ghost" onClick={onClose}>
                 Cancel
               </AppButton>
-              <AppButton variantStyle="primary" onClick={onSave}>
+              <AppButton
+                variantStyle="primary"
+                onClick={onSave}
+                loading={isSaving}
+                disabled={isSaving}
+              >
                 {editingId ? "Save" : "Create"}
               </AppButton>
             </HStack>

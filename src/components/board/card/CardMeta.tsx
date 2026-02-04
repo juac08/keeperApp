@@ -19,6 +19,7 @@ import { useTagsStore } from "@/state/TagsStore";
 import { getTagMeta } from "@/utils/tagHelpers";
 import { useAssigneesStore } from "@/state/AssigneesStore";
 import type { DensityMode } from "@/state/DensityStore";
+import { AvatarCircle } from "@/ui";
 
 type Props = {
   card: Card;
@@ -201,30 +202,14 @@ const CardMeta: React.FC<Props> = ({ card, density = "comfortable" }) => {
             <PriorityIcon />
           </Box>
           {assignee && (
-            <Box
-              w="24px"
-              h="24px"
-              borderRadius="full"
-              bg="blue.100"
-              display="flex"
-              alignItems="center"
-              justifyContent="center"
-              fontSize="xs"
-              fontWeight="600"
-              color="blue.700"
-              title={assignee.name}
-              cursor="pointer"
-            >
-              {assignee.avatar ||
-                (() => {
-                  const names = assignee.name.trim().split(/\s+/);
-                  const initials =
-                    names.length > 1
-                      ? names[0].charAt(0).toUpperCase() +
-                        names[names.length - 1].charAt(0).toUpperCase()
-                      : names[0].charAt(0).toUpperCase();
-                  return initials;
-                })()}
+            <Box title={assignee.name} cursor="pointer">
+              <AvatarCircle
+                name={assignee.name}
+                avatar={assignee.avatar}
+                seed={assignee.id}
+                size="24px"
+                fontSize="xs"
+              />
             </Box>
           )}
         </HStack>

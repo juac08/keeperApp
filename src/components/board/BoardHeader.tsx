@@ -28,9 +28,10 @@ const BoardHeader: React.FC<Props> = ({
       align="center"
       justify="space-between"
       direction={{ base: "column", md: "row" }}
-      gap={6}
+      gap={{ base: 4, md: 6 }}
       mb={8}
-      p={4}
+      px={{ base: 4, md: 6 }}
+      py={{ base: 4, md: 4 }}
       bg="bg.panel"
       borderRadius="xl"
       border="1px solid"
@@ -42,7 +43,7 @@ const BoardHeader: React.FC<Props> = ({
       backdropFilter="blur(10px)"
       backgroundColor="rgba(255, 255, 255, 0.95)"
       _dark={{
-        backgroundColor: "rgba(26, 32, 44, 0.95)",
+        backgroundColor: "rgba(15, 23, 42, 0.95)",
       }}
     >
       <ProjectInfo />

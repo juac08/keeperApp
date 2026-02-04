@@ -38,6 +38,7 @@ type Props = {
   onSave: (event: React.FormEvent) => void;
   editingId: string | null;
   form: FormState;
+  isSaving?: boolean;
   onChange: (
     event: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -52,6 +53,7 @@ const TaskModal: React.FC<Props> = ({
   onSave,
   editingId,
   form,
+  isSaving = false,
   onChange,
   onToggleBlocked,
 }) => {
@@ -321,6 +323,8 @@ const TaskModal: React.FC<Props> = ({
                 size="lg"
                 px={8}
                 boxShadow="0 4px 14px 0 rgba(102, 126, 234, 0.39)"
+                loading={isSaving}
+                disabled={isSaving}
               >
                 {editingId ? "💾 Save changes" : "✨ Create task"}
               </AppButton>

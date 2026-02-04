@@ -34,6 +34,7 @@ const BoardModal: React.FC<Props> = ({ isOpen, onClose }) => {
     if (!boardName.trim()) return;
 
     const template = getTemplateConfig(selectedTemplate);
+    const icon = template.icon;
 
     try {
       // Create the board
@@ -41,7 +42,7 @@ const BoardModal: React.FC<Props> = ({ isOpen, onClose }) => {
         name: boardName.trim(),
         description: boardDescription.trim(),
         template: selectedTemplate,
-        icon: template.icon,
+        icon,
       }).unwrap();
 
       if (template.defaultTags.length > 0) {

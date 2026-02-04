@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Box, HStack, Text, VStack } from "@chakra-ui/react";
-import { FiChevronDown, FiLogOut, FiUser } from "react-icons/fi";
+import { FiChevronDown, FiLogOut } from "react-icons/fi";
 import { useGetMeQuery, useLogoutMutation } from "@/store";
+import { AvatarCircle } from "@/ui";
 
 const UserDropdown: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,32 +29,6 @@ const UserDropdown: React.FC = () => {
     };
   }, [isOpen]);
 
-  const getUserInitials = (name: string) => {
-    const names = name.trim().split(/\s+/);
-    return names.length > 1
-      ? names[0].charAt(0).toUpperCase() +
-          names[names.length - 1].charAt(0).toUpperCase()
-      : names[0].charAt(0).toUpperCase();
-  };
-
-  const generateAvatarColor = (name: string) => {
-    const colors = [
-      "red",
-      "orange",
-      "yellow",
-      "green",
-      "teal",
-      "blue",
-      "cyan",
-      "purple",
-      "pink",
-    ];
-    const hash = name
-      .split("")
-      .reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    return colors[hash % colors.length];
-  };
-
   const handleLogout = async () => {
     await logout();
     window.location.reload();
@@ -77,20 +52,7 @@ const UserDropdown: React.FC = () => {
         onClick={() => setIsOpen(!isOpen)}
         minW="180px"
       >
-        <Box
-          w="32px"
-          h="32px"
-          borderRadius="full"
-          bg={`${generateAvatarColor(user.name)}.500`}
-          color="white"
-          fontWeight="600"
-          fontSize="sm"
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
-        >
-          {getUserInitials(user.name)}
-        </Box>
+        <AvatarCircle name={user.name} seed={user.id || user.email} size="32px" />
         <VStack gap={0} align="start" flex="1">
           <Text
             fontSize="sm"
@@ -137,20 +99,11 @@ const UserDropdown: React.FC = () => {
             borderBottomColor="border.muted"
           >
             <HStack gap={2}>
-              <Box
-                w="40px"
-                h="40px"
-                borderRadius="full"
-                bg={`${generateAvatarColor(user.name)}.500`}
-                color="white"
-                fontWeight="600"
-                fontSize="sm"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-              >
-                {getUserInitials(user.name)}
-              </Box>
+              <AvatarCircle
+                name={user.name}
+                seed={user.id || user.email}
+                size="40px"
+              />
               <VStack gap={0} align="start">
                 <Text fontSize="sm" fontWeight="600" color="text.primary">
                   {user.name}
