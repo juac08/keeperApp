@@ -19,6 +19,9 @@ const AssigneeSelect: React.FC<Props> = ({
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { assignees, getAssignee } = useAssigneesStore();
 
+  const filteredAssignees = assignees.filter(
+    (assignee) => !assignee.isSuperAdmin && assignee.name !== "System Admin",
+  );
   const selectedAssignee = value ? getAssignee(value) : undefined;
 
   useEffect(() => {
@@ -49,8 +52,6 @@ const AssigneeSelect: React.FC<Props> = ({
     onChange(undefined);
   };
 
-  const filteredAssignees = assignees;
-
   return (
     <Box position="relative" ref={dropdownRef}>
       <HStack gap={2} align="stretch">
@@ -58,15 +59,18 @@ const AssigneeSelect: React.FC<Props> = ({
           onClick={() => setIsOpen((prev) => !prev)}
           cursor="pointer"
           px={4}
-          py={2.5}
-          borderRadius="6px"
-          border="1px solid"
-          borderColor={isOpen ? "blue.400" : "border.muted"}
-          boxShadow={isOpen ? "0 0 0 1px #4299e1" : "none"}
+          py={3}
+          borderRadius="lg"
+          border="2px solid"
+          borderColor={isOpen ? "brand.400" : "border.muted"}
+          boxShadow={
+            isOpen ? "0 0 0 1px var(--chakra-colors-brand-400)" : "none"
+          }
           bg="bg.panel"
-          _hover={{ borderColor: isOpen ? "blue.400" : "gray.300" }}
+          _hover={{ borderColor: isOpen ? "brand.400" : "brand.200" }}
           transition="all 0.2s"
           flex="1"
+          minW="200px"
         >
           <HStack gap={2}>
             {selectedAssignee ? (
@@ -113,15 +117,15 @@ const AssigneeSelect: React.FC<Props> = ({
           left="0"
           minW="100%"
           w="100%"
-          maxW="320px"
+          maxW="400px"
           bg="bg.panel"
           borderRadius="xl"
           boxShadow="0 10px 40px rgba(0, 0, 0, 0.15)"
           border="2px solid"
-          borderColor="blue.100"
+          borderColor="brand.100"
           py={3}
           zIndex={1000}
-          maxH="320px"
+          maxH="300px"
           display="flex"
           flexDirection="column"
           overflowX="hidden"

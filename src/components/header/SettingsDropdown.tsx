@@ -10,18 +10,22 @@ import {
   FiSun,
   FiMoon,
   FiLayers,
-  FiLogOut,
+  FiUsers,
+  FiShield,
 } from "react-icons/fi";
 import { AppIconButton } from "@/ui";
 import { useThemeStore } from "@/state/ThemeStore";
 import { useDensityStore } from "@/state/DensityStore";
-import { useLogoutMutation } from "@/store";
+import { useGetMeQuery } from "@/store";
 
 type Props = {
   onClear: () => void;
   onOpenArchive: () => void;
   onOpenExportImport: () => void;
   onOpenTemplates: () => void;
+  onOpenMembers: () => void;
+  onOpenOrganizationMembers: () => void;
+  onDeleteBoard: () => void;
 };
 
 export const SettingsDropdown: React.FC<Props> = ({
@@ -29,12 +33,17 @@ export const SettingsDropdown: React.FC<Props> = ({
   onOpenArchive,
   onOpenExportImport,
   onOpenTemplates,
+  onOpenMembers,
+  onOpenOrganizationMembers,
+  onDeleteBoard,
 }) => {
   const { colorMode, toggleColorMode } = useThemeStore();
   const { density, setDensity } = useDensityStore();
-  const [logout] = useLogoutMutation();
+  const { data: user } = useGetMeQuery();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const canManageOrganization = user?.isSuperAdmin;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -69,6 +78,26 @@ export const SettingsDropdown: React.FC<Props> = ({
   };
 
   const menuItems = [
+    ...(canManageOrganization
+      ? [
+          {
+            icon: <FiShield size={16} />,
+            label: "Organization Members",
+            onClick: () => {
+              onOpenOrganizationMembers();
+              setIsOpen(false);
+            },
+          },
+        ]
+      : []),
+    {
+      icon: <FiUsers size={16} />,
+      label: "Board Members",
+      onClick: () => {
+        onOpenMembers();
+        setIsOpen(false);
+      },
+    },
     {
       icon: <FiDownload size={16} />,
       label: "Export/Import",
@@ -117,13 +146,13 @@ export const SettingsDropdown: React.FC<Props> = ({
       color: "red.600",
     },
     {
-      icon: <FiLogOut size={16} />,
-      label: "Logout",
-      onClick: async () => {
-        await logout();
-        window.location.reload();
+      icon: <FiTrash2 size={16} />,
+      label: "Delete board",
+      onClick: () => {
+        onDeleteBoard();
+        setIsOpen(false);
       },
-      color: "text.muted",
+      color: "red.700",
     },
   ];
 

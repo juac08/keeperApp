@@ -41,7 +41,7 @@ export const boardsApi = apiSlice.injectEndpoints({
         url: `/boards/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Board"],
+      invalidatesTags: ["Board", { type: "Task", id: "LIST" }],
     }),
   }),
 });

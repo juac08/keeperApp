@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Box, HStack, Text, Stack } from "@chakra-ui/react";
 import { FiChevronDown, FiPlus } from "react-icons/fi";
-import { useGetBoardsQuery, setActiveBoard } from "@/store";
+import { useGetBoardsQuery, setActiveBoard, useGetMeQuery } from "@/store";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { AppButton } from "@/ui";
 
@@ -12,12 +12,17 @@ type Props = {
 const BoardSelector: React.FC<Props> = ({ onCreateBoard }) => {
   const dispatch = useAppDispatch();
   const { data: boards = [] } = useGetBoardsQuery();
+  const { data: user } = useGetMeQuery();
   const activeBoardId = useAppSelector(
     (state) => state.activeBoard.activeBoardId,
   );
   const activeBoard = boards.find((b) => b.id === activeBoardId);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Check if user is admin (can create boards)
+  const canCreateBoard =
+    user?.organizationRole === "admin" || user?.isSuperAdmin;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -44,15 +49,26 @@ const BoardSelector: React.FC<Props> = ({ onCreateBoard }) => {
   };
 
   if (boards.length === 0) {
+    // Only show create button for admins
+    if (canCreateBoard) {
+      return (
+        <AppButton
+          size="sm"
+          variantStyle="primary"
+          onClick={onCreateBoard}
+          icon={<FiPlus size={14} />}
+        >
+          Create Board
+        </AppButton>
+      );
+    }
+    // Non-admins see message
     return (
-      <AppButton
-        size="sm"
-        variantStyle="primary"
-        onClick={onCreateBoard}
-        icon={<FiPlus size={14} />}
-      >
-        Create Board
-      </AppButton>
+      <Box px={3} py={2} borderRadius="md" bg="bg.muted">
+        <Text fontSize="sm" color="text.muted">
+          No boards available. Contact your admin.
+        </Text>
+      </Box>
     );
   }
 
@@ -129,31 +145,33 @@ const BoardSelector: React.FC<Props> = ({ onCreateBoard }) => {
               </HStack>
             </Box>
           ))}
-          <Box
-            borderTop="1px solid"
-            borderColor="border.muted"
-            mt={1.5}
-            pt={1.5}
-          >
+          {canCreateBoard && (
             <Box
-              onClick={() => {
-                onCreateBoard();
-                setIsOpen(false);
-              }}
-              borderRadius="md"
-              px={3}
-              py={2.5}
-              cursor="pointer"
-              _hover={{ bg: "blue.50" }}
+              borderTop="1px solid"
+              borderColor="border.muted"
+              mt={1.5}
+              pt={1.5}
             >
-              <HStack gap={2} color="blue.600">
-                <FiPlus size={16} />
-                <Text fontSize="sm" fontWeight="600">
-                  Create New Board
-                </Text>
-              </HStack>
+              <Box
+                onClick={() => {
+                  onCreateBoard();
+                  setIsOpen(false);
+                }}
+                borderRadius="md"
+                px={3}
+                py={2.5}
+                cursor="pointer"
+                _hover={{ bg: "blue.50" }}
+              >
+                <HStack gap={2} color="blue.600">
+                  <FiPlus size={16} />
+                  <Text fontSize="sm" fontWeight="600">
+                    Create New Board
+                  </Text>
+                </HStack>
+              </Box>
             </Box>
-          </Box>
+          )}
         </Box>
       )}
     </Box>

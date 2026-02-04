@@ -13,6 +13,8 @@ import { AppButton, AppInput, AppTextarea } from "@/ui";
 import { useCreateBoardMutation, useCreateTagMutation } from "@/store";
 import { BOARD_TEMPLATES, getTemplateConfig } from "@/config/boardTemplates";
 import type { BoardTemplate } from "@/types";
+import { useAppDispatch } from "@/store/hooks";
+import { setActiveBoard } from "@/store";
 
 type Props = {
   isOpen: boolean;
@@ -20,6 +22,7 @@ type Props = {
 };
 
 const BoardModal: React.FC<Props> = ({ isOpen, onClose }) => {
+  const dispatch = useAppDispatch();
   const [createBoard, { isLoading }] = useCreateBoardMutation();
   const [createTag] = useCreateTagMutation();
   const [selectedTemplate, setSelectedTemplate] =
@@ -52,6 +55,9 @@ const BoardModal: React.FC<Props> = ({ isOpen, onClose }) => {
           ),
         );
       }
+
+      // Set the newly created board as active
+      dispatch(setActiveBoard(board.id));
 
       // Reset form and close
       setBoardName("");

@@ -24,6 +24,9 @@ export interface User {
   id: string;
   email: string;
   name: string;
+  organizationRole?: "admin" | "member";
+  isSuperAdmin?: boolean;
+  organizationId?: string;
 }
 
 export const authApi = apiSlice.injectEndpoints({
@@ -41,9 +44,11 @@ export const authApi = apiSlice.injectEndpoints({
           // Invalidate all cached data after successful login
           dispatch(apiSlice.util.resetApiState());
         } catch (error) {
+          // Error handled in component
           console.error("Login failed:", error);
         }
       },
+      invalidatesTags: ["User"],
     }),
     register: builder.mutation<AuthResponse, RegisterRequest>({
       query: (userData) => ({
@@ -58,12 +63,15 @@ export const authApi = apiSlice.injectEndpoints({
           // Invalidate all cached data after successful registration
           dispatch(apiSlice.util.resetApiState());
         } catch (error) {
+          // Error handled in component
           console.error("Registration failed:", error);
         }
       },
+      invalidatesTags: ["User"],
     }),
     getMe: builder.query<User, void>({
       query: () => "/auth/me",
+      providesTags: ["User"],
     }),
     logout: builder.mutation<void, void>({
       queryFn: () => {

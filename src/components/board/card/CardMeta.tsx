@@ -215,7 +215,16 @@ const CardMeta: React.FC<Props> = ({ card, density = "comfortable" }) => {
               title={assignee.name}
               cursor="pointer"
             >
-              {assignee.avatar || assignee.name.charAt(0).toUpperCase()}
+              {assignee.avatar ||
+                (() => {
+                  const names = assignee.name.trim().split(/\s+/);
+                  const initials =
+                    names.length > 1
+                      ? names[0].charAt(0).toUpperCase() +
+                        names[names.length - 1].charAt(0).toUpperCase()
+                      : names[0].charAt(0).toUpperCase();
+                  return initials;
+                })()}
             </Box>
           )}
         </HStack>

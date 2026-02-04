@@ -3,6 +3,8 @@ export * from "./hooks";
 export * from "./api/apiSlice";
 export * from "./api/authApi";
 export * from "./api/boardsApi";
+export * from "./api/boardMembersApi";
+export * from "./api/organizationsApi";
 export * from "./api/tasksApi";
 export * from "./api/tagsApi";
 export * from "./api/usersApi";

@@ -12,6 +12,7 @@ export type Assignee = {
   name: string;
   avatar?: string;
   email?: string;
+  isSuperAdmin?: boolean;
 };
 
 export type Subtask = {
@@ -104,4 +105,32 @@ export type Board = {
   icon?: string;
   createdAt: string;
   updatedAt: string;
+};
+
+export type BoardMemberRole = "owner" | "admin" | "member" | "viewer";
+
+export type BoardMember = {
+  id: string;
+  boardId: string;
+  userId: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    avatar?: string;
+    isSuperAdmin?: boolean;
+  };
+  role: BoardMemberRole;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  avatar?: string;
+  organizationRole?: "admin" | "member";
+  isSuperAdmin?: boolean;
+  organizationId?: string;
 };

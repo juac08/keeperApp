@@ -122,8 +122,6 @@ const ActivityTimeline: React.FC<Props> = ({ activities }) => {
     );
   }
 
-  console.log(activities);
-
   return (
     <Stack gap={3} position="relative">
       {activities.map((activity, index) => {

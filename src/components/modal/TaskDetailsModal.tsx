@@ -266,7 +266,17 @@ const TaskDetailsModal: React.FC<Props> = ({
                         color="blue.700"
                       >
                         {assignee.avatar ||
-                          assignee.name.charAt(0).toUpperCase()}
+                          (() => {
+                            const names = assignee.name.trim().split(/\s+/);
+                            const initials =
+                              names.length > 1
+                                ? names[0].charAt(0).toUpperCase() +
+                                  names[names.length - 1]
+                                    .charAt(0)
+                                    .toUpperCase()
+                                : names[0].charAt(0).toUpperCase();
+                            return initials;
+                          })()}
                       </Box>
                       <Text fontSize="sm" fontWeight="500" color="text.primary">
                         {assignee.name}

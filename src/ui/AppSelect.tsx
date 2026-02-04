@@ -25,11 +25,13 @@ const AppSelect: React.FC<Props> = ({
         onChange={onChange}
         bg="bg.panel"
         borderColor="border.muted"
-        borderRadius="control"
-        h="40px"
-        px={3}
+        borderRadius="lg"
+        h="44px"
+        px={4}
         fontSize="sm"
-        color="gray.800"
+        color="text.primary"
+        minW="160px"
+        w="full"
         _focusVisible={{
           borderColor: "brand.400",
           boxShadow: "0 0 0 1px #5b85ff",

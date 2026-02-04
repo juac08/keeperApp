@@ -1,5 +1,16 @@
 import React, { useMemo, useState, useEffect, useRef } from "react";
-import { Box, Grid, HStack, Spinner, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Dialog,
+  Grid,
+  HStack,
+  IconButton,
+  Spinner,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
+import { FiPlus, FiAlertTriangle } from "react-icons/fi";
 import { useBoard } from "@/state/BoardContext";
 import { useCardFilters } from "@/hooks/useCardFilters";
 import { useArchiveStore } from "@/state/ArchiveStore";
@@ -11,6 +22,8 @@ import {
   TaskModal,
   TaskDetailsModal,
   BoardModal,
+  BoardMembersModal,
+  OrganizationMembersModal,
   ArchiveModal,
   ExportImportModal,
   TemplateModal,
@@ -19,7 +32,7 @@ import {
   useGetBoardsQuery,
   useGetMeQuery,
   useGetTagsQuery,
-  useGetUsersQuery,
+  useGetBoardMembersQuery,
   useArchiveTaskMutation,
   useCreateTagMutation,
   useCreateSubtaskMutation,
@@ -27,6 +40,7 @@ import {
   useDeleteSubtaskMutation,
   useCreateCommentMutation,
   useGetTaskQuery,
+  useDeleteBoardMutation,
 } from "@/store";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { setActiveBoard } from "@/store";
@@ -135,11 +149,19 @@ const AuthenticatedApp: React.FC = () => {
     (state) => state.activeBoard.activeBoardId,
   );
 
+  // Fetch current user
+  const { data: user } = useGetMeQuery();
+
   // Fetch boards on mount
   const { data: boards = [], isLoading: boardsLoading } = useGetBoardsQuery();
 
-  // Fetch users and tags
-  const { data: usersData } = useGetUsersQuery();
+  // Fetch board members and tags
+  const { data: boardMembers = [] } = useGetBoardMembersQuery(
+    activeBoardId || "",
+    {
+      skip: !activeBoardId,
+    },
+  );
   const { data: tagsData } = useGetTagsQuery(activeBoardId || undefined, {
     skip: !activeBoardId,
   });
@@ -154,14 +176,25 @@ const AuthenticatedApp: React.FC = () => {
   const { setTags } = useTagsStore();
   const tagSeedStatusRef = useRef<Record<string, boolean>>({});
 
-  const users = useMemo(() => usersData ?? [], [usersData]);
+  // Convert board members to assignees
+  const assignees = useMemo(
+    () =>
+      boardMembers.map((member) => ({
+        id: member.userId,
+        name: member.user.name,
+        email: member.user.email,
+        avatar: member.user.avatar,
+        isSuperAdmin: member.user.isSuperAdmin,
+      })),
+    [boardMembers],
+  );
   const tags = useMemo(() => tagsData ?? [], [tagsData]);
 
   useEffect(() => {
-    if (users.length > 0) {
-      setAssignees(users);
+    if (assignees.length > 0) {
+      setAssignees(assignees);
     }
-  }, [users, setAssignees]);
+  }, [assignees, setAssignees]);
 
   useEffect(() => {
     setTags(tags);
@@ -245,9 +278,16 @@ const AuthenticatedApp: React.FC = () => {
   const [isArchiveOpen, setIsArchiveOpen] = useState(false);
   const [isExportImportOpen, setIsExportImportOpen] = useState(false);
   const [isTemplateOpen, setIsTemplateOpen] = useState(false);
+  const [isMembersOpen, setIsMembersOpen] = useState(false);
+  const [isOrganizationMembersOpen, setIsOrganizationMembersOpen] =
+    useState(false);
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  console.log("App render - isDeleteDialogOpen:", isDeleteDialogOpen);
   const { archiveCard } = useArchiveStore();
   const [archiveTask] = useArchiveTaskMutation();
+  const [deleteBoard] = useDeleteBoardMutation();
 
   const { data: detailedTask, refetch: refetchTaskDetails } = useGetTaskQuery(
     selectedCard?.id ?? "",
@@ -325,6 +365,60 @@ const AuthenticatedApp: React.FC = () => {
     setIsExportImportOpen(false);
   };
 
+  const handleDeleteBoard = () => {
+    console.log("handleDeleteBoard called, activeBoardId:", activeBoardId);
+    if (!activeBoardId) {
+      console.log("No active board, returning");
+      return;
+    }
+    console.log("Setting dialog open to true");
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteBoard = async () => {
+    if (!activeBoardId) return;
+
+    try {
+      // Store the current board index to select next board
+      const currentBoardIndex = boards.findIndex((b) => b.id === activeBoardId);
+      const boardIdToDelete = activeBoardId;
+
+      // Immediately switch to another board or clear to remove tasks from UI
+      const remainingBoards = boards.filter((b) => b.id !== boardIdToDelete);
+
+      if (remainingBoards.length > 0) {
+        // Select the next board immediately
+        const nextBoard =
+          remainingBoards[
+            Math.min(currentBoardIndex, remainingBoards.length - 1)
+          ];
+        dispatch(setActiveBoard(nextBoard.id));
+      } else {
+        // No boards left - clear active board immediately
+        dispatch(setActiveBoard(""));
+      }
+
+      // Close the dialog
+      setIsDeleteDialogOpen(false);
+
+      // Delete the board via API (happens in background)
+      await deleteBoard(boardIdToDelete).unwrap();
+
+      // Show success message
+      appToaster.success({
+        title: "Board deleted successfully",
+        duration: 2000,
+      });
+
+      // Force a full page reload to clear all state and tasks
+      window.location.reload();
+    } catch (error) {
+      console.error("Failed to delete board:", error);
+      appToaster.error({ title: "Failed to delete board", duration: 2000 });
+      setIsDeleteDialogOpen(false);
+    }
+  };
+
   const handleImport = (importedCards: Card[]) => {
     importedCards.forEach((card) => addCard(card));
     appToaster.success({
@@ -342,6 +436,22 @@ const AuthenticatedApp: React.FC = () => {
 
   const closeTemplateModal = () => {
     setIsTemplateOpen(false);
+  };
+
+  const openMembersModal = () => {
+    setIsMembersOpen(true);
+  };
+
+  const closeMembersModal = () => {
+    setIsMembersOpen(false);
+  };
+
+  const openOrganizationMembersModal = () => {
+    setIsOrganizationMembersOpen(true);
+  };
+
+  const closeOrganizationMembersModal = () => {
+    setIsOrganizationMembersOpen(false);
   };
 
   const handleSelectTemplate = (template: CardTemplate) => {
@@ -678,11 +788,13 @@ const AuthenticatedApp: React.FC = () => {
       >
         <BoardHeader
           onClear={clearBoard}
-          onAdd={openNewTaskModal}
           onCreateBoard={openBoardModal}
           onOpenArchive={openArchiveModal}
+          onDeleteBoard={handleDeleteBoard}
           onOpenExportImport={openExportImportModal}
           onOpenTemplates={openTemplateModal}
+          onOpenMembers={openMembersModal}
+          onOpenOrganizationMembers={openOrganizationMembersModal}
         />
         <BoardToolbar
           total={cards.length}
@@ -762,6 +874,133 @@ const AuthenticatedApp: React.FC = () => {
         onClose={closeTemplateModal}
         onSelectTemplate={handleSelectTemplate}
       />
+
+      <BoardMembersModal
+        boardId={activeBoardId || ""}
+        isOpen={isMembersOpen}
+        onClose={closeMembersModal}
+      />
+
+      <OrganizationMembersModal
+        organizationId={user?.organizationId || ""}
+        isOpen={isOrganizationMembersOpen}
+        onClose={closeOrganizationMembersModal}
+      />
+
+      <IconButton
+        aria-label="Create task"
+        onClick={openNewTaskModal}
+        position="fixed"
+        bottom={8}
+        right={8}
+        size="lg"
+        borderRadius="full"
+        zIndex={100}
+        bg="linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+        color="white"
+        boxShadow="0 4px 12px rgba(102, 126, 234, 0.4)"
+        transition="all 0.2s"
+        _hover={{
+          transform: "translateY(-4px)",
+          boxShadow: "0 8px 16px rgba(102, 126, 234, 0.5)",
+        }}
+        _active={{
+          transform: "translateY(0)",
+          boxShadow: "0 2px 8px rgba(102, 126, 234, 0.3)",
+        }}
+      >
+        <FiPlus size={24} />
+      </IconButton>
+
+      <Dialog.Root
+        open={isDeleteDialogOpen}
+        onOpenChange={(details) =>
+          !details.open && setIsDeleteDialogOpen(false)
+        }
+      >
+        <Dialog.Backdrop bg="rgba(0, 0, 0, 0.6)" backdropFilter="blur(10px)" />
+        <Dialog.Positioner>
+          <Dialog.Content
+            maxW="420px"
+            borderRadius="xl"
+            overflow="hidden"
+            boxShadow="0 20px 60px rgba(0, 0, 0, 0.3)"
+            bg="white"
+            _dark={{ bg: "gray.800" }}
+          >
+            <Dialog.CloseTrigger
+              top={3}
+              right={3}
+              color="gray.400"
+              _hover={{ color: "gray.600", bg: "gray.100" }}
+              borderRadius="full"
+            />
+
+            <Box px={6} pt={6} pb={4}>
+              <VStack gap={3} align="center">
+                <Box
+                  p={3}
+                  borderRadius="full"
+                  bg="red.50"
+                  _dark={{ bg: "red.900/20" }}
+                >
+                  <FiAlertTriangle size={32} color="#DC2626" />
+                </Box>
+                <Dialog.Title
+                  fontSize="xl"
+                  fontWeight="semibold"
+                  color="gray.900"
+                  _dark={{ color: "white" }}
+                  textAlign="center"
+                >
+                  Delete Board?
+                </Dialog.Title>
+              </VStack>
+            </Box>
+
+            <Dialog.Body px={6} py={4}>
+              <Text
+                fontSize="sm"
+                lineHeight="relaxed"
+                color="gray.600"
+                _dark={{ color: "gray.400" }}
+                textAlign="center"
+              >
+                This action will permanently delete all tasks in this board and
+                cannot be undone.
+              </Text>
+            </Dialog.Body>
+
+            <Dialog.Footer gap={3} px={6} pb={6} pt={2} flexDirection="column">
+              <Button
+                onClick={confirmDeleteBoard}
+                size="lg"
+                width="full"
+                bg="red.600"
+                color="white"
+                _hover={{ bg: "red.700" }}
+                _active={{ bg: "red.800" }}
+                borderRadius="lg"
+                fontWeight="medium"
+              >
+                Delete Board
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={() => setIsDeleteDialogOpen(false)}
+                size="lg"
+                width="full"
+                color="gray.600"
+                _hover={{ bg: "gray.100" }}
+                borderRadius="lg"
+                fontWeight="medium"
+              >
+                Cancel
+              </Button>
+            </Dialog.Footer>
+          </Dialog.Content>
+        </Dialog.Positioner>
+      </Dialog.Root>
     </Box>
   );
 };
