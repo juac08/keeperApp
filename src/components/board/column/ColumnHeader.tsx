@@ -8,6 +8,13 @@ type Props = {
 };
 
 const ColumnHeader: React.FC<Props> = ({ column, count }) => {
+  const dotColor =
+    column.id === "todo"
+      ? "blue.500"
+      : column.id === "inprogress"
+        ? "purple.500"
+        : "green.500";
+
   return (
     <HStack align="flex-start" justify="space-between" mb={4}>
       <Box>
@@ -16,21 +23,25 @@ const ColumnHeader: React.FC<Props> = ({ column, count }) => {
             w="10px"
             h="10px"
             borderRadius="full"
-            bg={
-              column.id === "todo"
-                ? "blue.400"
-                : column.id === "inprogress"
-                  ? "purple.400"
-                  : "green.400"
-            }
+            bg={dotColor}
+            boxShadow="0 0 0 4px rgba(255, 255, 255, 0.6)"
           />
-          <Heading size="sm">{column.title}</Heading>
+          <Heading size="sm" fontWeight="700">
+            {column.title}
+          </Heading>
         </HStack>
         <Text fontSize="sm" color="text.muted" mt={1}>
           {column.hint}
         </Text>
       </Box>
-      <Badge borderRadius="full" px={2}>
+      <Badge
+        borderRadius="full"
+        px={2.5}
+        py={1}
+        fontSize="xs"
+        bg="bg.muted"
+        color="text.secondary"
+      >
         {count}
       </Badge>
     </HStack>

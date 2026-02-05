@@ -6,7 +6,7 @@ import { useTagsStore } from "@/state/TagsStore";
 import { getTagMeta } from "@/utils/tagHelpers";
 import { useAssigneesStore } from "@/state/AssigneesStore";
 import type { DensityMode } from "@/state/DensityStore";
-import { AvatarCircle } from "@/ui";
+import { AvatarCircle, TooltipWrap } from "@/ui";
 
 type Props = {
   card: Card;
@@ -107,7 +107,7 @@ const CardMeta: React.FC<Props> = ({ card, density = "comfortable" }) => {
 
   return (
     <>
-      {card.blocked && card.blockedReason && (
+      {card.blocked && (
         <Box
           bg="purple.50"
           borderLeft="2px solid"
@@ -121,7 +121,13 @@ const CardMeta: React.FC<Props> = ({ card, density = "comfortable" }) => {
           <Text fontWeight="600" mb={0.5}>
             🚫 Blocked
           </Text>
-          <Text fontSize={spacing.fontSize}>{card.blockedReason}</Text>
+          {card.blockedReason ? (
+            <Text fontSize={spacing.fontSize}>{card.blockedReason}</Text>
+          ) : (
+            <Text fontSize={spacing.fontSize} color="purple.700">
+              No reason provided
+            </Text>
+          )}
         </Box>
       )}
 
@@ -152,29 +158,32 @@ const CardMeta: React.FC<Props> = ({ card, density = "comfortable" }) => {
           {dueDateBadge}
         </HStack>
         <HStack gap={4} flexShrink={0} align="center" pr={1}>
-          <Box
-            color={
-              card.priority === "High"
-                ? "red.500"
-                : card.priority === "Medium"
-                  ? "orange.500"
-                  : "blue.500"
-            }
-            fontSize="16px"
-            title={`Priority: ${card.priority}`}
-          >
-            <PriorityIcon />
-          </Box>
-          {assignee && (
-            <Box title={assignee.name} cursor="pointer">
-              <AvatarCircle
-                name={assignee.name}
-                avatar={assignee.avatar}
-                seed={assignee.id}
-                size="24px"
-                fontSize="xs"
-              />
+          <TooltipWrap label={`Priority: ${card.priority}`}>
+            <Box
+              color={
+                card.priority === "High"
+                  ? "red.500"
+                  : card.priority === "Medium"
+                    ? "orange.500"
+                    : "blue.500"
+              }
+              fontSize="16px"
+            >
+              <PriorityIcon />
             </Box>
+          </TooltipWrap>
+          {assignee && (
+            <TooltipWrap label={assignee.name}>
+              <Box cursor="pointer">
+                <AvatarCircle
+                  name={assignee.name}
+                  avatar={assignee.avatar}
+                  seed={assignee.id}
+                  size="24px"
+                  fontSize="xs"
+                />
+              </Box>
+            </TooltipWrap>
           )}
         </HStack>
       </HStack>

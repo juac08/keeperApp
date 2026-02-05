@@ -11,7 +11,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { FiPlus, FiAlertTriangle } from "react-icons/fi";
+import { FiAlertTriangle } from "react-icons/fi";
 import { useBoard } from "@/state/BoardContext";
 import { useCardFilters } from "@/hooks/useCardFilters";
 import { useArchiveStore } from "@/state/ArchiveStore";
@@ -131,8 +131,8 @@ const App: React.FC = () => {
         py={{ base: 6, md: 8 }}
       >
         <Box
-          maxW="1200px"
-          mx="auto"
+          w="full"
+          minH="calc(100vh - 64px)"
           bg="bg.panel"
           borderRadius={{ base: "2xl", md: "3xl" }}
           border="2px solid"
@@ -306,7 +306,6 @@ const AuthenticatedApp: React.FC = () => {
     updateCard,
     removeCard,
     moveCard,
-    clearBoard,
   } = useBoard();
   const {
     filteredCards,
@@ -336,8 +335,10 @@ const AuthenticatedApp: React.FC = () => {
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isSavingTask, setIsSavingTask] = useState(false);
+  const [taskErrors, setTaskErrors] = useState<
+    Partial<Record<keyof TaskForm, string>>
+  >({});
 
-  console.log("App render - isDeleteDialogOpen:", isDeleteDialogOpen);
   const { archiveCard } = useArchiveStore();
   const [archiveTask] = useArchiveTaskMutation();
   const [deleteBoard] = useDeleteBoardMutation();
@@ -348,12 +349,6 @@ const AuthenticatedApp: React.FC = () => {
       skip: !selectedCard?.id,
     },
   );
-
-  const openNewTaskModal = () => {
-    setForm(emptyForm);
-    setEditingId(null);
-    setIsTemplateOpen(true);
-  };
 
   const openDetailsModal = (card: Card) => {
     setSelectedCard(card);
@@ -419,12 +414,7 @@ const AuthenticatedApp: React.FC = () => {
   };
 
   const handleDeleteBoard = () => {
-    console.log("handleDeleteBoard called, activeBoardId:", activeBoardId);
-    if (!activeBoardId) {
-      console.log("No active board, returning");
-      return;
-    }
-    console.log("Setting dialog open to true");
+    if (!activeBoardId) return;
     setIsDeleteDialogOpen(true);
   };
 
@@ -473,7 +463,9 @@ const AuthenticatedApp: React.FC = () => {
   };
 
   const handleImport = (importedCards: Card[]) => {
-    importedCards.forEach((card) => addCard(card));
+    importedCards.forEach((card) => {
+      void addCard(card);
+    });
     appToaster.success({
       title: `Imported ${importedCards.length} tasks`,
       duration: 2000,
@@ -516,6 +508,7 @@ const AuthenticatedApp: React.FC = () => {
       tags: template.template.tags || [],
       status: template.template.status || "todo",
     });
+    setTaskErrors({});
     setEditingId(null);
     setIsOpen(true);
   };
@@ -533,12 +526,14 @@ const AuthenticatedApp: React.FC = () => {
       assigneeId: card.assigneeId || "",
       subtasks: card.subtasks || [],
     });
+    setTaskErrors({});
     setEditingId(card.id);
     setIsOpen(true);
   };
 
   const closeModal = () => {
     setIsOpen(false);
+    setTaskErrors({});
   };
 
   const handleRemoveCard = (id: string) => {
@@ -589,10 +584,18 @@ const AuthenticatedApp: React.FC = () => {
   ) => {
     const { name, value } = event.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+    if (taskErrors[name as keyof TaskForm]) {
+      setTaskErrors((prev) => ({ ...prev, [name]: undefined }));
+    }
   };
 
-  const toggleBlocked = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const checked = event.target.checked;
+  const toggleBlocked = (
+    eventOrChecked: React.ChangeEvent<HTMLInputElement> | boolean,
+  ) => {
+    const checked =
+      typeof eventOrChecked === "boolean"
+        ? eventOrChecked
+        : eventOrChecked.target.checked;
     setForm((prev) => ({
       ...prev,
       blocked: checked,
@@ -604,8 +607,20 @@ const AuthenticatedApp: React.FC = () => {
     event.preventDefault();
     const title = form.title.trim();
     const content = form.content.trim();
-    if (!title && !content) return;
-    if (form.blocked && !form.blockedReason.trim()) return;
+    if (!title) {
+      setTaskErrors((prev) => ({
+        ...prev,
+        title: "Task title is required.",
+      }));
+      return;
+    }
+    if (editingId && form.blocked && !form.blockedReason.trim()) {
+      setTaskErrors((prev) => ({
+        ...prev,
+        blockedReason: "Blocked reason is required.",
+      }));
+      return;
+    }
 
     setIsSavingTask(true);
     try {
@@ -706,7 +721,7 @@ const AuthenticatedApp: React.FC = () => {
           duration: 2000,
         });
       } else {
-        await addCard({
+        const created = await addCard({
           title: title || "Untitled",
           content,
           status: form.status,
@@ -716,14 +731,33 @@ const AuthenticatedApp: React.FC = () => {
           dueDate: form.dueDate || "",
           tags: form.tags || [],
           assigneeId: form.assigneeId || undefined,
-          subtasks: form.subtasks || [],
+          subtasks: [],
         });
+
+        const incomingSubtasks = form.subtasks || [];
+        if (incomingSubtasks.length > 0 && created?.id) {
+          for (const subtask of incomingSubtasks) {
+            const createdSubtask = await createSubtask({
+              taskId: created.id,
+              text: subtask.text,
+            }).unwrap();
+
+            if (subtask.completed) {
+              await updateSubtask({
+                taskId: created.id,
+                subtaskId: createdSubtask.id,
+                updates: { completed: true },
+              }).unwrap();
+            }
+          }
+        }
         appToaster.success({
           title: "Task created successfully",
           duration: 2000,
         });
       }
       setIsOpen(false);
+      setTaskErrors({});
     } catch (error: any) {
       const description = getErrorMessage(error);
       appToaster.error({
@@ -817,8 +851,8 @@ const AuthenticatedApp: React.FC = () => {
         py={{ base: 6, md: 8 }}
       >
         <Box
-          maxW="1200px"
-          mx="auto"
+          w="full"
+          minH="calc(100vh - 64px)"
           bg="bg.panel"
           borderRadius={{ base: "2xl", md: "3xl" }}
           border="2px solid"
@@ -895,14 +929,13 @@ const AuthenticatedApp: React.FC = () => {
         py={{ base: 6, md: 8 }}
       >
         <BoardHeader
-          onClear={clearBoard}
           onCreateBoard={openBoardModal}
           onOpenArchive={openArchiveModal}
-          onDeleteBoard={handleDeleteBoard}
           onOpenExportImport={openExportImportModal}
           onOpenTemplates={openTemplateModal}
           onOpenMembers={openMembersModal}
           onOpenOrganizationMembers={openOrganizationMembersModal}
+          onDeleteBoard={handleDeleteBoard}
         />
         {cardsLoading ? (
           <Box mb={8}>
@@ -1027,6 +1060,7 @@ const AuthenticatedApp: React.FC = () => {
         onChange={updateForm}
         onToggleBlocked={toggleBlocked}
         isSaving={isSavingTask}
+        errors={taskErrors}
       />
 
       <TaskDetailsModal
@@ -1071,45 +1105,6 @@ const AuthenticatedApp: React.FC = () => {
         isOpen={isOrganizationMembersOpen}
         onClose={closeOrganizationMembersModal}
       />
-
-      <Button
-        aria-label="Add task"
-        onClick={openNewTaskModal}
-        position="fixed"
-        bottom={{ base: 6, md: 8 }}
-        right={{ base: 5, md: 8 }}
-        h={{ base: 11, md: 12 }}
-        px={{ base: 4, sm: 5 }}
-        borderRadius="full"
-        zIndex={100}
-        bg="text.primary"
-        color="bg.panel"
-        boxShadow="0 8px 18px rgba(15, 23, 42, 0.18)"
-        transition="all 0.2s ease"
-        _hover={{
-          transform: "translateY(-2px)",
-          boxShadow: "0 12px 22px rgba(15, 23, 42, 0.22)",
-        }}
-        _active={{
-          transform: "translateY(0)",
-          boxShadow: "0 6px 14px rgba(15, 23, 42, 0.18)",
-        }}
-        _dark={{
-          bg: "gray.100",
-          color: "gray.900",
-        }}
-      >
-        <HStack gap={2}>
-          <Box as={FiPlus} fontSize="20px" />
-          <Text
-            fontSize="sm"
-            fontWeight="600"
-            display={{ base: "none", sm: "block" }}
-          >
-            Add task
-          </Text>
-        </HStack>
-      </Button>
 
       <Dialog.Root
         open={isDeleteDialogOpen}

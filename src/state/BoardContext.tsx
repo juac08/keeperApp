@@ -13,7 +13,7 @@ type BoardContextValue = {
   counts: Record<Status, number>;
   isLoading: boolean;
   error: string | undefined;
-  addCard: (card: Partial<Card>) => Promise<void>;
+  addCard: (card: Partial<Card>) => Promise<Card>;
   updateCard: (card: Card) => Promise<void>;
   removeCard: (id: string) => Promise<void>;
   moveCard: (id: string, status: Status) => Promise<void>;
@@ -62,7 +62,8 @@ export const BoardProvider: React.FC<{ children: React.ReactNode }> = ({
         delete payload.assigneeId;
       }
 
-      await createTask(payload).unwrap();
+      const created = await createTask(payload).unwrap();
+      return created;
     } catch (error: any) {
       console.error("Failed to add task:", error);
       throw error;

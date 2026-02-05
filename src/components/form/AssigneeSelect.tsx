@@ -55,14 +55,12 @@ const AssigneeSelect: React.FC<Props> = ({ value, onChange }) => {
           cursor="pointer"
           px={4}
           py={3}
-          borderRadius="lg"
-          border="2px solid"
-          borderColor={isOpen ? "brand.400" : "border.muted"}
-          boxShadow={
-            isOpen ? "0 0 0 1px var(--chakra-colors-brand-400)" : "none"
-          }
+          borderRadius="xl"
+          border="1px solid"
+          borderColor={isOpen ? "blue.400" : "border.muted"}
+          boxShadow={isOpen ? "0 0 0 3px rgba(59, 130, 246, 0.15)" : "none"}
           bg="bg.panel"
-          _hover={{ borderColor: isOpen ? "brand.400" : "brand.200" }}
+          _hover={{ borderColor: isOpen ? "blue.400" : "blue.200" }}
           transition="all 0.2s"
           flex="1"
           minW="200px"
@@ -87,7 +85,7 @@ const AssigneeSelect: React.FC<Props> = ({ value, onChange }) => {
             as="button"
             onClick={handleClear}
             p={2}
-            borderRadius="lg"
+            borderRadius="xl"
             border="1px solid"
             borderColor="border.muted"
             bg="bg.panel"
@@ -115,9 +113,9 @@ const AssigneeSelect: React.FC<Props> = ({ value, onChange }) => {
           maxW="400px"
           bg="bg.panel"
           borderRadius="xl"
-          boxShadow="0 10px 40px rgba(0, 0, 0, 0.15)"
-          border="2px solid"
-          borderColor="brand.100"
+          boxShadow="0 16px 40px rgba(15, 23, 42, 0.12)"
+          border="1px solid"
+          borderColor="border.muted"
           py={3}
           zIndex={1000}
           maxH="300px"
@@ -143,7 +141,7 @@ const AssigneeSelect: React.FC<Props> = ({ value, onChange }) => {
               mx={2}
               cursor="pointer"
               borderRadius="lg"
-              _hover={{ bg: "blue.50" }}
+              _hover={{ bg: "bg.muted", transform: "translateX(4px)" }}
               transition="all 0.15s"
               onClick={() => handleSelect(assignee.id)}
             >

@@ -74,14 +74,26 @@ const mapTaskFromApi = (task: any): Card => {
     ? task.tags.map((tag: any) => (typeof tag === "string" ? tag : tag.id))
     : [];
 
+  const blockedValue =
+    task.blocked ??
+    task.isBlocked ??
+    task.is_blocked ??
+    task.blockedStatus ??
+    false;
+  const blockedReasonValue =
+    task.blockedReason ??
+    task.blocked_reason ??
+    task.blockedReasonText ??
+    "";
+
   return {
     id: task.id ?? String(Date.now()),
     title: task.title ?? "Untitled",
     content: task.description ?? task.content ?? "",
     status: (task.status ?? "todo") as Status,
     priority: normalizePriority(task.priority),
-    blocked: Boolean(task.blocked ?? false),
-    blockedReason: task.blocked ? (task.blockedReason ?? "") : "",
+    blocked: Boolean(blockedValue),
+    blockedReason: blockedValue ? String(blockedReasonValue ?? "") : "",
     dueDate: task.dueDate ?? "",
     tags: normalizeTags,
     assigneeId: task.assigneeId ?? "",
@@ -120,10 +132,14 @@ const mapCardToApiPayload = (
 
   if (task.blocked !== undefined) {
     payload.blocked = task.blocked;
+    payload.isBlocked = task.blocked;
+    payload.is_blocked = task.blocked;
   }
 
   if (task.blockedReason !== undefined || task.blocked !== undefined) {
-    payload.blockedReason = task.blocked ? (task.blockedReason ?? "") : null;
+    const reason = task.blocked ? (task.blockedReason ?? "") : null;
+    payload.blockedReason = reason;
+    payload.blocked_reason = reason;
   }
 
   if (task.dueDate !== undefined) {

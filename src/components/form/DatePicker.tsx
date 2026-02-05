@@ -42,9 +42,9 @@ const DatePicker: React.FC<Props> = ({
               }
               .custom-datepicker-wrapper input {
                 width: 100%;
-                padding: 10px 14px;
+                padding: 12px 16px;
                 padding-left: 38px;
-                border-radius: 6px;
+                border-radius: 12px;
                 border: 1px solid ${isOverdue ? "#fc8181" : isDueToday ? "#f6ad55" : "#cbd5e0"};
                 background-color: var(--chakra-colors-bg-panel);
                 color: var(--chakra-colors-text-primary);
@@ -53,23 +53,23 @@ const DatePicker: React.FC<Props> = ({
                 transition: all 0.2s;
               }
               .custom-datepicker-wrapper input:hover {
-                border-color: #a0aec0;
+                border-color: #bfdbfe;
               }
               .custom-datepicker-wrapper input:focus {
                 border-color: #4299e1;
-                box-shadow: 0 0 0 1px #4299e1;
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
               }
               .react-datepicker {
                 font-family: inherit;
                 background-color: var(--chakra-colors-bg-panel);
                 border: 1px solid var(--chakra-colors-border-muted);
-                border-radius: 8px;
-                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+                border-radius: 12px;
+                box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
               }
               .react-datepicker__header {
                 background-color: var(--chakra-colors-bg-muted);
                 border-bottom: 1px solid var(--chakra-colors-border-muted);
-                border-radius: 8px 8px 0 0;
+                border-radius: 12px 12px 0 0;
                 padding-top: 8px;
               }
               .react-datepicker__current-month {

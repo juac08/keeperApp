@@ -67,6 +67,14 @@ const BoardSelector: React.FC<Props> = ({ onCreateBoard }) => {
           variantStyle="primary"
           onClick={onCreateBoard}
           icon={<FiPlus size={14} />}
+          h="44px"
+          px={6}
+          borderRadius="full"
+          bg="gray.900"
+          color="white"
+          _hover={{ bg: "gray.800" }}
+          _active={{ bg: "gray.700" }}
+          boxShadow="0 10px 24px rgba(15, 23, 42, 0.22)"
         >
           Create Board
         </AppButton>
@@ -87,24 +95,37 @@ const BoardSelector: React.FC<Props> = ({ onCreateBoard }) => {
       <Box
         onClick={() => setIsOpen(!isOpen)}
         cursor="pointer"
-        px={3}
-        py={2}
+        px={3.5}
+        py={2.5}
         bg="bg.panel"
         border="1px solid"
-        borderColor={isOpen ? "blue.400" : "gray.200"}
-        boxShadow={isOpen ? "0 0 0 1px #4299e1" : "none"}
-        borderRadius="md"
+        borderColor={isOpen ? "blue.400" : "border.muted"}
+        boxShadow={isOpen ? "0 0 0 1px #4299e1" : "0 8px 20px rgba(15, 23, 42, 0.06)"}
+        borderRadius="xl"
         _hover={{ borderColor: isOpen ? "blue.400" : "gray.300" }}
         transition="all 0.2s"
       >
-        <HStack gap={2}>
-          <Text fontSize="lg">{resolveBoardIcon(activeBoard)}</Text>
-          <Text fontSize="sm" fontWeight="600" color="text.primary">
+        <HStack gap={2.5}>
+          <Box
+            w="36px"
+            h="36px"
+            borderRadius="12px"
+            bg="bg.muted"
+            border="1px solid"
+            borderColor="border.muted"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            fontSize="18px"
+          >
+            {resolveBoardIcon(activeBoard)}
+          </Box>
+          <Text fontSize="md" fontWeight="700" color="text.primary">
             {activeBoard?.name || "Select Board"}
           </Text>
           <Box
             as={FiChevronDown}
-            fontSize="14px"
+            fontSize="16px"
             color="text.muted"
             transform={isOpen ? "rotate(180deg)" : "rotate(0)"}
             transition="transform 0.2s"

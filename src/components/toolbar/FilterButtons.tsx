@@ -55,8 +55,9 @@ const FilterButtons: React.FC<Props> = ({
       <Box position="relative" ref={dropdownRef}>
         <AppButton
           size="sm"
-          h="40px"
-          px={4}
+          h="44px"
+          px={5}
+          borderRadius="full"
           variantStyle={activeFilter === "priority" ? "primary" : "outline"}
           icon={<FiFilter />}
           onClick={handlePriorityClick}
@@ -72,8 +73,9 @@ const FilterButtons: React.FC<Props> = ({
       </Box>
       <AppButton
         size="sm"
-        h="40px"
-        px={4}
+        h="44px"
+        px={5}
+        borderRadius="full"
         variantStyle={activeFilter === "blocked" ? "primary" : "outline"}
         icon={<FiAlertCircle />}
         onClick={() => onFilterChange("blocked")}

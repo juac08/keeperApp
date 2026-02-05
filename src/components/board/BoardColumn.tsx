@@ -35,9 +35,9 @@ const BoardColumn: React.FC<Props> = ({
 }) => {
   return (
     <Box
-      bg={dragOver === column.id ? "blue.50" : "gray.50"}
+      bg={dragOver === column.id ? "blue.50" : "bg.panel"}
       border="1px solid"
-      borderColor={dragOver === column.id ? "blue.400" : "gray.200"}
+      borderColor={dragOver === column.id ? "blue.400" : "border.muted"}
       borderRadius="2xl"
       p={4}
       minH="560px"
@@ -45,7 +45,7 @@ const BoardColumn: React.FC<Props> = ({
       onDrop={(event) => onDrop(event, column.id)}
       onDragLeave={onDragLeave}
       transition="all 0.2s ease"
-      boxShadow={dragOver === column.id ? "lg" : "none"}
+      boxShadow={dragOver === column.id ? "lg" : "0 12px 30px rgba(15, 23, 42, 0.04)"}
       transform={dragOver === column.id ? "scale(1.02)" : "scale(1)"}
     >
       <ColumnHeader column={column} count={count} />

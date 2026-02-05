@@ -96,12 +96,12 @@ const TagInput: React.FC<Props> = ({
           px={4}
           py={3}
           minH="52px"
-          borderRadius="6px"
+          borderRadius="xl"
           border="1px solid"
           borderColor={isOpen ? "blue.400" : "border.muted"}
-          boxShadow={isOpen ? "0 0 0 1px #4299e1" : "none"}
+          boxShadow={isOpen ? "0 0 0 3px rgba(59, 130, 246, 0.15)" : "none"}
           bg="bg.panel"
-          _hover={{ borderColor: isOpen ? "blue.400" : "gray.300" }}
+          _hover={{ borderColor: isOpen ? "blue.400" : "blue.200" }}
           transition="all 0.2s"
         >
           <HStack gap={2} flexWrap="wrap">
@@ -160,7 +160,7 @@ const TagInput: React.FC<Props> = ({
               onClick={() => setIsOpen(!isOpen)}
               px={3}
               py={1.5}
-              borderRadius="lg"
+              borderRadius="full"
               bg={isOpen ? "blue.50" : "bg.muted"}
               color={isOpen ? "blue.700" : "text.primary"}
               _hover={{ bg: "blue.50", color: "blue.700" }}
@@ -186,7 +186,7 @@ const TagInput: React.FC<Props> = ({
             w="max-content"
             bg="bg.panel"
             borderRadius="xl"
-            boxShadow="0 10px 40px rgba(0, 0, 0, 0.15)"
+            boxShadow="0 16px 40px rgba(15, 23, 42, 0.12)"
             border="1px solid"
             borderColor="border.muted"
             py={2}

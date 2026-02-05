@@ -4,3 +4,4 @@ export { default as AppInput } from "./AppInput";
 export { default as AppTextarea } from "./AppTextarea";
 export { default as AppSelect } from "./AppSelect";
 export { default as AvatarCircle } from "./AvatarCircle";
+export { default as TooltipWrap } from "./TooltipWrap";

@@ -9,11 +9,11 @@ const EmptyColumn: React.FC = () => {
   return (
     <MotionBox
       border="2px dashed"
-      borderColor="gray.300"
-      borderRadius="xl"
-      p={8}
+      borderColor="border.muted"
+      borderRadius="2xl"
+      p={10}
       textAlign="center"
-      bg="gray.50"
+      bg="linear-gradient(180deg, rgba(248, 250, 252, 0.9) 0%, rgba(241, 245, 249, 0.9) 100%)"
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{
@@ -23,8 +23,8 @@ const EmptyColumn: React.FC = () => {
       }}
     >
       <VStack gap={2}>
-        <Box as={FiInbox} fontSize="48px" color="text.muted" mb={1} />
-        <Text fontWeight="600" color="text.secondary" fontSize="md">
+        <Box as={FiInbox} fontSize="52px" color="text.muted" mb={1} />
+        <Text fontWeight="700" color="text.secondary" fontSize="md">
           No tasks yet
         </Text>
         <Text fontSize="sm" color="text.muted">

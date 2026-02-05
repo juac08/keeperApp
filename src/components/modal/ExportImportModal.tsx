@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { Box, HStack, VStack, Text, Dialog } from "@chakra-ui/react";
+import { Box, HStack, Text, Dialog, Stack } from "@chakra-ui/react";
 import { FiDownload, FiUpload, FiX } from "react-icons/fi";
 import { AppButton, AppIconButton } from "@/ui";
 import { exportBoardToJSON, importBoardFromJSON } from "@/utils/exportImport";
@@ -70,17 +70,49 @@ export const ExportImportModal: React.FC<Props> = ({
     <Dialog.Root open={isOpen} onOpenChange={onClose}>
       <Dialog.Backdrop bg="blackAlpha.600" backdropFilter="blur(8px)" />
       <Dialog.Positioner>
-        <Dialog.Content borderRadius="lg" maxW="500px">
+        <Dialog.Content
+          borderRadius="2xl"
+          maxW="720px"
+          overflow="hidden"
+          boxShadow="0 24px 60px rgba(15, 23, 42, 0.18)"
+          bg="bg.panel"
+        >
           <Dialog.Header
-            py={4}
-            px={6}
+            py={5}
+            px={{ base: 6, md: 8 }}
             borderBottom="1px solid"
-            borderColor="gray.200"
+            borderColor="border.muted"
           >
-            <HStack justify="space-between">
-              <Dialog.Title fontSize="lg" fontWeight="600">
-                Export / Import Board
-              </Dialog.Title>
+            <HStack justify="space-between" align="center">
+              <HStack gap={3} align="center">
+                <Box
+                  w="40px"
+                  h="40px"
+                  borderRadius="14px"
+                  bg="linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%)"
+                  color="white"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  boxShadow="0 10px 20px rgba(14, 165, 233, 0.25)"
+                >
+                  <FiDownload size={18} />
+                </Box>
+                <Box>
+                  <Text
+                    fontSize="xs"
+                    fontWeight="700"
+                    color="text.muted"
+                    textTransform="uppercase"
+                    letterSpacing="0.12em"
+                  >
+                    Transfer
+                  </Text>
+                  <Dialog.Title fontSize="lg" fontWeight="700">
+                    Export & import board
+                  </Dialog.Title>
+                </Box>
+              </HStack>
               <Dialog.CloseTrigger asChild>
                 <AppIconButton aria-label="Close" size="sm" onClick={onClose}>
                   <FiX size={18} />
@@ -89,46 +121,82 @@ export const ExportImportModal: React.FC<Props> = ({
             </HStack>
           </Dialog.Header>
 
-          <Dialog.Body px={6} py={6}>
-            <VStack gap={4} align="stretch">
+          <Dialog.Body px={{ base: 6, md: 8 }} py={6}>
+            <Stack gap={4}>
               <Box
-                border="2px dashed"
-                borderColor="gray.300"
+                border="1px solid"
+                borderColor="border.muted"
                 borderRadius="xl"
-                p={6}
-                textAlign="center"
+                p={{ base: 5, md: 6 }}
+                bg="linear-gradient(180deg, #f5f8ff 0%, #eef3ff 100%)"
+                boxShadow="0 12px 26px rgba(37, 99, 235, 0.12)"
                 cursor="pointer"
                 transition="all 0.2s"
-                _hover={{ borderColor: "blue.400", bg: "blue.50" }}
+                _hover={{ transform: "translateY(-2px)" }}
                 onClick={handleExport}
               >
-                <FiDownload size={32} style={{ margin: "0 auto 12px" }} />
-                <Text fontSize="md" fontWeight="600" mb={1}>
-                  Export Board
-                </Text>
-                <Text fontSize="sm" color="gray.600">
-                  Download {cards.length} tasks as JSON
-                </Text>
+                <HStack gap={4} align="center">
+                  <Box
+                    w="48px"
+                    h="48px"
+                    borderRadius="16px"
+                    bg="white"
+                    border="1px solid"
+                    borderColor="blue.100"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    color="blue.600"
+                  >
+                    <FiDownload size={20} />
+                  </Box>
+                  <Box>
+                    <Text fontSize="md" fontWeight="700" mb={1}>
+                      Export board
+                    </Text>
+                    <Text fontSize="sm" color="text.muted">
+                      Download {cards.length} tasks as a JSON snapshot
+                    </Text>
+                  </Box>
+                </HStack>
               </Box>
 
               <Box
-                border="2px dashed"
-                borderColor="gray.300"
+                border="1px solid"
+                borderColor="border.muted"
                 borderRadius="xl"
-                p={6}
-                textAlign="center"
+                p={{ base: 5, md: 6 }}
+                bg="linear-gradient(180deg, #f0fdf4 0%, #ecfdf5 100%)"
+                boxShadow="0 12px 26px rgba(16, 185, 129, 0.12)"
                 cursor="pointer"
                 transition="all 0.2s"
-                _hover={{ borderColor: "green.400", bg: "green.50" }}
+                _hover={{ transform: "translateY(-2px)" }}
                 onClick={handleImportClick}
               >
-                <FiUpload size={32} style={{ margin: "0 auto 12px" }} />
-                <Text fontSize="md" fontWeight="600" mb={1}>
-                  Import Board
-                </Text>
-                <Text fontSize="sm" color="gray.600">
-                  Upload JSON file to restore tasks
-                </Text>
+                <HStack gap={4} align="center">
+                  <Box
+                    w="48px"
+                    h="48px"
+                    borderRadius="16px"
+                    bg="white"
+                    border="1px solid"
+                    borderColor="green.100"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    color="green.600"
+                  >
+                    <FiUpload size={20} />
+                  </Box>
+                  <Box>
+                    <Text fontSize="md" fontWeight="700" mb={1}>
+                      Import board
+                    </Text>
+                    <Text fontSize="sm" color="text.muted">
+                      Upload a JSON file to restore tasks
+                    </Text>
+                  </Box>
+                </HStack>
               </Box>
 
               <input
@@ -138,7 +206,7 @@ export const ExportImportModal: React.FC<Props> = ({
                 style={{ display: "none" }}
                 onChange={handleFileSelect}
               />
-            </VStack>
+            </Stack>
           </Dialog.Body>
 
           <Dialog.Footer

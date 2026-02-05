@@ -31,23 +31,48 @@ export const ArchiveModal: React.FC<Props> = ({
       <Dialog.Backdrop bg="blackAlpha.600" backdropFilter="blur(8px)" />
       <Dialog.Positioner>
         <Dialog.Content
-          borderRadius="lg"
-          maxW="800px"
+          borderRadius="2xl"
+          maxW="900px"
           maxH="90vh"
           overflow="hidden"
+          boxShadow="0 24px 60px rgba(15, 23, 42, 0.18)"
+          bg="bg.panel"
         >
           <Dialog.Header
-            py={4}
-            px={6}
+            py={5}
+            px={{ base: 6, md: 8 }}
             borderBottom="1px solid"
-            borderColor="gray.200"
+            borderColor="border.muted"
           >
             <HStack justify="space-between">
-              <HStack gap={2}>
-                <FiArchive size={20} />
-                <Dialog.Title fontSize="lg" fontWeight="600">
-                  Archive ({archivedCards.length})
-                </Dialog.Title>
+              <HStack gap={3} align="center">
+                <Box
+                  w="40px"
+                  h="40px"
+                  borderRadius="14px"
+                  bg="linear-gradient(135deg, #6366f1 0%, #a855f7 100%)"
+                  color="white"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  boxShadow="0 10px 20px rgba(99, 102, 241, 0.25)"
+                >
+                  <FiArchive size={18} />
+                </Box>
+                <Box>
+                  <Text
+                    fontSize="xs"
+                    fontWeight="700"
+                    color="text.muted"
+                    textTransform="uppercase"
+                    letterSpacing="0.12em"
+                  >
+                    Archive
+                  </Text>
+                  <Dialog.Title fontSize="lg" fontWeight="700">
+                    Archived tasks ({archivedCards.length})
+                  </Dialog.Title>
+                </Box>
               </HStack>
               <Dialog.CloseTrigger asChild>
                 <AppIconButton aria-label="Close" size="sm" onClick={onClose}>
@@ -57,7 +82,7 @@ export const ArchiveModal: React.FC<Props> = ({
             </HStack>
           </Dialog.Header>
 
-          <Dialog.Body px={6} py={6} overflowY="auto">
+          <Dialog.Body px={{ base: 6, md: 8 }} py={6} overflowY="auto">
             {archivedCards.length === 0 ? (
               <Box textAlign="center" py={12}>
                 <Text fontSize="5xl" mb={4}>
@@ -75,11 +100,12 @@ export const ArchiveModal: React.FC<Props> = ({
                 {archivedCards.map((card) => (
                   <Box
                     key={card.id}
-                    bg="gray.50"
-                    border="2px solid"
-                    borderColor="gray.200"
-                    borderRadius="md"
+                    bg="bg.muted"
+                    border="1px solid"
+                    borderColor="border.muted"
+                    borderRadius="xl"
                     p={4}
+                    boxShadow="0 10px 22px rgba(15, 23, 42, 0.06)"
                   >
                     <HStack justify="space-between" align="flex-start">
                       <VStack align="flex-start" flex="1" gap={1}>

@@ -51,13 +51,13 @@ const PrioritySelect: React.FC<Props> = ({ value, onChange, size = "md" }) => {
         onClick={() => setIsOpen(!isOpen)}
         cursor="pointer"
         px={4}
-        py={2.5}
-        borderRadius="6px"
+        py={3}
+        borderRadius="xl"
         border="1px solid"
         borderColor={isOpen ? "blue.400" : "border.muted"}
-        boxShadow={isOpen ? "0 0 0 1px #4299e1" : "none"}
+        boxShadow={isOpen ? "0 0 0 3px rgba(59, 130, 246, 0.15)" : "none"}
         bg="bg.panel"
-        _hover={{ borderColor: isOpen ? "blue.400" : "gray.300" }}
+        _hover={{ borderColor: isOpen ? "blue.400" : "blue.200" }}
         transition="all 0.2s"
       >
         <HStack justify="space-between">
@@ -70,7 +70,7 @@ const PrioritySelect: React.FC<Props> = ({ value, onChange, size = "md" }) => {
                 bg={`${selectedPriority.color}.500`}
               />
             )}
-            <Text fontSize={size === "sm" ? "sm" : "md"} fontWeight="500">
+            <Text fontSize={size === "sm" ? "sm" : "md"} fontWeight="600">
               {selectedPriority?.label || "Select priority"}
             </Text>
           </HStack>
@@ -91,20 +91,21 @@ const PrioritySelect: React.FC<Props> = ({ value, onChange, size = "md" }) => {
           left="0"
           right="0"
           bg="bg.panel"
-          borderRadius="md"
-          boxShadow="lg"
+          borderRadius="xl"
+          boxShadow="0 16px 40px rgba(15, 23, 42, 0.12)"
           border="1px solid"
           borderColor="border.muted"
-          py={1}
+          py={2}
           zIndex={10}
         >
           {priorities.map((priority) => (
             <Box
               key={priority.value}
               px={4}
-              py={2}
+              py={2.5}
               cursor="pointer"
-              _hover={{ bg: "bg.muted" }}
+              _hover={{ bg: "bg.muted", transform: "translateX(4px)" }}
+              transition="all 0.2s"
               onClick={() => handleSelect(priority.value)}
             >
               <HStack justify="space-between">

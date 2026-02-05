@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, Dialog, Grid, HStack, Text, VStack } from "@chakra-ui/react";
-import { FiX } from "react-icons/fi";
+import { FiX, FiLayers } from "react-icons/fi";
 import { CARD_TEMPLATES, type CardTemplate } from "@/config/cardTemplates";
 import { AppIconButton } from "@/ui";
 
@@ -24,17 +24,48 @@ export const TemplateModal: React.FC<Props> = ({
     <Dialog.Root open={isOpen} onOpenChange={onClose} size="xl">
       <Dialog.Backdrop bg="blackAlpha.600" backdropFilter="blur(8px)" />
       <Dialog.Positioner>
-        <Dialog.Content borderRadius="lg" maxW="900px">
+        <Dialog.Content
+          borderRadius="2xl"
+          maxW="960px"
+          boxShadow="0 24px 60px rgba(15, 23, 42, 0.18)"
+          bg="bg.panel"
+        >
           <Dialog.Header
-            py={4}
-            px={6}
+            py={5}
+            px={{ base: 6, md: 8 }}
             borderBottom="1px solid"
             borderColor="border.muted"
           >
             <HStack justify="space-between">
-              <Dialog.Title fontSize="lg" fontWeight="600">
-                Choose a template
-              </Dialog.Title>
+              <HStack gap={3} align="center">
+                <Box
+                  w="40px"
+                  h="40px"
+                  borderRadius="14px"
+                  bg="linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)"
+                  color="white"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  boxShadow="0 10px 20px rgba(124, 58, 237, 0.25)"
+                >
+                  <FiLayers size={18} />
+                </Box>
+                <Box>
+                  <Text
+                    fontSize="xs"
+                    fontWeight="700"
+                    color="text.muted"
+                    textTransform="uppercase"
+                    letterSpacing="0.12em"
+                  >
+                    Templates
+                  </Text>
+                  <Dialog.Title fontSize="lg" fontWeight="700">
+                    Choose a template
+                  </Dialog.Title>
+                </Box>
+              </HStack>
               <Dialog.CloseTrigger asChild>
                 <AppIconButton aria-label="Close" size="sm" onClick={onClose}>
                   <FiX size={18} />
@@ -43,7 +74,7 @@ export const TemplateModal: React.FC<Props> = ({
             </HStack>
           </Dialog.Header>
 
-          <Dialog.Body px={6} py={6}>
+          <Dialog.Body px={{ base: 6, md: 8 }} py={6}>
             <Grid
               templateColumns={{
                 base: "1fr",

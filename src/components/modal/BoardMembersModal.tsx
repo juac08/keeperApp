@@ -12,7 +12,7 @@ import {
   Skeleton,
   SkeletonText,
 } from "@chakra-ui/react";
-import { FiUserPlus, FiSearch, FiTrash2 } from "react-icons/fi";
+import { FiUserPlus, FiSearch, FiTrash2, FiUsers } from "react-icons/fi";
 import { AppButton, AppSelect } from "@/ui";
 import {
   useGetBoardMembersQuery,
@@ -131,35 +131,72 @@ const BoardMembersModal: React.FC<Props> = ({ boardId, isOpen, onClose }) => {
       <Dialog.Backdrop bg="blackAlpha.600" backdropFilter="blur(8px)" />
       <Dialog.Positioner>
         <Dialog.Content
-          borderRadius="lg"
+          borderRadius="2xl"
           overflow="hidden"
-          maxW="600px"
+          maxW="680px"
           maxH="90vh"
-          boxShadow="0 20px 40px rgba(0, 0, 0, 0.15)"
+          boxShadow="0 24px 60px rgba(15, 23, 42, 0.18)"
           bg="bg.panel"
         >
           <Dialog.Header
             bg="bg.panel"
-            py={4}
-            px={6}
+            py={5}
+            px={{ base: 6, md: 8 }}
             borderBottom="1px solid"
             borderColor="border.muted"
             position="relative"
           >
-            <Dialog.Title fontSize="xl" fontWeight="600" color="text.primary">
-              Manage Board Members
-            </Dialog.Title>
+            <HStack gap={3} align="center">
+              <Box
+                w="40px"
+                h="40px"
+                borderRadius="14px"
+                bg="linear-gradient(135deg, #2563eb 0%, #38bdf8 100%)"
+                color="white"
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                boxShadow="0 10px 20px rgba(37, 99, 235, 0.25)"
+              >
+                <FiUsers size={18} />
+              </Box>
+              <Box>
+                <Text
+                  fontSize="xs"
+                  fontWeight="700"
+                  color="text.muted"
+                  textTransform="uppercase"
+                  letterSpacing="0.12em"
+                >
+                  Board
+                </Text>
+                <Dialog.Title
+                  fontSize="lg"
+                  fontWeight="700"
+                  color="text.primary"
+                >
+                  Manage board members
+                </Dialog.Title>
+              </Box>
+            </HStack>
             <Dialog.CloseTrigger
               position="absolute"
               right="20px"
               top="20px"
-              borderRadius="lg"
+              borderRadius="full"
+              w="40px"
+              h="40px"
               color="text.muted"
               _hover={{ bg: "bg.muted" }}
             />
           </Dialog.Header>
 
-          <Dialog.Body bg="bg.panel" px={6} py={6} overflowY="auto">
+          <Dialog.Body
+            bg="bg.panel"
+            px={{ base: 6, md: 8 }}
+            py={6}
+            overflowY="auto"
+          >
             <Stack gap={6}>
               {/* Add Member Section */}
               {canManage && (

@@ -3,7 +3,6 @@ import { Flex } from "@chakra-ui/react";
 import { HeaderActions, ProjectInfo } from "@/components/header";
 
 type Props = {
-  onClear: () => void;
   onCreateBoard: () => void;
   onOpenArchive: () => void;
   onOpenExportImport: () => void;
@@ -14,7 +13,6 @@ type Props = {
 };
 
 const BoardHeader: React.FC<Props> = ({
-  onClear,
   onCreateBoard,
   onOpenArchive,
   onOpenExportImport,
@@ -27,35 +25,34 @@ const BoardHeader: React.FC<Props> = ({
     <Flex
       align="center"
       justify="space-between"
-      direction={{ base: "column", md: "row" }}
+      direction={{ base: "column", lg: "row" }}
       gap={{ base: 4, md: 6 }}
       mb={8}
-      px={{ base: 4, md: 6 }}
-      py={{ base: 4, md: 4 }}
+      px={{ base: 5, md: 7 }}
+      py={{ base: 4, md: 5 }}
       bg="bg.panel"
-      borderRadius="xl"
+      borderRadius="2xl"
       border="1px solid"
       borderColor="border.muted"
-      boxShadow="sm"
+      boxShadow="0 18px 40px rgba(15, 23, 42, 0.08)"
       position="sticky"
       top={4}
       zIndex={100}
-      backdropFilter="blur(10px)"
-      backgroundColor="rgba(255, 255, 255, 0.95)"
+      backdropFilter="blur(12px)"
+      backgroundColor="rgba(255, 255, 255, 0.92)"
       _dark={{
-        backgroundColor: "rgba(15, 23, 42, 0.95)",
+        backgroundColor: "rgba(15, 23, 42, 0.92)",
       }}
     >
       <ProjectInfo />
       <HeaderActions
-        onClear={onClear}
         onCreateBoard={onCreateBoard}
-        onDeleteBoard={onDeleteBoard}
         onOpenArchive={onOpenArchive}
         onOpenExportImport={onOpenExportImport}
         onOpenTemplates={onOpenTemplates}
         onOpenMembers={onOpenMembers}
         onOpenOrganizationMembers={onOpenOrganizationMembers}
+        onDeleteBoard={onDeleteBoard}
       />
     </Flex>
   );

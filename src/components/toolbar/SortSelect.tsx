@@ -59,13 +59,17 @@ export const SortSelect: React.FC<Props> = ({ value, onChange }) => {
         onClick={() => setIsOpen(!isOpen)}
         cursor="pointer"
         px={4}
-        py={2}
-        borderRadius="6px"
+        py={2.5}
+        borderRadius="xl"
         border="1px solid"
         borderColor={isOpen ? "blue.400" : "border.muted"}
-        boxShadow={isOpen ? "0 0 0 1px #4299e1" : "none"}
+        boxShadow={
+          isOpen
+            ? "0 0 0 2px rgba(59, 130, 246, 0.15)"
+            : "0 8px 18px rgba(15, 23, 42, 0.04)"
+        }
         bg="bg.panel"
-        minW="160px"
+        minW="180px"
         transition="all 0.2s"
         _hover={{ borderColor: isOpen ? "blue.400" : "gray.300" }}
       >

@@ -21,24 +21,33 @@ const SearchBar: React.FC<Props> = ({
     <HStack
       gap={3}
       bg="bg.panel"
-      borderRadius="6px"
+      borderRadius="xl"
       px={4}
-      h="40px"
+      h="44px"
       border="1px solid"
       borderColor={
-        isFocused ? "blue.400" : hasValue ? "blue.400" : "border.muted"
+        isFocused ? "blue.400" : hasValue ? "blue.300" : "border.muted"
       }
-      boxShadow={isFocused ? "0 0 0 1px #4299e1" : "none"}
+      boxShadow={
+        isFocused
+          ? "0 0 0 2px rgba(59, 130, 246, 0.15)"
+          : "0 8px 18px rgba(15, 23, 42, 0.04)"
+      }
       align="center"
       transition="all 0.2s"
     >
       <Box
-        color={isFocused || hasValue ? "blue.500" : "text.muted"}
+        w="28px"
+        h="28px"
+        borderRadius="full"
+        bg={isFocused || hasValue ? "blue.50" : "bg.muted"}
+        color={isFocused || hasValue ? "blue.600" : "text.muted"}
         display="flex"
         alignItems="center"
-        transition="color 0.2s"
+        justifyContent="center"
+        transition="all 0.2s"
       >
-        <Box as={FiSearch} fontSize="16px" />
+        <Box as={FiSearch} fontSize="14px" />
       </Box>
       <AppInput
         variant="flushed"
@@ -50,7 +59,7 @@ const SearchBar: React.FC<Props> = ({
         bg="transparent"
         border="none"
         px={0}
-        h="40px"
+        h="44px"
         fontSize="sm"
         color="text.primary"
         _focusVisible={{ boxShadow: "none" }}

@@ -33,8 +33,6 @@ export const DensityToggle: React.FC = () => {
     };
   }, [isOpen]);
 
-  const selectedOption = options.find((opt) => opt.value === density);
-
   const handleSelect = (value: DensityMode) => {
     setDensity(value);
     setIsOpen(false);
@@ -47,7 +45,13 @@ export const DensityToggle: React.FC = () => {
         onClick={() => setIsOpen(!isOpen)}
         size="md"
       >
-        {selectedOption?.icon}
+        <Box
+          w="10px"
+          h="18px"
+          borderRadius="3px"
+          border="2px solid"
+          borderColor="currentColor"
+        />
       </AppIconButton>
 
       {isOpen && (

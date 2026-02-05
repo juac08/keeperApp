@@ -27,7 +27,6 @@ import {
   FiMessageCircle,
   FiCheckSquare,
   FiSquare,
-  FiPlus,
 } from "react-icons/fi";
 import type { Card } from "@/types";
 import { AppButton, AvatarCircle } from "@/ui";
@@ -126,65 +125,99 @@ const TaskDetailsModal: React.FC<Props> = ({
       <Dialog.Backdrop bg="blackAlpha.600" backdropFilter="blur(8px)" />
       <Dialog.Positioner>
         <Dialog.Content
-          borderRadius="lg"
+          borderRadius="2xl"
           overflow="hidden"
-          maxW="800px"
+          maxW="980px"
           maxH="90vh"
-          boxShadow="0 20px 40px rgba(0, 0, 0, 0.15)"
+          boxShadow="0 24px 60px rgba(15, 23, 42, 0.18)"
           bg="bg.panel"
         >
           <Dialog.Header
             bg="bg.panel"
-            py={4}
-            px={6}
+            py={5}
+            px={{ base: 6, md: 8 }}
             borderBottom="1px solid"
             borderColor="border.muted"
-            position="relative"
           >
-            <HStack gap={3}>
-              <Badge
-                colorScheme={
-                  card.status === "done"
-                    ? "green"
-                    : card.status === "inprogress"
-                      ? "blue"
-                      : "gray"
-                }
-                px={2}
-                py={1}
-                borderRadius="md"
-                fontSize="xs"
-                fontWeight="600"
-              >
-                {statusLabels[card.status]}
-              </Badge>
-              <HStack
-                gap={1.5}
-                color={
-                  card.priority === "High"
-                    ? "red.500"
-                    : card.priority === "Medium"
-                      ? "orange.500"
-                      : "blue.500"
-                }
-              >
-                <Box as={PriorityIcon} fontSize="14px" />
-                <Text fontSize="xs" fontWeight="600">
-                  {card.priority}
-                </Text>
+            <HStack justify="space-between" align="center">
+              <HStack gap={3} align="center">
+                <Box
+                  w="40px"
+                  h="40px"
+                  borderRadius="14px"
+                  bg="linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%)"
+                  color="white"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  boxShadow="0 10px 20px rgba(14, 165, 233, 0.25)"
+                >
+                  <FiFileText size={18} />
+                </Box>
+                <Box>
+                  <Text
+                    fontSize="xs"
+                    fontWeight="700"
+                    color="text.muted"
+                    textTransform="uppercase"
+                    letterSpacing="0.12em"
+                  >
+                    Task
+                  </Text>
+                  <Text fontSize="lg" fontWeight="700" color="text.primary">
+                    Task details
+                  </Text>
+                </Box>
+              </HStack>
+              <HStack gap={3}>
+                <Badge
+                  colorScheme={
+                    card.status === "done"
+                      ? "green"
+                      : card.status === "inprogress"
+                        ? "blue"
+                        : "gray"
+                  }
+                  px={2.5}
+                  py={1}
+                  borderRadius="full"
+                  fontSize="xs"
+                  fontWeight="700"
+                >
+                  {statusLabels[card.status]}
+                </Badge>
+                <HStack
+                  gap={1.5}
+                  color={
+                    card.priority === "High"
+                      ? "red.500"
+                      : card.priority === "Medium"
+                        ? "orange.500"
+                        : "blue.500"
+                  }
+                >
+                  <Box as={PriorityIcon} fontSize="14px" />
+                  <Text fontSize="xs" fontWeight="700">
+                    {card.priority}
+                  </Text>
+                </HStack>
+                <Dialog.CloseTrigger
+                  borderRadius="full"
+                  w="40px"
+                  h="40px"
+                  color="text.muted"
+                  _hover={{ bg: "bg.muted" }}
+                />
               </HStack>
             </HStack>
-            <Dialog.CloseTrigger
-              position="absolute"
-              right="20px"
-              top="20px"
-              borderRadius="lg"
-              color="text.muted"
-              _hover={{ bg: "bg.muted" }}
-            />
           </Dialog.Header>
 
-          <Dialog.Body bg="bg.panel" px={6} py={6} overflowY="auto">
+          <Dialog.Body
+            bg="bg.panel"
+            px={{ base: 6, md: 8 }}
+            py={6}
+            overflowY="auto"
+          >
             <Stack gap={6}>
               {/* Title */}
               <Heading
@@ -219,7 +252,7 @@ const TaskDetailsModal: React.FC<Props> = ({
               )}
 
               {/* Blocked */}
-              {card.blocked && card.blockedReason && (
+              {card.blocked && (
                 <Box
                   bg="red.50"
                   border="2px solid"
@@ -234,7 +267,7 @@ const TaskDetailsModal: React.FC<Props> = ({
                     </Text>
                   </HStack>
                   <Text fontSize="sm" color="red.700">
-                    {card.blockedReason}
+                    {card.blockedReason || "No reason provided"}
                   </Text>
                 </Box>
               )}
@@ -367,28 +400,47 @@ const TaskDetailsModal: React.FC<Props> = ({
               {/* Subtasks */}
               {card.subtasks && card.subtasks.length > 0 && (
                 <Box pt={4} borderTop="1px solid" borderColor="border.muted">
-                  <HStack mb={3}>
-                    <HStack gap={2} align="center" flex="1">
-                      <FiCheckSquare size={16} color="gray" />
-                      <Text fontSize="sm" fontWeight="600" color="text.primary">
-                        Subtasks (
-                        {card.subtasks.filter((st) => st.completed).length}/
-                        {card.subtasks.length})
+                  <HStack mb={3} justify="space-between">
+                    <HStack gap={2} align="center">
+                      <Box as={FiCheckSquare} fontSize="16px" color="gray.600" />
+                      <Text fontSize="sm" fontWeight="700" color="text.primary">
+                        Subtasks
                       </Text>
+                      <Badge
+                        px={2}
+                        py={0.5}
+                        borderRadius="full"
+                        fontSize="xs"
+                        fontWeight="700"
+                        bg="blue.50"
+                        color="blue.700"
+                      >
+                        {card.subtasks.filter((st) => st.completed).length}/
+                        {card.subtasks.length}
+                      </Badge>
                     </HStack>
                   </HStack>
-                  <Stack gap={1}>
-                    {card.subtasks.map((subtask) => (
-                      <HStack
-                        key={subtask.id}
-                        py={1.5}
-                        justify="space-between"
-                        align="center"
-                        px={2}
-                        borderRadius="md"
-                        _hover={{ bg: "gray.50" }}
-                      >
-                        <HStack gap={2} flex="1" align="center">
+
+                  <Box
+                    borderRadius="xl"
+                    border="1px solid"
+                    borderColor="border.muted"
+                    bg="bg.panel"
+                    overflow="hidden"
+                  >
+                    <Stack gap={0}>
+                      {card.subtasks.map((subtask, index) => (
+                        <HStack
+                          key={subtask.id}
+                          py={2.5}
+                          px={3}
+                          gap={3}
+                          align="center"
+                          bg="bg.panel"
+                          borderTop={index === 0 ? "none" : "1px solid"}
+                          borderColor="border.muted"
+                          _hover={{ bg: "bg.muted" }}
+                        >
                           <Box
                             color={subtask.completed ? "gray.500" : "gray.400"}
                             fontSize="14px"
@@ -410,12 +462,9 @@ const TaskDetailsModal: React.FC<Props> = ({
                             {subtask.text}
                           </Text>
                         </HStack>
-                        <Box color="gray.400" fontSize="14px" flexShrink={0}>
-                          <FiPlus />
-                        </Box>
-                      </HStack>
-                    ))}
-                  </Stack>
+                      ))}
+                    </Stack>
+                  </Box>
                 </Box>
               )}
 

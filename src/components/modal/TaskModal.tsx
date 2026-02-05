@@ -8,6 +8,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+import { FiEdit2, FiPlus } from "react-icons/fi";
 import type { Priority, Status, Subtask } from "@/types";
 import { AppButton, AppInput, AppTextarea } from "@/ui";
 import {
@@ -39,12 +40,15 @@ type Props = {
   editingId: string | null;
   form: FormState;
   isSaving?: boolean;
+  errors?: Partial<Record<keyof FormState, string>>;
   onChange: (
     event: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >,
   ) => void;
-  onToggleBlocked: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onToggleBlocked: (
+    eventOrChecked: React.ChangeEvent<HTMLInputElement> | boolean,
+  ) => void;
 };
 
 const TaskModal: React.FC<Props> = ({
@@ -54,6 +58,7 @@ const TaskModal: React.FC<Props> = ({
   editingId,
   form,
   isSaving = false,
+  errors,
   onChange,
   onToggleBlocked,
 }) => {
@@ -65,32 +70,60 @@ const TaskModal: React.FC<Props> = ({
       <Dialog.Backdrop bg="blackAlpha.600" backdropFilter="blur(8px)" />
       <Dialog.Positioner>
         <Dialog.Content
-          borderRadius="lg"
+          borderRadius="2xl"
           overflow="hidden"
-          maxW="900px"
-          boxShadow="0 20px 40px rgba(0, 0, 0, 0.15)"
+          maxW="980px"
+          boxShadow="0 24px 60px rgba(15, 23, 42, 0.18)"
           bg="bg.panel"
         >
           <Dialog.Header
             bg="bg.panel"
-            py={4}
-            px={6}
+            py={5}
+            px={{ base: 6, md: 8 }}
             borderBottom="1px solid"
             borderColor="border.muted"
           >
             <HStack justify="space-between">
-              <Text fontSize="sm" fontWeight="600" color="text.secondary">
-                {editingId ? "Edit task" : "Create task"}
-              </Text>
+              <HStack gap={3} align="center">
+                <Box
+                  w="40px"
+                  h="40px"
+                  borderRadius="14px"
+                  bg="linear-gradient(135deg, #2563eb 0%, #38bdf8 100%)"
+                  color="white"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  boxShadow="0 10px 20px rgba(37, 99, 235, 0.25)"
+                >
+                  <Box as={editingId ? FiEdit2 : FiPlus} fontSize="18px" />
+                </Box>
+                <Box>
+                  <Text
+                    fontSize="xs"
+                    fontWeight="700"
+                    color="text.muted"
+                    textTransform="uppercase"
+                    letterSpacing="0.12em"
+                  >
+                    Task
+                  </Text>
+                  <Text fontSize="lg" fontWeight="700" color="text.primary">
+                    {editingId ? "Edit task" : "Create task"}
+                  </Text>
+                </Box>
+              </HStack>
               <Dialog.CloseTrigger
-                borderRadius="md"
-                _hover={{ bg: "gray.100" }}
+                borderRadius="full"
+                w="40px"
+                h="40px"
+                _hover={{ bg: "bg.muted" }}
               />
             </HStack>
           </Dialog.Header>
 
-          <Dialog.Body bg="bg.panel" px={6} pt={6} pb={6}>
-            <Stack gap={5}>
+          <Dialog.Body bg="bg.panel" px={{ base: 6, md: 8 }} pt={6} pb={6}>
+            <Stack gap={6}>
               {/* Title */}
               <Field.Root>
                 <AppInput
@@ -99,8 +132,22 @@ const TaskModal: React.FC<Props> = ({
                   onChange={onChange}
                   placeholder="Task title"
                   fontSize="md"
-                  fontWeight="500"
+                  fontWeight="600"
+                  h="48px"
+                  borderRadius="xl"
+                  borderColor={errors?.title ? "red.300" : undefined}
+                  _focusVisible={{
+                    borderColor: errors?.title ? "red.400" : "blue.400",
+                    boxShadow: errors?.title
+                      ? "0 0 0 3px rgba(248, 113, 113, 0.2)"
+                      : "0 0 0 3px rgba(59, 130, 246, 0.15)",
+                  }}
                 />
+                {errors?.title && (
+                  <Text fontSize="xs" color="red.500" mt={2}>
+                    {errors.title}
+                  </Text>
+                )}
               </Field.Root>
 
               {/* Description */}
@@ -118,12 +165,13 @@ const TaskModal: React.FC<Props> = ({
                   value={form.content}
                   onChange={onChange}
                   placeholder="Add a description..."
-                  rows={4}
+                  rows={5}
+                  borderRadius="xl"
                 />
               </Field.Root>
 
               {/* Two Column Layout */}
-              <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={5}>
+              <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={6}>
                 {/* Left Column */}
                 <Stack gap={4}>
                   <Field.Root>
@@ -216,62 +264,70 @@ const TaskModal: React.FC<Props> = ({
                     />
                   </Field.Root>
 
-                  {form.blocked && (
+                  {editingId && form.blocked && (
                     <Field.Root>
                       <Field.Label
                         fontSize="xs"
                         fontWeight="600"
                         color="gray.600"
                         mb={2}
-                      >
-                        BLOCKED REASON
-                      </Field.Label>
+                    >
+                      BLOCKED REASON (OPTIONAL)
+                    </Field.Label>
                       <AppInput
                         name="blockedReason"
                         value={form.blockedReason}
                         onChange={onChange}
                         placeholder="What's blocking this?"
                       />
+                      {errors?.blockedReason && (
+                        <Text fontSize="xs" color="red.500" mt={2}>
+                          {errors.blockedReason}
+                        </Text>
+                      )}
                     </Field.Root>
                   )}
                 </Stack>
               </Grid>
 
-              {/* Subtasks */}
-              <Box pt={3} borderTop="1px solid" borderColor="border.muted">
-                <SubtaskList
-                  subtasks={form.subtasks}
-                  onChange={(subtasks) =>
-                    onChange({
-                      target: { name: "subtasks", value: subtasks },
-                    } as any)
-                  }
-                />
-              </Box>
+              {/* Subtasks (only after task exists) */}
+              {editingId && (
+                <Box
+                  pt={4}
+                  borderTop="1px solid"
+                  borderColor="border.muted"
+                >
+                  <SubtaskList
+                    subtasks={form.subtasks}
+                    onChange={(subtasks) =>
+                      onChange({
+                        target: { name: "subtasks", value: subtasks },
+                      } as any)
+                    }
+                  />
+                </Box>
+              )}
 
               {/* Blocked Toggle */}
-              <HStack pt={2}>
-                <AppButton
-                  size="sm"
-                  variantStyle={form.blocked ? "primary" : "outline"}
-                  onClick={() =>
-                    onToggleBlocked({
-                      target: {
-                        checked: !form.blocked,
-                      } as HTMLInputElement,
-                    } as React.ChangeEvent<HTMLInputElement>)
-                  }
-                >
-                  {form.blocked ? "🚫 Blocked" : "Mark as blocked"}
-                </AppButton>
-              </HStack>
+              {editingId && (
+                <HStack pt={1}>
+                  <AppButton
+                    size="sm"
+                    variantStyle={form.blocked ? "primary" : "outline"}
+                    onClick={() => onToggleBlocked(!form.blocked)}
+                    borderRadius="full"
+                  >
+                    {form.blocked ? "🚫 Blocked" : "Mark as blocked"}
+                  </AppButton>
+                </HStack>
+              )}
             </Stack>
           </Dialog.Body>
 
           <Dialog.Footer
             bg="bg.panel"
-            py={4}
-            px={6}
+            py={5}
+            px={{ base: 6, md: 8 }}
             borderTop="1px solid"
             borderColor="border.muted"
           >
@@ -284,6 +340,8 @@ const TaskModal: React.FC<Props> = ({
                 onClick={onSave}
                 loading={isSaving}
                 disabled={isSaving}
+                borderRadius="full"
+                px={6}
               >
                 {editingId ? "Save" : "Create"}
               </AppButton>

@@ -8,7 +8,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { FiX } from "react-icons/fi";
+import { FiX, FiLayout } from "react-icons/fi";
 import { AppButton, AppInput, AppTextarea } from "@/ui";
 import { useCreateBoardMutation, useCreateTagMutation } from "@/store";
 import { BOARD_TEMPLATES, getTemplateConfig } from "@/config/boardTemplates";
@@ -85,34 +85,62 @@ const BoardModal: React.FC<Props> = ({ isOpen, onClose }) => {
       <Dialog.Backdrop bg="blackAlpha.600" backdropFilter="blur(8px)" />
       <Dialog.Positioner>
         <Dialog.Content
-          borderRadius="lg"
+          borderRadius="2xl"
           overflow="hidden"
-          maxW="700px"
-          boxShadow="0 20px 40px rgba(0, 0, 0, 0.15)"
+          maxW="780px"
+          boxShadow="0 24px 60px rgba(15, 23, 42, 0.18)"
           bg="bg.panel"
         >
           <Dialog.Header
             bg="bg.panel"
-            py={4}
-            px={6}
+            py={5}
+            px={{ base: 6, md: 8 }}
             borderBottom="1px solid"
             borderColor="border.muted"
           >
             <HStack justify="space-between">
-              <Text fontSize="md" fontWeight="600" color="text.primary">
-                Create New Board
-              </Text>
+              <HStack gap={3} align="center">
+                <Box
+                  w="40px"
+                  h="40px"
+                  borderRadius="14px"
+                  bg="linear-gradient(135deg, #2563eb 0%, #38bdf8 100%)"
+                  color="white"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  boxShadow="0 10px 20px rgba(37, 99, 235, 0.25)"
+                >
+                  <FiLayout size={18} />
+                </Box>
+                <Box>
+                  <Text
+                    fontSize="xs"
+                    fontWeight="700"
+                    color="text.muted"
+                    textTransform="uppercase"
+                    letterSpacing="0.12em"
+                  >
+                    Board
+                  </Text>
+                  <Text fontSize="lg" fontWeight="700" color="text.primary">
+                    Create new board
+                  </Text>
+                </Box>
+              </HStack>
               <Dialog.CloseTrigger
-                borderRadius="md"
-                _hover={{ bg: "gray.100" }}
+                borderRadius="full"
+                w="40px"
+                h="40px"
+                _hover={{ bg: "bg.muted" }}
               >
                 <FiX size={18} />
               </Dialog.CloseTrigger>
             </HStack>
           </Dialog.Header>
 
-          <Dialog.Body bg="bg.panel" px={6} py={6}>
-            <Stack gap={5}>
+          <Dialog.Body bg="bg.panel" px={{ base: 6, md: 8 }} py={6}>
+            <Stack gap={6}>
               {/* Board Name */}
               <Field.Root>
                 <Field.Label
@@ -184,10 +212,21 @@ const BoardModal: React.FC<Props> = ({ isOpen, onClose }) => {
                       textAlign="left"
                     >
                       <HStack gap={3} align="flex-start">
-                        <Text fontSize="2xl">{template.icon}</Text>
+                        <Box
+                          w="28px"
+                          h="28px"
+                          display="flex"
+                          alignItems="center"
+                          justifyContent="center"
+                          mt="2px"
+                        >
+                          <Text fontSize="22px" lineHeight="1">
+                            {template.icon}
+                          </Text>
+                        </Box>
                         <Stack gap={1} flex="1">
                           <Text
-                            fontSize="sm"
+                            fontSize="md"
                             fontWeight="600"
                             color="text.primary"
                           >
@@ -196,7 +235,7 @@ const BoardModal: React.FC<Props> = ({ isOpen, onClose }) => {
                           <Text
                             fontSize="xs"
                             color="text.muted"
-                            lineHeight="1.4"
+                            lineHeight="1.45"
                           >
                             {template.description}
                           </Text>

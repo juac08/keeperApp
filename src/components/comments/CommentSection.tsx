@@ -3,7 +3,7 @@ import { Box, HStack, Stack, Text, VStack } from "@chakra-ui/react";
 import { FiMessageSquare, FiSend } from "react-icons/fi";
 import type { Comment } from "@/types";
 import { useAssigneesStore } from "@/state/AssigneesStore";
-import { AppButton, AppTextarea } from "@/ui";
+import { AppButton, AppTextarea, AvatarCircle } from "@/ui";
 
 type Props = {
   comments: Comment[];
@@ -43,11 +43,36 @@ const CommentSection: React.FC<Props> = ({ comments, onAddComment }) => {
 
   return (
     <Box>
-      <HStack mb={3}>
-        <FiMessageSquare size={16} />
-        <Text fontSize="sm" fontWeight="600" color="text.primary">
-          Comments ({comments.length})
-        </Text>
+      <HStack mb={3} justify="space-between">
+        <HStack gap={2}>
+          <Box
+            w="28px"
+            h="28px"
+            borderRadius="10px"
+            bg="bg.muted"
+            border="1px solid"
+            borderColor="border.muted"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <FiMessageSquare size={14} />
+          </Box>
+          <Text fontSize="sm" fontWeight="700" color="text.primary">
+            Comments
+          </Text>
+          <Box
+            px={2}
+            py={0.5}
+            borderRadius="full"
+            fontSize="xs"
+            fontWeight="700"
+            bg="blue.50"
+            color="blue.700"
+          >
+            {comments.length}
+          </Box>
+        </HStack>
       </HStack>
 
       <Stack gap={3}>
@@ -55,13 +80,13 @@ const CommentSection: React.FC<Props> = ({ comments, onAddComment }) => {
           <Box
             p={4}
             textAlign="center"
-            borderRadius="md"
+            borderRadius="lg"
             bg="bg.muted"
             border="1px dashed"
             borderColor="border.muted"
           >
             <Text fontSize="sm" color="text.muted">
-              No comments yet. Be the first to comment!
+              No comments yet. Start the conversation.
             </Text>
           </Box>
         ) : (
@@ -69,7 +94,8 @@ const CommentSection: React.FC<Props> = ({ comments, onAddComment }) => {
             const author = comment.authorId
               ? getAssignee(comment.authorId)
               : null;
-            const displayName = author?.name || comment.authorName || "Unknown";
+            const displayName =
+              author?.name || comment.authorName || "Unknown";
             const initialsSource = author?.name || comment.authorName;
             const initial = initialsSource
               ? initialsSource.charAt(0).toUpperCase()
@@ -78,42 +104,40 @@ const CommentSection: React.FC<Props> = ({ comments, onAddComment }) => {
               <Box
                 key={comment.id}
                 p={3}
-                bg="bg.muted"
-                borderRadius="md"
-                borderLeft="3px solid"
-                borderLeftColor="blue.400"
+                bg="bg.panel"
+                borderRadius="lg"
+                border="1px solid"
+                borderColor="border.muted"
+                _hover={{ borderColor: "blue.100" }}
+                transition="all 0.15s"
               >
-                <HStack justify="space-between" mb={1}>
-                  <HStack gap={2}>
-                    <Box
-                      w="24px"
-                      h="24px"
-                      borderRadius="full"
-                      bg="blue.100"
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="center"
-                      fontSize="xs"
-                      fontWeight="600"
-                      color="blue.700"
+                <HStack align="flex-start" gap={3}>
+                  <AvatarCircle
+                    name={displayName}
+                    avatar={author?.avatar}
+                    seed={author?.id || comment.id}
+                    size="30px"
+                    fontSize="xs"
+                  />
+                  <Box flex="1">
+                    <HStack justify="space-between" align="center">
+                      <Text fontSize="sm" fontWeight="700" color="text.primary">
+                        {displayName}
+                      </Text>
+                      <Text fontSize="xs" color="text.muted">
+                        {formatTimestamp(comment.createdAt)}
+                      </Text>
+                    </HStack>
+                    <Text
+                      fontSize="sm"
+                      color="text.secondary"
+                      whiteSpace="pre-wrap"
+                      mt={1}
                     >
-                      {initial}
-                    </Box>
-                    <Text fontSize="sm" fontWeight="600" color="text.primary">
-                      {displayName}
+                      {comment.text}
                     </Text>
-                  </HStack>
-                  <Text fontSize="xs" color="text.muted">
-                    {formatTimestamp(comment.createdAt)}
-                  </Text>
+                  </Box>
                 </HStack>
-                <Text
-                  fontSize="sm"
-                  color="text.secondary"
-                  whiteSpace="pre-wrap"
-                >
-                  {comment.text}
-                </Text>
               </Box>
             );
           })
