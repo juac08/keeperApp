@@ -40,22 +40,22 @@ const config = defineConfig({
     semanticTokens: {
       colors: {
         "bg.canvas": {
-          value: { _light: "#f6f8fb", _dark: "#0f172a" },
+          value: { _light: "#f6f8fb", _dark: "#0b1220" },
         },
         "bg.panel": {
-          value: { _light: "#ffffff", _dark: "#1e293b" },
+          value: { _light: "#ffffff", _dark: "#111827" },
         },
         "bg.muted": {
-          value: { _light: "#f1f4f9", _dark: "#334155" },
+          value: { _light: "#f1f4f9", _dark: "#1f2937" },
         },
         "border.muted": {
-          value: { _light: "#e2e8f0", _dark: "#475569" },
+          value: { _light: "#e2e8f0", _dark: "#2b3646" },
         },
         "text.primary": {
-          value: { _light: "#0f172a", _dark: "#f1f5f9" },
+          value: { _light: "#0f172a", _dark: "#e5e7eb" },
         },
         "text.secondary": {
-          value: { _light: "#334155", _dark: "#cbd5e1" },
+          value: { _light: "#334155", _dark: "#c7d2fe" },
         },
         "text.muted": {
           value: { _light: "#64748b", _dark: "#94a3b8" },

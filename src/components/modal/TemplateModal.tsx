@@ -27,6 +27,7 @@ export const TemplateModal: React.FC<Props> = ({
         <Dialog.Content
           borderRadius="2xl"
           maxW="960px"
+          overflow="hidden"
           boxShadow="0 24px 60px rgba(15, 23, 42, 0.18)"
           bg="bg.panel"
         >
@@ -120,6 +121,7 @@ export const TemplateModal: React.FC<Props> = ({
             borderTop="1px solid"
             borderColor="border.muted"
             bg="bg.panel"
+            borderBottomRadius="2xl"
           >
             <Text fontSize="xs" color="text.muted">
               Select a template to quickly create a task with pre-filled content
