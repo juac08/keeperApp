@@ -5,6 +5,7 @@ import { useGetBoardsQuery, setActiveBoard, useGetMeQuery } from "@/store";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import { AppButton } from "@/ui";
 import { BOARD_TEMPLATES } from "@/config/boardTemplates";
+import type { BoardTemplate } from "@/types";
 
 type Props = {
   onCreateBoard: () => void;
@@ -49,9 +50,31 @@ const BoardSelector: React.FC<Props> = ({ onCreateBoard }) => {
     setIsOpen(false);
   };
 
+  const getStoredValue = (key: string, id: string) => {
+    if (typeof window === "undefined") return undefined;
+    try {
+      const map = JSON.parse(localStorage.getItem(key) ?? "{}") as Record<
+        string,
+        string
+      >;
+      return map[id];
+    } catch (error) {
+      return undefined;
+    }
+  };
+
   const resolveBoardIcon = (board: typeof boards[number] | undefined) => {
     if (!board) return "📋";
     if (board.icon) return board.icon;
+    const storedIcon = getStoredValue("keeper.boardIcons", board.id);
+    if (storedIcon) return storedIcon;
+    const storedTemplate = getStoredValue("keeper.boardTemplates", board.id);
+    if (
+      storedTemplate &&
+      Object.prototype.hasOwnProperty.call(BOARD_TEMPLATES, storedTemplate)
+    ) {
+      return BOARD_TEMPLATES[storedTemplate as BoardTemplate].icon;
+    }
     if (board.template && BOARD_TEMPLATES[board.template]) {
       return BOARD_TEMPLATES[board.template].icon;
     }
@@ -116,9 +139,10 @@ const BoardSelector: React.FC<Props> = ({ onCreateBoard }) => {
             display="flex"
             alignItems="center"
             justifyContent="center"
-            fontSize="18px"
           >
-            {resolveBoardIcon(activeBoard)}
+            <Text fontSize="18px" lineHeight="1">
+              {resolveBoardIcon(activeBoard)}
+            </Text>
           </Box>
           <Text fontSize="md" fontWeight="700" color="text.primary">
             {activeBoard?.name || "Select Board"}
@@ -162,7 +186,21 @@ const BoardSelector: React.FC<Props> = ({ onCreateBoard }) => {
               }}
             >
               <HStack gap={2.5} w="100%">
-                <Text fontSize="xl">{resolveBoardIcon(board)}</Text>
+                <Box
+                  w="28px"
+                  h="28px"
+                  borderRadius="10px"
+                  bg="bg.muted"
+                  border="1px solid"
+                  borderColor="border.muted"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Text fontSize="16px" lineHeight="1">
+                    {resolveBoardIcon(board)}
+                  </Text>
+                </Box>
                 <Stack gap={0} flex="1" minW="0">
                   <Text fontSize="sm" fontWeight="600" color="text.primary">
                     {board.name}

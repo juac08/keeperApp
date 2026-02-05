@@ -45,6 +45,24 @@ const BoardModal: React.FC<Props> = ({ isOpen, onClose }) => {
         icon,
       }).unwrap();
 
+      try {
+        const iconMap = JSON.parse(
+          localStorage.getItem("keeper.boardIcons") ?? "{}",
+        );
+        const templateMap = JSON.parse(
+          localStorage.getItem("keeper.boardTemplates") ?? "{}",
+        );
+        iconMap[board.id] = icon;
+        templateMap[board.id] = selectedTemplate;
+        localStorage.setItem("keeper.boardIcons", JSON.stringify(iconMap));
+        localStorage.setItem(
+          "keeper.boardTemplates",
+          JSON.stringify(templateMap),
+        );
+      } catch (error) {
+        console.warn("Failed to persist board icon/template", error);
+      }
+
       if (template.defaultTags.length > 0) {
         await Promise.all(
           template.defaultTags.map((tag) =>
