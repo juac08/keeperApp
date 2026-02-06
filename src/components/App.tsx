@@ -17,16 +17,6 @@ import { COLUMNS } from "@/config";
 import { BoardView } from "@/components/board";
 import AppToaster, { appToaster } from "@/shared";
 import {
-  TaskModal,
-  TaskDetailsModal,
-  BoardModal,
-  BoardMembersModal,
-  OrganizationMembersModal,
-  ArchiveModal,
-  ExportImportModal,
-  TemplateModal,
-} from "@/components/modal";
-import {
   useGetBoardsQuery,
   useGetMeQuery,
   useGetTagsQuery,
@@ -55,6 +45,32 @@ import {
   SkeletonCard,
 } from "@/ui";
 
+const TaskModal = React.lazy(() => import("@/components/modal/TaskModal"));
+const TaskDetailsModal = React.lazy(
+  () => import("@/components/modal/TaskDetailsModal"),
+);
+const BoardModal = React.lazy(() => import("@/components/modal/BoardModal"));
+const BoardMembersModal = React.lazy(
+  () => import("@/components/modal/BoardMembersModal"),
+);
+const OrganizationMembersModal = React.lazy(
+  () => import("@/components/modal/OrganizationMembersModal"),
+);
+const ArchiveModal = React.lazy(() =>
+  import("@/components/modal/ArchiveModal").then((m) => ({
+    default: m.ArchiveModal,
+  })),
+);
+const ExportImportModal = React.lazy(() =>
+  import("@/components/modal/ExportImportModal").then((m) => ({
+    default: m.ExportImportModal,
+  })),
+);
+const TemplateModal = React.lazy(() =>
+  import("@/components/modal/TemplateModal").then((m) => ({
+    default: m.TemplateModal,
+  })),
+);
 const emptyForm: TaskForm = {
   title: "",
   content: "",
@@ -919,59 +935,61 @@ const AuthenticatedApp: React.FC = () => {
           />
         </Panel>
 
-        <TaskModal
-          isOpen={isOpen}
-          onClose={closeModal}
-          onSave={saveCard}
-          editingId={editingId}
-          form={form}
-          onChange={updateForm}
-          onToggleBlocked={toggleBlocked}
-          isSaving={isSavingTask}
-          errors={taskErrors}
-        />
-        <TaskDetailsModal
-          card={detailsCard}
-          isOpen={isDetailsOpen}
-          onClose={closeDetailsModal}
-          onEdit={openEditModal}
-          onAddComment={handleAddComment}
-        />
+        <React.Suspense fallback={null}>
+          <TaskModal
+            isOpen={isOpen}
+            onClose={closeModal}
+            onSave={saveCard}
+            editingId={editingId}
+            form={form}
+            onChange={updateForm}
+            onToggleBlocked={toggleBlocked}
+            isSaving={isSavingTask}
+            errors={taskErrors}
+          />
+          <TaskDetailsModal
+            card={detailsCard}
+            isOpen={isDetailsOpen}
+            onClose={closeDetailsModal}
+            onEdit={openEditModal}
+            onAddComment={handleAddComment}
+          />
 
-        <BoardModal isOpen={isBoardModalOpen} onClose={closeBoardModal} />
+          <BoardModal isOpen={isBoardModalOpen} onClose={closeBoardModal} />
 
-        <ArchiveModal
-          isOpen={isArchiveOpen}
-          onClose={closeArchiveModal}
-          onRestore={handleRestoreCard}
-        />
+          <ArchiveModal
+            isOpen={isArchiveOpen}
+            onClose={closeArchiveModal}
+            onRestore={handleRestoreCard}
+          />
 
-        <ExportImportModal
-          isOpen={isExportImportOpen}
-          onClose={closeExportImportModal}
-          boardId={activeBoard?.id || "default"}
-          boardName={boardName}
-          cards={cards}
-          onImport={handleImport}
-        />
+          <ExportImportModal
+            isOpen={isExportImportOpen}
+            onClose={closeExportImportModal}
+            boardId={activeBoard?.id || "default"}
+            boardName={boardName}
+            cards={cards}
+            onImport={handleImport}
+          />
 
-        <TemplateModal
-          isOpen={isTemplateOpen}
-          onClose={closeTemplateModal}
-          onSelectTemplate={handleSelectTemplate}
-        />
+          <TemplateModal
+            isOpen={isTemplateOpen}
+            onClose={closeTemplateModal}
+            onSelectTemplate={handleSelectTemplate}
+          />
 
-        <BoardMembersModal
-          boardId={activeBoardId || ""}
-          isOpen={isMembersOpen}
-          onClose={closeMembersModal}
-        />
+          <BoardMembersModal
+            boardId={activeBoardId || ""}
+            isOpen={isMembersOpen}
+            onClose={closeMembersModal}
+          />
 
-        <OrganizationMembersModal
-          organizationId={user?.organizationId || ""}
-          isOpen={isOrganizationMembersOpen}
-          onClose={closeOrganizationMembersModal}
-        />
+          <OrganizationMembersModal
+            organizationId={user?.organizationId || ""}
+            isOpen={isOrganizationMembersOpen}
+            onClose={closeOrganizationMembersModal}
+          />
+        </React.Suspense>
 
         <Dialog.Root
           open={isDeleteDialogOpen}
