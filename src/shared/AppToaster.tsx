@@ -18,6 +18,9 @@ const AppToaster: React.FC = () => {
       {(toast: ToastOptions) => {
         const isInfo = toast.type === "info";
         const iconColor = isInfo ? "blue.500" : "green.500";
+        const isDark =
+          typeof document !== "undefined" &&
+          document.documentElement.getAttribute("data-theme") === "dark";
         const Icon = isInfo ? FiInfo : FiCheckCircle;
 
         return (
@@ -66,7 +69,7 @@ const AppToaster: React.FC = () => {
                 <Box flex="1" minW="0">
                   <Toast.Title
                     fontWeight="600"
-                    color="gray.900"
+                    color={isDark ? "text.primary" : "gray.900"}
                     lineHeight="1.5"
                     wordBreak="break-word"
                   >
@@ -75,7 +78,7 @@ const AppToaster: React.FC = () => {
                   {toast.description && (
                     <Toast.Description
                       mt={1}
-                      color="gray.600"
+                      color={isDark ? "text.secondary" : "gray.600"}
                       lineHeight="1.5"
                       wordBreak="break-word"
                     >
@@ -94,8 +97,11 @@ const AppToaster: React.FC = () => {
                 display="flex"
                 alignItems="center"
                 justifyContent="center"
-                color="gray.400"
-                _hover={{ bg: "gray.100", color: "gray.600" }}
+                color={isDark ? "text.muted" : "gray.400"}
+                _hover={{
+                  bg: isDark ? "bg.muted" : "gray.100",
+                  color: isDark ? "text.primary" : "gray.600",
+                }}
                 transition="all 0.2s"
               >
                 <FiX size={16} />
