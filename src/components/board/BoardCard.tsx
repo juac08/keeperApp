@@ -53,7 +53,7 @@ const BoardCard: React.FC<Props> = ({
       borderColor="border.muted"
       borderRadius="xl"
       p={padding}
-      boxShadow={isDragging ? "lg" : "0 12px 24px rgba(15, 23, 42, 0.06)"}
+      boxShadow={isDragging ? "soft" : "0 10px 22px rgba(15, 23, 42, 0.08)"}
       onClick={() => !isDragging && onCardClick(card)}
       cursor={isDragging ? "grabbing" : "pointer"}
       opacity={isDragging ? 0.9 : 1}
@@ -62,7 +62,7 @@ const BoardCard: React.FC<Props> = ({
       transition="all 0.15s ease"
       _hover={{
         transform: isDragging ? "rotate(2deg)" : "translateY(-2px)",
-        boxShadow: isDragging ? "lg" : "0 18px 36px rgba(15, 23, 42, 0.1)",
+        boxShadow: isDragging ? "soft" : "0 18px 36px rgba(15, 23, 42, 0.16)",
         borderColor: "blue.200",
       }}
     >

@@ -7,18 +7,19 @@ const AppInput: React.FC<InputProps> = (props) => {
     <Input
       bg="bg.panel"
       borderColor="border.muted"
-      borderRadius="xl"
+      borderRadius="control"
       h="48px"
       px={4}
       fontSize="sm"
       color="text.primary"
       borderWidth={1}
       _placeholder={{ color: "text.muted", fontWeight: "400" }}
-      _hover={{ borderColor: "blue.200" }}
+      _hover={{ borderColor: "blue.300" }}
       _focusVisible={{
-        borderColor: "blue.400",
-        boxShadow: "0 0 0 3px rgba(59, 130, 246, 0.15)",
+        borderColor: "blue.500",
+        boxShadow: "0 0 0 3px rgba(31, 134, 220, 0.2)",
       }}
+      transition="all 0.18s ease"
       {...props}
     />
   );

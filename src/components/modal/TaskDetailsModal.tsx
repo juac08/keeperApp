@@ -27,9 +27,10 @@ import {
   FiMessageCircle,
   FiCheckSquare,
   FiSquare,
+  FiX,
 } from "react-icons/fi";
 import type { Card } from "@/types";
-import { AppButton, AvatarCircle } from "@/ui";
+import { AppButton, AppIconButton, AvatarCircle } from "@/ui";
 import { useTagsStore } from "@/state/TagsStore";
 import { getTagMeta } from "@/utils/tagHelpers";
 import { useAssigneesStore } from "@/state/AssigneesStore";
@@ -201,13 +202,16 @@ const TaskDetailsModal: React.FC<Props> = ({
                     {card.priority}
                   </Text>
                 </HStack>
-                <Dialog.CloseTrigger
-                  borderRadius="full"
-                  w="40px"
-                  h="40px"
-                  color="text.muted"
-                  _hover={{ bg: "bg.muted" }}
-                />
+                <Dialog.CloseTrigger asChild>
+                  <AppIconButton
+                    aria-label="Close"
+                    size="sm"
+                    w="40px"
+                    h="40px"
+                  >
+                    <FiX />
+                  </AppIconButton>
+                </Dialog.CloseTrigger>
               </HStack>
             </HStack>
           </Dialog.Header>

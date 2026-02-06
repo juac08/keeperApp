@@ -9,8 +9,10 @@ const AppIconButton: React.FC<Props> = ({ children, ...props }) => {
     <IconButton
       variant="ghost"
       borderRadius="control"
-      color="text.muted"
-      _hover={{ bg: "bg.muted", color: "gray.900" }}
+      color="text.secondary"
+      _hover={{ bg: "bg.muted", color: "text.primary" }}
+      _active={{ bg: "blue.50", color: "text.primary" }}
+      transition="all 0.18s ease"
       {...props}
     >
       {children}

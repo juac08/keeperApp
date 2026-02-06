@@ -40,7 +40,7 @@ export const LoginForm: React.FC<{ onSuccess: () => void }> = ({
       <Box
         position="absolute"
         inset={0}
-        bgGradient="radial(circle at 10% 10%, rgba(99, 102, 241, 0.15), transparent 45%), radial(circle at 90% 20%, rgba(59, 130, 246, 0.18), transparent 40%), radial(circle at 50% 90%, rgba(14, 165, 233, 0.16), transparent 45%)"
+        bgGradient="radial(circle at 10% 10%, rgba(31, 134, 220, 0.2), transparent 45%), radial(circle at 90% 20%, rgba(114, 187, 255, 0.18), transparent 40%), radial(circle at 50% 90%, rgba(31, 134, 220, 0.16), transparent 45%)"
       />
       <Box
         position="absolute"
@@ -49,7 +49,7 @@ export const LoginForm: React.FC<{ onSuccess: () => void }> = ({
         w="280px"
         h="280px"
         borderRadius="full"
-        bg="rgba(59, 130, 246, 0.12)"
+        bg="rgba(31, 134, 220, 0.14)"
         filter="blur(1px)"
       />
       <Box
@@ -59,7 +59,7 @@ export const LoginForm: React.FC<{ onSuccess: () => void }> = ({
         w="260px"
         h="260px"
         borderRadius="full"
-        bg="rgba(99, 102, 241, 0.12)"
+        bg="rgba(114, 187, 255, 0.14)"
       />
 
       <Box
@@ -90,13 +90,13 @@ export const LoginForm: React.FC<{ onSuccess: () => void }> = ({
                 w="28px"
                 h="28px"
                 borderRadius="10px"
-                bg="blue.600"
+                bg="brand.600"
                 color="white"
                 display="flex"
                 alignItems="center"
                 justifyContent="center"
                 fontSize="16px"
-                boxShadow="0 10px 20px rgba(59, 130, 246, 0.3)"
+                boxShadow="0 10px 20px rgba(31, 134, 220, 0.3)"
               >
                 K
               </Box>
@@ -167,7 +167,7 @@ export const LoginForm: React.FC<{ onSuccess: () => void }> = ({
                 <Text
                   fontSize="xs"
                   fontWeight="700"
-                  color="blue.600"
+                  color="brand.600"
                   letterSpacing="0.12em"
                   textTransform="uppercase"
                 >

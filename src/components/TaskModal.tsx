@@ -9,9 +9,9 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { FiColumns } from "react-icons/fi";
+import { FiColumns, FiX } from "react-icons/fi";
 import type { Priority, Status } from "../types";
-import { AppButton, AppInput, AppTextarea } from "@/ui";
+import { AppButton, AppIconButton, AppInput, AppTextarea } from "@/ui";
 import {
   PrioritySelect,
   StatusSelect,
@@ -116,14 +116,19 @@ const TaskModal: React.FC<Props> = ({
                 </Heading>
               </Box>
             </HStack>
-            <Dialog.CloseTrigger
-              position="absolute"
-              right="20px"
-              top="20px"
-              borderRadius="lg"
-              color="text.muted"
-              _hover={{ bg: "bg.muted" }}
-            />
+            <Dialog.CloseTrigger asChild>
+              <AppIconButton
+                aria-label="Close"
+                size="sm"
+                position="absolute"
+                right="20px"
+                top="20px"
+                w="40px"
+                h="40px"
+              >
+                <FiX />
+              </AppIconButton>
+            </Dialog.CloseTrigger>
           </Dialog.Header>
           <Dialog.Body bg="bg.panel" px={{ base: 6, md: 10 }} pt={8} pb={10}>
             <Grid templateColumns={{ base: "1fr", md: "1.8fr 1fr" }} gap={8}>

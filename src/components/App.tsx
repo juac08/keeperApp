@@ -11,7 +11,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { FiAlertTriangle } from "react-icons/fi";
+import { FiAlertTriangle, FiX } from "react-icons/fi";
 import { useBoard } from "@/state/BoardContext";
 import { useCardFilters } from "@/hooks/useCardFilters";
 import { useArchiveStore } from "@/state/ArchiveStore";
@@ -50,6 +50,7 @@ import { LoginForm } from "@/components/auth";
 import { useTagsStore } from "@/state/TagsStore";
 import { useAssigneesStore } from "@/state/AssigneesStore";
 import { CORE_TAG_PRESETS } from "@/utils/tagHelpers";
+import { AppIconButton } from "@/ui";
 
 const emptyForm: TaskForm = {
   title: "",
@@ -126,66 +127,80 @@ const App: React.FC = () => {
     return (
       <Box
         minH="100vh"
-        bg="bg.muted"
-        px={{ base: 4, md: 6 }}
-        py={{ base: 6, md: 8 }}
+        bg="bg.canvas"
+        position="relative"
+        overflow="hidden"
       >
         <Box
-          w="full"
-          minH="calc(100vh - 64px)"
-          bg="bg.panel"
-          borderRadius={{ base: "2xl", md: "3xl" }}
-          border="2px solid"
-          borderColor="border.muted"
-          boxShadow="soft"
-          px={{ base: 5, md: 8 }}
+          position="absolute"
+          inset={0}
+          bgGradient="radial(circle at 15% 10%, rgba(31, 134, 220, 0.18), transparent 45%), radial(circle at 90% 20%, rgba(114, 187, 255, 0.18), transparent 40%), radial(circle at 50% 90%, rgba(31, 134, 220, 0.12), transparent 50%)"
+        />
+        <Box
+          position="relative"
+          zIndex={1}
+          px={{ base: 4, md: 6 }}
           py={{ base: 6, md: 8 }}
+          maxW="1600px"
+          mx="auto"
         >
-          <HStack justify="space-between" mb={8}>
-            <HStack gap={3}>
-              <Skeleton w="44px" h="44px" borderRadius="12px" />
-              <Box>
-                <Skeleton h="18px" w="160px" mb={2} />
-                <Skeleton h="12px" w="220px" />
-              </Box>
+          <Box
+            w="full"
+            minH="calc(100vh - 64px)"
+            bg="bg.panel"
+            borderRadius={{ base: "2xl", md: "3xl" }}
+            border="2px solid"
+            borderColor="border.muted"
+            boxShadow="soft"
+            px={{ base: 5, md: 8 }}
+            py={{ base: 6, md: 8 }}
+          >
+            <HStack justify="space-between" mb={8}>
+              <HStack gap={3}>
+                <Skeleton w="44px" h="44px" borderRadius="12px" />
+                <Box>
+                  <Skeleton h="18px" w="160px" mb={2} />
+                  <Skeleton h="12px" w="220px" />
+                </Box>
+              </HStack>
+              <HStack gap={3}>
+                <Skeleton h="40px" w="160px" borderRadius="lg" />
+                <Skeleton h="40px" w="40px" borderRadius="full" />
+                <Skeleton h="40px" w="40px" borderRadius="full" />
+              </HStack>
             </HStack>
-            <HStack gap={3}>
-              <Skeleton h="40px" w="160px" borderRadius="lg" />
-              <Skeleton h="40px" w="40px" borderRadius="full" />
-              <Skeleton h="40px" w="40px" borderRadius="full" />
+            <HStack gap={4} align="stretch">
+              {[0, 1, 2].map((i) => (
+                <Box
+                  key={i}
+                  flex="1"
+                  bg="bg.muted"
+                  borderRadius="2xl"
+                  border="1px solid"
+                  borderColor="border.muted"
+                  p={4}
+                  minH="520px"
+                >
+                  <Skeleton h="16px" w="120px" mb={4} />
+                  <VStack gap={3} align="stretch">
+                    {[0, 1, 2].map((j) => (
+                      <Box
+                        key={j}
+                        bg="bg.panel"
+                        borderRadius="xl"
+                        border="1px solid"
+                        borderColor="border.muted"
+                        p={3}
+                      >
+                        <Skeleton h="14px" w="70%" mb={2} />
+                        <SkeletonText noOfLines={2} />
+                      </Box>
+                    ))}
+                  </VStack>
+                </Box>
+              ))}
             </HStack>
-          </HStack>
-          <HStack gap={4} align="stretch">
-            {[0, 1, 2].map((i) => (
-              <Box
-                key={i}
-                flex="1"
-                bg="bg.muted"
-                borderRadius="2xl"
-                border="1px solid"
-                borderColor="border.muted"
-                p={4}
-                minH="520px"
-              >
-                <Skeleton h="16px" w="120px" mb={4} />
-                <VStack gap={3} align="stretch">
-                  {[0, 1, 2].map((j) => (
-                    <Box
-                      key={j}
-                      bg="bg.panel"
-                      borderRadius="xl"
-                      border="1px solid"
-                      borderColor="border.muted"
-                      p={3}
-                    >
-                      <Skeleton h="14px" w="70%" mb={2} />
-                      <SkeletonText noOfLines={2} />
-                    </Box>
-                  ))}
-                </VStack>
-              </Box>
-            ))}
-          </HStack>
+          </Box>
         </Box>
       </Box>
     );
@@ -846,13 +861,102 @@ const AuthenticatedApp: React.FC = () => {
     return (
       <Box
         minH="100vh"
-        bg="bg.muted"
+        bg="bg.canvas"
+        position="relative"
+        overflow="hidden"
+      >
+        <Box
+          position="absolute"
+          inset={0}
+          bgGradient="radial(circle at 15% 10%, rgba(31, 134, 220, 0.18), transparent 45%), radial(circle at 90% 20%, rgba(114, 187, 255, 0.18), transparent 40%), radial(circle at 50% 90%, rgba(31, 134, 220, 0.12), transparent 50%)"
+        />
+        <Box
+          position="relative"
+          zIndex={1}
+          px={{ base: 4, md: 6 }}
+          py={{ base: 6, md: 8 }}
+          maxW="1600px"
+          mx="auto"
+        >
+          <Box
+            w="full"
+            minH="calc(100vh - 64px)"
+            bg="bg.panel"
+            borderRadius={{ base: "2xl", md: "3xl" }}
+            border="2px solid"
+            borderColor="border.muted"
+            boxShadow="soft"
+            px={{ base: 5, md: 8 }}
+            py={{ base: 6, md: 8 }}
+          >
+            <HStack justify="space-between" mb={8}>
+              <HStack gap={3}>
+                <Skeleton w="44px" h="44px" borderRadius="12px" />
+                <Box>
+                  <Skeleton h="18px" w="160px" mb={2} />
+                  <Skeleton h="12px" w="220px" />
+                </Box>
+              </HStack>
+              <HStack gap={3}>
+                <Skeleton h="40px" w="160px" borderRadius="lg" />
+                <Skeleton h="40px" w="40px" borderRadius="full" />
+                <Skeleton h="40px" w="40px" borderRadius="full" />
+              </HStack>
+            </HStack>
+            <HStack gap={4} align="stretch">
+              {[0, 1, 2].map((i) => (
+                <Box
+                  key={i}
+                  flex="1"
+                  bg="bg.muted"
+                  borderRadius="2xl"
+                  border="1px solid"
+                  borderColor="border.muted"
+                  p={4}
+                  minH="520px"
+                >
+                  <Skeleton h="16px" w="120px" mb={4} />
+                  <VStack gap={3} align="stretch">
+                    {[0, 1, 2].map((j) => (
+                      <Box
+                        key={j}
+                        bg="bg.panel"
+                        borderRadius="xl"
+                        border="1px solid"
+                        borderColor="border.muted"
+                        p={3}
+                      >
+                        <Skeleton h="14px" w="70%" mb={2} />
+                        <SkeletonText noOfLines={2} />
+                      </Box>
+                    ))}
+                  </VStack>
+                </Box>
+              ))}
+            </HStack>
+          </Box>
+        </Box>
+      </Box>
+    );
+  }
+
+  return (
+    <Box minH="100vh" bg="bg.canvas" position="relative" overflow="hidden">
+      <Box
+        position="absolute"
+        inset={0}
+        bgGradient="radial(circle at 10% 15%, rgba(31, 134, 220, 0.18), transparent 45%), radial(circle at 90% 25%, rgba(114, 187, 255, 0.18), transparent 40%), radial(circle at 55% 85%, rgba(31, 134, 220, 0.12), transparent 50%)"
+      />
+      <Box
+        position="relative"
+        zIndex={1}
+        maxW="1600px"
+        mx="auto"
         px={{ base: 4, md: 6 }}
         py={{ base: 6, md: 8 }}
       >
+        <AppToaster />
         <Box
-          w="full"
-          minH="calc(100vh - 64px)"
           bg="bg.panel"
           borderRadius={{ base: "2xl", md: "3xl" }}
           border="2px solid"
@@ -861,340 +965,283 @@ const AuthenticatedApp: React.FC = () => {
           px={{ base: 5, md: 8 }}
           py={{ base: 6, md: 8 }}
         >
-          <HStack justify="space-between" mb={8}>
-            <HStack gap={3}>
-              <Skeleton w="44px" h="44px" borderRadius="12px" />
-              <Box>
-                <Skeleton h="18px" w="160px" mb={2} />
-                <Skeleton h="12px" w="220px" />
-              </Box>
-            </HStack>
-            <HStack gap={3}>
-              <Skeleton h="40px" w="160px" borderRadius="lg" />
-              <Skeleton h="40px" w="40px" borderRadius="full" />
-              <Skeleton h="40px" w="40px" borderRadius="full" />
-            </HStack>
-          </HStack>
-          <HStack gap={4} align="stretch">
-            {[0, 1, 2].map((i) => (
-              <Box
-                key={i}
-                flex="1"
-                bg="bg.muted"
-                borderRadius="2xl"
-                border="1px solid"
-                borderColor="border.muted"
-                p={4}
-                minH="520px"
+          <BoardHeader
+            onCreateBoard={openBoardModal}
+            onOpenArchive={openArchiveModal}
+            onOpenExportImport={openExportImportModal}
+            onOpenTemplates={openTemplateModal}
+            onOpenMembers={openMembersModal}
+            onOpenOrganizationMembers={openOrganizationMembersModal}
+            onDeleteBoard={handleDeleteBoard}
+          />
+          {cardsLoading ? (
+            <Box mb={8}>
+              <Grid
+                templateColumns={{ base: "1fr", lg: "1.4fr auto" }}
+                gap={4}
+                alignItems="center"
+                mb={4}
               >
-                <Skeleton h="16px" w="120px" mb={4} />
-                <VStack gap={3} align="stretch">
-                  {[0, 1, 2].map((j) => (
-                    <Box
-                      key={j}
-                      bg="bg.panel"
-                      borderRadius="xl"
-                      border="1px solid"
-                      borderColor="border.muted"
-                      p={3}
-                    >
-                      <Skeleton h="14px" w="70%" mb={2} />
-                      <SkeletonText noOfLines={2} />
-                    </Box>
-                  ))}
-                </VStack>
-              </Box>
-            ))}
-          </HStack>
-        </Box>
-      </Box>
-    );
-  }
-
-  return (
-    <Box
-      maxW="1600px"
-      mx="auto"
-      px={{ base: 4, md: 6 }}
-      py={{ base: 6, md: 8 }}
-    >
-      <AppToaster />
-      <Box
-        bg="bg.panel"
-        borderRadius={{ base: "2xl", md: "3xl" }}
-        border="2px solid"
-        borderColor="border.muted"
-        boxShadow="soft"
-        px={{ base: 5, md: 8 }}
-        py={{ base: 6, md: 8 }}
-      >
-        <BoardHeader
-          onCreateBoard={openBoardModal}
-          onOpenArchive={openArchiveModal}
-          onOpenExportImport={openExportImportModal}
-          onOpenTemplates={openTemplateModal}
-          onOpenMembers={openMembersModal}
-          onOpenOrganizationMembers={openOrganizationMembersModal}
-          onDeleteBoard={handleDeleteBoard}
-        />
-        {cardsLoading ? (
-          <Box mb={8}>
+                <Skeleton h="44px" borderRadius="lg" />
+                <HStack gap={3} justify="flex-end">
+                  <Skeleton h="44px" w="150px" borderRadius="lg" />
+                  <Skeleton h="44px" w="130px" borderRadius="lg" />
+                  <Skeleton h="44px" w="100px" borderRadius="lg" />
+                </HStack>
+              </Grid>
+              <SimpleGrid columns={{ base: 2, md: 4 }} gap={3}>
+                {[0, 1, 2, 3].map((tile) => (
+                  <Box
+                    key={tile}
+                    bg="bg.muted"
+                    borderRadius="xl"
+                    p={3}
+                    border="1px solid"
+                    borderColor="border.muted"
+                  >
+                    <Skeleton h="10px" w="60%" mb={2} />
+                    <Skeleton h="20px" w="40%" />
+                  </Box>
+                ))}
+              </SimpleGrid>
+            </Box>
+          ) : (
+            <BoardToolbar
+              total={cards.length}
+              todo={counts.todo}
+              inprogress={counts.inprogress}
+              done={counts.done}
+              searchQuery={searchQuery}
+              activeFilter={activeFilter}
+              priorityFilter={priorityFilter}
+              sortBy={sortBy}
+              hasActiveFilters={hasActiveFilters}
+              onSearch={handleSearch}
+              onFilterChange={handleFilterChange}
+              onPriorityChange={handlePriorityChange}
+              onSortChange={handleSortChange}
+              onClearFilters={clearFilters}
+            />
+          )}
+          {cardsLoading ? (
             <Grid
-              templateColumns={{ base: "1fr", lg: "1.4fr auto" }}
+              templateColumns={{ base: "1fr", lg: "repeat(3, 1fr)" }}
               gap={4}
-              alignItems="center"
-              mb={4}
             >
-              <Skeleton h="44px" borderRadius="lg" />
-              <HStack gap={3} justify="flex-end">
-                <Skeleton h="44px" w="150px" borderRadius="lg" />
-                <Skeleton h="44px" w="130px" borderRadius="lg" />
-                <Skeleton h="44px" w="100px" borderRadius="lg" />
-              </HStack>
-            </Grid>
-            <SimpleGrid columns={{ base: 2, md: 4 }} gap={3}>
-              {[0, 1, 2, 3].map((tile) => (
+              {COLUMNS.map((column) => (
                 <Box
-                  key={tile}
+                  key={column.id}
                   bg="bg.muted"
-                  borderRadius="xl"
-                  p={3}
-                  border="1px solid"
+                  border="2px solid"
                   borderColor="border.muted"
+                  borderRadius="2xl"
+                  p={4}
+                  minH="560px"
                 >
-                  <Skeleton h="10px" w="60%" mb={2} />
-                  <Skeleton h="20px" w="40%" />
+                  <HStack justify="space-between" mb={4}>
+                    <HStack gap={2}>
+                      <Skeleton w="10px" h="10px" borderRadius="full" />
+                      <Skeleton h="14px" w="120px" />
+                    </HStack>
+                    <Skeleton h="18px" w="28px" borderRadius="full" />
+                  </HStack>
+                  <Skeleton h="12px" w="75%" mb={4} />
+                  <VStack gap={3} align="stretch" minH="400px">
+                    {[0, 1, 2, 3].map((card) => (
+                      <Box
+                        key={card}
+                        bg="bg.panel"
+                        borderRadius="xl"
+                        border="1px solid"
+                        borderColor="border.muted"
+                        p={3}
+                      >
+                        <Skeleton h="14px" w="65%" mb={2} />
+                        <SkeletonText noOfLines={2} />
+                        <HStack mt={3} justify="space-between">
+                          <Skeleton h="10px" w="80px" />
+                          <Skeleton h="20px" w="20px" borderRadius="full" />
+                        </HStack>
+                      </Box>
+                    ))}
+                  </VStack>
                 </Box>
               ))}
-            </SimpleGrid>
-          </Box>
-        ) : (
-          <BoardToolbar
-            total={cards.length}
-            todo={counts.todo}
-            inprogress={counts.inprogress}
-            done={counts.done}
-            searchQuery={searchQuery}
-            activeFilter={activeFilter}
-            priorityFilter={priorityFilter}
-            sortBy={sortBy}
-            hasActiveFilters={hasActiveFilters}
-            onSearch={handleSearch}
-            onFilterChange={handleFilterChange}
-            onPriorityChange={handlePriorityChange}
-            onSortChange={handleSortChange}
-            onClearFilters={clearFilters}
-          />
-        )}
-        {cardsLoading ? (
-          <Grid templateColumns={{ base: "1fr", lg: "repeat(3, 1fr)" }} gap={4}>
-            {COLUMNS.map((column) => (
-              <Box
-                key={column.id}
-                bg="bg.muted"
-                border="2px solid"
-                borderColor="border.muted"
-                borderRadius="2xl"
-                p={4}
-                minH="560px"
-              >
-                <HStack justify="space-between" mb={4}>
-                  <HStack gap={2}>
-                    <Skeleton w="10px" h="10px" borderRadius="full" />
-                    <Skeleton h="14px" w="120px" />
-                  </HStack>
-                  <Skeleton h="18px" w="28px" borderRadius="full" />
-                </HStack>
-                <Skeleton h="12px" w="75%" mb={4} />
-                <VStack gap={3} align="stretch" minH="400px">
-                  {[0, 1, 2, 3].map((card) => (
-                    <Box
-                      key={card}
-                      bg="bg.panel"
-                      borderRadius="xl"
-                      border="1px solid"
-                      borderColor="border.muted"
-                      p={3}
-                    >
-                      <Skeleton h="14px" w="65%" mb={2} />
-                      <SkeletonText noOfLines={2} />
-                      <HStack mt={3} justify="space-between">
-                        <Skeleton h="10px" w="80px" />
-                        <Skeleton h="20px" w="20px" borderRadius="full" />
-                      </HStack>
-                    </Box>
-                  ))}
+            </Grid>
+          ) : (
+            <Grid
+              templateColumns={{ base: "1fr", lg: "repeat(3, 1fr)" }}
+              gap={4}
+            >
+              {COLUMNS.map((column) => (
+                <BoardColumn
+                  key={column.id}
+                  column={column}
+                  cards={cardsByStatus[column.id]}
+                  count={counts[column.id]}
+                  dragOver={dragOver}
+                  onDragOver={handleDragOver}
+                  onDrop={handleDrop}
+                  onDragLeave={handleDragLeave}
+                  onCardClick={openDetailsModal}
+                  onEdit={openEditModal}
+                  onRemove={handleRemoveCard}
+                  onDragStart={handleDragStart}
+                  onArchive={handleArchiveCard}
+                />
+              ))}
+            </Grid>
+          )}
+        </Box>
+
+        <TaskModal
+          isOpen={isOpen}
+          onClose={closeModal}
+          onSave={saveCard}
+          editingId={editingId}
+          form={form}
+          onChange={updateForm}
+          onToggleBlocked={toggleBlocked}
+          isSaving={isSavingTask}
+          errors={taskErrors}
+        />
+        <TaskDetailsModal
+          card={detailsCard}
+          isOpen={isDetailsOpen}
+          onClose={closeDetailsModal}
+          onEdit={openEditModal}
+          onAddComment={handleAddComment}
+        />
+
+        <BoardModal isOpen={isBoardModalOpen} onClose={closeBoardModal} />
+
+        <ArchiveModal
+          isOpen={isArchiveOpen}
+          onClose={closeArchiveModal}
+          onRestore={handleRestoreCard}
+        />
+
+        <ExportImportModal
+          isOpen={isExportImportOpen}
+          onClose={closeExportImportModal}
+          boardId={activeBoard?.id || "default"}
+          boardName={boardName}
+          cards={cards}
+          onImport={handleImport}
+        />
+
+        <TemplateModal
+          isOpen={isTemplateOpen}
+          onClose={closeTemplateModal}
+          onSelectTemplate={handleSelectTemplate}
+        />
+
+        <BoardMembersModal
+          boardId={activeBoardId || ""}
+          isOpen={isMembersOpen}
+          onClose={closeMembersModal}
+        />
+
+        <OrganizationMembersModal
+          organizationId={user?.organizationId || ""}
+          isOpen={isOrganizationMembersOpen}
+          onClose={closeOrganizationMembersModal}
+        />
+
+        <Dialog.Root
+          open={isDeleteDialogOpen}
+          onOpenChange={(details) =>
+            !details.open && setIsDeleteDialogOpen(false)
+          }
+        >
+          <Dialog.Backdrop bg="rgba(0, 0, 0, 0.6)" backdropFilter="blur(10px)" />
+          <Dialog.Positioner>
+            <Dialog.Content
+              maxW="420px"
+              borderRadius="xl"
+              overflow="hidden"
+              boxShadow="0 20px 60px rgba(0, 0, 0, 0.3)"
+              bg="white"
+              _dark={{ bg: "gray.800" }}
+            >
+              <Dialog.CloseTrigger asChild>
+                <AppIconButton
+                  aria-label="Close"
+                  size="sm"
+                  position="absolute"
+                  top={3}
+                  right={3}
+                >
+                  <FiX />
+                </AppIconButton>
+              </Dialog.CloseTrigger>
+
+              <Box px={6} pt={6} pb={4}>
+                <VStack gap={3} align="center">
+                  <Box
+                    p={3}
+                    borderRadius="full"
+                    bg="red.50"
+                    _dark={{ bg: "red.900/20" }}
+                  >
+                    <FiAlertTriangle size={32} color="#DC2626" />
+                  </Box>
+                  <Dialog.Title
+                    fontSize="xl"
+                    fontWeight="semibold"
+                    color="gray.900"
+                    _dark={{ color: "white" }}
+                    textAlign="center"
+                  >
+                    Delete Board?
+                  </Dialog.Title>
                 </VStack>
               </Box>
-            ))}
-          </Grid>
-        ) : (
-          <Grid templateColumns={{ base: "1fr", lg: "repeat(3, 1fr)" }} gap={4}>
-            {COLUMNS.map((column) => (
-              <BoardColumn
-                key={column.id}
-                column={column}
-                cards={cardsByStatus[column.id]}
-                count={counts[column.id]}
-                dragOver={dragOver}
-                onDragOver={handleDragOver}
-                onDrop={handleDrop}
-                onDragLeave={handleDragLeave}
-                onCardClick={openDetailsModal}
-                onEdit={openEditModal}
-              onRemove={handleRemoveCard}
-              onDragStart={handleDragStart}
-              onArchive={handleArchiveCard}
-            />
-            ))}
-          </Grid>
-        )}
-      </Box>
 
-      <TaskModal
-        isOpen={isOpen}
-        onClose={closeModal}
-        onSave={saveCard}
-        editingId={editingId}
-        form={form}
-        onChange={updateForm}
-        onToggleBlocked={toggleBlocked}
-        isSaving={isSavingTask}
-        errors={taskErrors}
-      />
-
-      <TaskDetailsModal
-        card={detailsCard}
-        isOpen={isDetailsOpen}
-        onClose={closeDetailsModal}
-        onEdit={openEditModal}
-        onAddComment={handleAddComment}
-      />
-
-      <BoardModal isOpen={isBoardModalOpen} onClose={closeBoardModal} />
-
-      <ArchiveModal
-        isOpen={isArchiveOpen}
-        onClose={closeArchiveModal}
-        onRestore={handleRestoreCard}
-      />
-
-      <ExportImportModal
-        isOpen={isExportImportOpen}
-        onClose={closeExportImportModal}
-        boardId={activeBoard?.id || "default"}
-        boardName={boardName}
-        cards={cards}
-        onImport={handleImport}
-      />
-
-      <TemplateModal
-        isOpen={isTemplateOpen}
-        onClose={closeTemplateModal}
-        onSelectTemplate={handleSelectTemplate}
-      />
-
-      <BoardMembersModal
-        boardId={activeBoardId || ""}
-        isOpen={isMembersOpen}
-        onClose={closeMembersModal}
-      />
-
-      <OrganizationMembersModal
-        organizationId={user?.organizationId || ""}
-        isOpen={isOrganizationMembersOpen}
-        onClose={closeOrganizationMembersModal}
-      />
-
-      <Dialog.Root
-        open={isDeleteDialogOpen}
-        onOpenChange={(details) =>
-          !details.open && setIsDeleteDialogOpen(false)
-        }
-      >
-        <Dialog.Backdrop bg="rgba(0, 0, 0, 0.6)" backdropFilter="blur(10px)" />
-        <Dialog.Positioner>
-          <Dialog.Content
-            maxW="420px"
-            borderRadius="xl"
-            overflow="hidden"
-            boxShadow="0 20px 60px rgba(0, 0, 0, 0.3)"
-            bg="white"
-            _dark={{ bg: "gray.800" }}
-          >
-            <Dialog.CloseTrigger
-              top={3}
-              right={3}
-              color="gray.400"
-              _hover={{ color: "gray.600", bg: "gray.100" }}
-              borderRadius="full"
-            />
-
-            <Box px={6} pt={6} pb={4}>
-              <VStack gap={3} align="center">
-                <Box
-                  p={3}
-                  borderRadius="full"
-                  bg="red.50"
-                  _dark={{ bg: "red.900/20" }}
-                >
-                  <FiAlertTriangle size={32} color="#DC2626" />
-                </Box>
-                <Dialog.Title
-                  fontSize="xl"
-                  fontWeight="semibold"
-                  color="gray.900"
-                  _dark={{ color: "white" }}
+              <Dialog.Body px={6} py={4}>
+                <Text
+                  fontSize="sm"
+                  lineHeight="relaxed"
+                  color="gray.600"
+                  _dark={{ color: "gray.400" }}
                   textAlign="center"
                 >
-                  Delete Board?
-                </Dialog.Title>
-              </VStack>
-            </Box>
+                  This action will permanently delete all tasks in this board
+                  and cannot be undone.
+                </Text>
+              </Dialog.Body>
 
-            <Dialog.Body px={6} py={4}>
-              <Text
-                fontSize="sm"
-                lineHeight="relaxed"
-                color="gray.600"
-                _dark={{ color: "gray.400" }}
-                textAlign="center"
-              >
-                This action will permanently delete all tasks in this board and
-                cannot be undone.
-              </Text>
-            </Dialog.Body>
-
-            <Dialog.Footer gap={3} px={6} pb={6} pt={2} flexDirection="column">
-              <Button
-                onClick={confirmDeleteBoard}
-                size="lg"
-                width="full"
-                bg="red.600"
-                color="white"
-                _hover={{ bg: "red.700" }}
-                _active={{ bg: "red.800" }}
-                borderRadius="lg"
-                fontWeight="medium"
-              >
-                Delete Board
-              </Button>
-              <Button
-                variant="ghost"
-                onClick={() => setIsDeleteDialogOpen(false)}
-                size="lg"
-                width="full"
-                color="gray.600"
-                _hover={{ bg: "gray.100" }}
-                borderRadius="lg"
-                fontWeight="medium"
-              >
-                Cancel
-              </Button>
-            </Dialog.Footer>
-          </Dialog.Content>
-        </Dialog.Positioner>
-      </Dialog.Root>
+              <Dialog.Footer gap={3} px={6} pb={6} pt={2} flexDirection="column">
+                <Button
+                  onClick={confirmDeleteBoard}
+                  size="lg"
+                  width="full"
+                  bg="red.600"
+                  color="white"
+                  _hover={{ bg: "red.700" }}
+                  _active={{ bg: "red.800" }}
+                  borderRadius="lg"
+                  fontWeight="medium"
+                >
+                  Delete Board
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => setIsDeleteDialogOpen(false)}
+                  size="lg"
+                  width="full"
+                  color="gray.600"
+                  _hover={{ bg: "gray.100" }}
+                  borderRadius="lg"
+                  fontWeight="medium"
+                >
+                  Cancel
+                </Button>
+              </Dialog.Footer>
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Dialog.Root>
+      </Box>
     </Box>
   );
 };

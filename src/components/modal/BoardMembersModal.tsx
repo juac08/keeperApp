@@ -12,8 +12,8 @@ import {
   Skeleton,
   SkeletonText,
 } from "@chakra-ui/react";
-import { FiUserPlus, FiSearch, FiTrash2, FiUsers } from "react-icons/fi";
-import { AppButton, AppSelect } from "@/ui";
+import { FiUserPlus, FiSearch, FiTrash2, FiUsers, FiX } from "react-icons/fi";
+import { AppButton, AppIconButton, AppSelect } from "@/ui";
 import {
   useGetBoardMembersQuery,
   useAddBoardMemberMutation,
@@ -179,16 +179,19 @@ const BoardMembersModal: React.FC<Props> = ({ boardId, isOpen, onClose }) => {
                 </Dialog.Title>
               </Box>
             </HStack>
-            <Dialog.CloseTrigger
-              position="absolute"
-              right="20px"
-              top="20px"
-              borderRadius="full"
-              w="40px"
-              h="40px"
-              color="text.muted"
-              _hover={{ bg: "bg.muted" }}
-            />
+            <Dialog.CloseTrigger asChild>
+              <AppIconButton
+                aria-label="Close"
+                size="sm"
+                position="absolute"
+                right="20px"
+                top="20px"
+                w="40px"
+                h="40px"
+              >
+                <FiX />
+              </AppIconButton>
+            </Dialog.CloseTrigger>
           </Dialog.Header>
 
           <Dialog.Body

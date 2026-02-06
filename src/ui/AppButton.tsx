@@ -19,7 +19,7 @@ const AppButton: React.FC<Props> = ({
   ...props
 }) => {
   const variantMap: Record<VariantStyle, ButtonProps> = {
-    primary: { variant: "solid", colorScheme: "blue" },
+    primary: { variant: "solid", colorScheme: "brand" },
     outline: {
       variant: "outline",
       colorScheme: "gray",
@@ -34,10 +34,20 @@ const AppButton: React.FC<Props> = ({
 
   return (
     <Button
-      borderRadius="6px"
+      borderRadius="control"
       fontWeight="600"
+      letterSpacing="-0.01em"
       boxShadow={variantStyle === "primary" ? "lift" : "none"}
-      _hover={{ bg: variantStyle === "primary" ? "blue.600" : "bg.muted" }}
+      _hover={{
+        bg: variantStyle === "primary" ? "brand.600" : "bg.muted",
+        boxShadow: variantStyle === "primary" ? "soft" : "none",
+        transform: "translateY(-1px)",
+      }}
+      _active={{
+        bg: variantStyle === "primary" ? "brand.700" : "bg.muted",
+        transform: "translateY(0)",
+      }}
+      transition="all 0.18s ease"
       {...variantMap[variantStyle]}
       h={resolvedH}
       px={resolvedPx}
