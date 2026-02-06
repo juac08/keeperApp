@@ -50,7 +50,12 @@ import { LoginForm } from "@/components/auth";
 import { useTagsStore } from "@/state/TagsStore";
 import { useAssigneesStore } from "@/state/AssigneesStore";
 import { CORE_TAG_PRESETS } from "@/utils/tagHelpers";
-import { AppIconButton } from "@/ui";
+import {
+  AppIconButton,
+  ContentContainer,
+  PageShell,
+  Panel,
+} from "@/ui";
 
 const emptyForm: TaskForm = {
   title: "",
@@ -125,36 +130,9 @@ const App: React.FC = () => {
   // Show loading state while checking authentication
   if (userLoading) {
     return (
-      <Box
-        minH="100vh"
-        bg="bg.canvas"
-        position="relative"
-        overflow="hidden"
-      >
-        <Box
-          position="absolute"
-          inset={0}
-          bgGradient="radial(circle at 15% 10%, rgba(31, 134, 220, 0.18), transparent 45%), radial(circle at 90% 20%, rgba(114, 187, 255, 0.18), transparent 40%), radial(circle at 50% 90%, rgba(31, 134, 220, 0.12), transparent 50%)"
-        />
-        <Box
-          position="relative"
-          zIndex={1}
-          px={{ base: 4, md: 6 }}
-          py={{ base: 6, md: 8 }}
-          maxW="1600px"
-          mx="auto"
-        >
-          <Box
-            w="full"
-            minH="calc(100vh - 64px)"
-            bg="bg.panel"
-            borderRadius={{ base: "2xl", md: "3xl" }}
-            border="2px solid"
-            borderColor="border.muted"
-            boxShadow="soft"
-            px={{ base: 5, md: 8 }}
-            py={{ base: 6, md: 8 }}
-          >
+      <PageShell>
+        <ContentContainer>
+          <Panel w="full" minH="calc(100vh - 64px)">
             <HStack justify="space-between" mb={8}>
               <HStack gap={3}>
                 <Skeleton w="44px" h="44px" borderRadius="12px" />
@@ -200,9 +178,9 @@ const App: React.FC = () => {
                 </Box>
               ))}
             </HStack>
-          </Box>
-        </Box>
-      </Box>
+          </Panel>
+        </ContentContainer>
+      </PageShell>
     );
   }
 
@@ -869,36 +847,9 @@ const AuthenticatedApp: React.FC = () => {
   // Show loading state while boards are loading
   if (boardsLoading) {
     return (
-      <Box
-        minH="100vh"
-        bg="bg.canvas"
-        position="relative"
-        overflow="hidden"
-      >
-        <Box
-          position="absolute"
-          inset={0}
-          bgGradient="radial(circle at 15% 10%, rgba(31, 134, 220, 0.18), transparent 45%), radial(circle at 90% 20%, rgba(114, 187, 255, 0.18), transparent 40%), radial(circle at 50% 90%, rgba(31, 134, 220, 0.12), transparent 50%)"
-        />
-        <Box
-          position="relative"
-          zIndex={1}
-          px={{ base: 4, md: 6 }}
-          py={{ base: 6, md: 8 }}
-          maxW="1600px"
-          mx="auto"
-        >
-          <Box
-            w="full"
-            minH="calc(100vh - 64px)"
-            bg="bg.panel"
-            borderRadius={{ base: "2xl", md: "3xl" }}
-            border="2px solid"
-            borderColor="border.muted"
-            boxShadow="soft"
-            px={{ base: 5, md: 8 }}
-            py={{ base: 6, md: 8 }}
-          >
+      <PageShell>
+        <ContentContainer>
+          <Panel w="full" minH="calc(100vh - 64px)">
             <HStack justify="space-between" mb={8}>
               <HStack gap={3}>
                 <Skeleton w="44px" h="44px" borderRadius="12px" />
@@ -944,43 +895,17 @@ const AuthenticatedApp: React.FC = () => {
                 </Box>
               ))}
             </HStack>
-          </Box>
-        </Box>
-      </Box>
+          </Panel>
+        </ContentContainer>
+      </PageShell>
     );
   }
 
   return (
-    <Box
-      minH="100vh"
-      w="full"
-      bg="bg.canvas"
-      position="relative"
-      overflow="hidden"
-    >
-      <Box
-        position="absolute"
-        inset={0}
-        bgGradient="radial(circle at 10% 15%, rgba(31, 134, 220, 0.18), transparent 45%), radial(circle at 90% 25%, rgba(114, 187, 255, 0.18), transparent 40%), radial(circle at 55% 85%, rgba(31, 134, 220, 0.12), transparent 50%)"
-      />
-      <Box
-        position="relative"
-        zIndex={1}
-        maxW="1600px"
-        mx="auto"
-        px={{ base: 4, md: 6 }}
-        py={{ base: 6, md: 8 }}
-      >
+    <PageShell>
+      <ContentContainer>
         <AppToaster />
-        <Box
-          bg="bg.panel"
-          borderRadius={{ base: "2xl", md: "3xl" }}
-          border="2px solid"
-          borderColor="border.muted"
-          boxShadow="soft"
-          px={{ base: 5, md: 8 }}
-          py={{ base: 6, md: 8 }}
-        >
+        <Panel>
           <BoardHeader
             onCreateBoard={openBoardModal}
             onOpenArchive={openArchiveModal}
@@ -1109,7 +1034,7 @@ const AuthenticatedApp: React.FC = () => {
               ))}
             </Grid>
           )}
-        </Box>
+        </Panel>
 
         <TaskModal
           isOpen={isOpen}
@@ -1258,8 +1183,8 @@ const AuthenticatedApp: React.FC = () => {
             </Dialog.Content>
           </Dialog.Positioner>
         </Dialog.Root>
-      </Box>
-    </Box>
+      </ContentContainer>
+    </PageShell>
   );
 };
 

@@ -3,6 +3,7 @@ import { Box } from "@chakra-ui/react";
 import type { Card } from "@/types";
 import { CardHeader, CardMeta } from "@/components/board/card";
 import { useDensityStore } from "@/state/DensityStore";
+import { CardSurface } from "@/ui";
 
 type Props = {
   card: Card;
@@ -43,24 +44,19 @@ const BoardCard: React.FC<Props> = ({
   const padding = paddingMap[density];
 
   return (
-    <Box
+    <CardSurface
       role="group"
       data-group
       draggable
       onDragStart={(e) => handleDragStart(e)}
       onDragEnd={handleDragEnd}
-      bg="bg.panel"
-      border="1px solid"
-      borderColor="border.muted"
-      borderRadius="xl"
       p={padding}
-      boxShadow={isDragging ? "soft" : "0 10px 22px rgba(15, 23, 42, 0.08)"}
+      isDragging={isDragging}
       onClick={() => !isDragging && onCardClick(card)}
       cursor={isDragging ? "grabbing" : "pointer"}
       opacity={isDragging ? 0.9 : 1}
       position="relative"
       transform={isDragging ? "rotate(2deg)" : "translateY(0)"}
-      transition="all 0.15s ease"
       _hover={{
         transform: isDragging ? "rotate(2deg)" : "translateY(-2px)",
         boxShadow: isDragging ? "soft" : "0 18px 36px rgba(15, 23, 42, 0.16)",
@@ -74,7 +70,7 @@ const BoardCard: React.FC<Props> = ({
         onArchive={onArchive}
       />
       <CardMeta card={card} density={density} />
-    </Box>
+    </CardSurface>
   );
 };
 
