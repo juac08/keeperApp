@@ -7,6 +7,7 @@ import type {
   Status,
   Subtask,
 } from "@/types";
+import type { RootState } from "@/store/store";
 
 const normalizePriority = (value: unknown): Priority => {
   const key = String(value ?? "medium").toLowerCase();
@@ -171,6 +172,52 @@ const mapCardToApiPayload = (
   return payload;
 };
 
+const updateQueryData = apiSlice.util.updateQueryData as any;
+
+const getActiveBoardId = (state: RootState, fallback?: string) =>
+  fallback ?? state.activeBoard.activeBoardId ?? undefined;
+
+const applyCardUpdates = (draft: Card, updates: Partial<Card>) => {
+  if (updates.title !== undefined) draft.title = updates.title;
+  if (updates.content !== undefined) draft.content = updates.content;
+  if (updates.status !== undefined) draft.status = updates.status;
+  if (updates.priority !== undefined)
+    draft.priority = normalizePriority(updates.priority);
+  if (updates.blocked !== undefined) draft.blocked = updates.blocked;
+  if (updates.blockedReason !== undefined || updates.blocked !== undefined) {
+    draft.blockedReason = draft.blocked ? updates.blockedReason ?? "" : "";
+  }
+  if (updates.dueDate !== undefined) draft.dueDate = updates.dueDate ?? "";
+  if (updates.tags !== undefined) draft.tags = updates.tags;
+  if (updates.assigneeId !== undefined)
+    draft.assigneeId = updates.assigneeId ?? "";
+  if (updates.subtasks !== undefined) draft.subtasks = updates.subtasks;
+  if (updates.comments !== undefined) draft.comments = updates.comments;
+  if (updates.activities !== undefined) draft.activities = updates.activities;
+  draft.updatedAt = new Date().toISOString();
+};
+
+const buildOptimisticCard = (
+  task: Partial<Card>,
+  id: string,
+): Card => ({
+  id,
+  title: task.title ?? "Untitled",
+  content: task.content ?? "",
+  status: (task.status ?? "todo") as Status,
+  priority: normalizePriority(task.priority),
+  blocked: Boolean(task.blocked),
+  blockedReason: task.blocked ? task.blockedReason ?? "" : "",
+  dueDate: task.dueDate ?? "",
+  tags: task.tags ?? [],
+  assigneeId: task.assigneeId ?? "",
+  subtasks: task.subtasks ?? [],
+  comments: task.comments ?? [],
+  activities: task.activities ?? [],
+  createdAt: task.createdAt ?? new Date().toISOString(),
+  updatedAt: task.updatedAt ?? new Date().toISOString(),
+});
+
 export const tasksApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getTasks: builder.query<Card[], string | undefined>({
@@ -213,6 +260,55 @@ export const tasksApi = apiSlice.injectEndpoints({
         method: "POST",
         body: mapCardToApiPayload(task),
       }),
+      async onQueryStarted(task, { dispatch, queryFulfilled, getState }) {
+        const boardId = getActiveBoardId(getState() as RootState, task.boardId);
+        if (!boardId) {
+          return;
+        }
+
+        const tempId = `temp-${Date.now()}`;
+        const optimisticCard = buildOptimisticCard(task, tempId);
+
+        const patchResult = dispatch(
+          updateQueryData(
+            "getTasks",
+            boardId,
+            (draft: Card[]) => {
+              draft.unshift(optimisticCard);
+            },
+          ),
+        );
+
+        try {
+          const { data } = await queryFulfilled;
+          const normalized = mapTaskFromApi(data);
+
+          dispatch(
+            updateQueryData(
+              "getTasks",
+              boardId,
+              (draft: Card[]) => {
+                const index = draft.findIndex((card) => card.id === tempId);
+                if (index >= 0) {
+                  draft[index] = normalized;
+                } else {
+                  draft.unshift(normalized);
+                }
+              },
+            ),
+          );
+
+          dispatch(
+            updateQueryData(
+              "getTask",
+              normalized.id,
+              () => normalized,
+            ),
+          );
+        } catch {
+          patchResult.undo();
+        }
+      },
       invalidatesTags: [{ type: "Task", id: "LIST" }],
     }),
     updateTask: builder.mutation<Card, { id: string; updates: Partial<Card> }>({
@@ -221,6 +317,70 @@ export const tasksApi = apiSlice.injectEndpoints({
         method: "PUT",
         body: mapCardToApiPayload(updates),
       }),
+      async onQueryStarted(
+        { id, updates },
+        { dispatch, queryFulfilled, getState },
+      ) {
+        const boardId = getActiveBoardId(getState() as RootState);
+        const patchResults = [];
+
+        patchResults.push(
+          dispatch(
+            updateQueryData("getTask", id, (draft: Card) => {
+              applyCardUpdates(draft, updates);
+            }),
+          ),
+        );
+
+        if (boardId) {
+          patchResults.push(
+            dispatch(
+              updateQueryData(
+                "getTasks",
+                boardId,
+                (draft: Card[]) => {
+                  const card = draft.find((item) => item.id === id);
+                  if (card) {
+                    applyCardUpdates(card, updates);
+                  }
+                },
+              ),
+            ),
+          );
+        }
+
+        try {
+          const { data } = await queryFulfilled;
+          const normalized = mapTaskFromApi(data);
+
+          dispatch(
+            updateQueryData(
+              "getTask",
+              normalized.id,
+              () => normalized,
+            ),
+          );
+
+          if (boardId) {
+            dispatch(
+              updateQueryData(
+                "getTasks",
+                boardId,
+                (draft: Card[]) => {
+                  const index = draft.findIndex(
+                    (item) => item.id === normalized.id,
+                  );
+                  if (index >= 0) {
+                    draft[index] = normalized;
+                  }
+                },
+              ),
+            );
+          }
+        } catch {
+          patchResults.forEach((patch) => patch.undo());
+        }
+      },
       invalidatesTags: (_result, _error, { id }) => [
         { type: "Task", id },
         { type: "Task", id: "LIST" },
@@ -231,6 +391,31 @@ export const tasksApi = apiSlice.injectEndpoints({
         url: `/tasks/${id}`,
         method: "DELETE",
       }),
+      async onQueryStarted(id, { dispatch, queryFulfilled, getState }) {
+        const boardId = getActiveBoardId(getState() as RootState);
+        if (!boardId) {
+          return;
+        }
+
+        const patchResult = dispatch(
+          updateQueryData(
+            "getTasks",
+            boardId,
+            (draft: Card[]) => {
+              const index = draft.findIndex((card) => card.id === id);
+              if (index >= 0) {
+                draft.splice(index, 1);
+              }
+            },
+          ),
+        );
+
+        try {
+          await queryFulfilled;
+        } catch {
+          patchResult.undo();
+        }
+      },
       invalidatesTags: [{ type: "Task", id: "LIST" }],
     }),
     archiveTask: builder.mutation<Card, { id: string; archived: boolean }>({
@@ -239,6 +424,50 @@ export const tasksApi = apiSlice.injectEndpoints({
         method: "PATCH",
         body: { archived },
       }),
+      async onQueryStarted(
+        { id, archived },
+        { dispatch, queryFulfilled, getState },
+      ) {
+        const boardId = getActiveBoardId(getState() as RootState);
+        if (!boardId) {
+          return;
+        }
+
+        const patchResult = dispatch(
+          updateQueryData(
+            "getTasks",
+            boardId,
+            (draft: Card[]) => {
+              if (archived) {
+                const index = draft.findIndex((card) => card.id === id);
+                if (index >= 0) {
+                  draft.splice(index, 1);
+                }
+                return;
+              }
+              const card = draft.find((item) => item.id === id);
+              if (card) {
+                (card as any).archived = false;
+              }
+            },
+          ),
+        );
+
+        try {
+          const { data } = await queryFulfilled;
+          const normalized = mapTaskFromApi(data);
+
+          dispatch(
+            updateQueryData(
+              "getTask",
+              normalized.id,
+              () => normalized,
+            ),
+          );
+        } catch {
+          patchResult.undo();
+        }
+      },
       invalidatesTags: (_result, _error, { id }) => [
         { type: "Task", id },
         { type: "Task", id: "LIST" },
