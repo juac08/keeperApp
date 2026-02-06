@@ -3,11 +3,8 @@ import {
   Box,
   Button,
   Dialog,
-  Grid,
   HStack,
   Skeleton,
-  SkeletonText,
-  SimpleGrid,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -17,7 +14,7 @@ import { useCardFilters } from "@/hooks/useCardFilters";
 import { useArchiveStore } from "@/state/ArchiveStore";
 import type { Card, Priority, Status, TaskForm, Subtask } from "@/types";
 import { COLUMNS } from "@/config";
-import { BoardHeader, BoardToolbar, BoardColumn } from "@/components/board";
+import { BoardView } from "@/components/board";
 import AppToaster, { appToaster } from "@/shared";
 import {
   TaskModal,
@@ -55,6 +52,7 @@ import {
   ContentContainer,
   PageShell,
   Panel,
+  SkeletonCard,
 } from "@/ui";
 
 const emptyForm: TaskForm = {
@@ -162,17 +160,7 @@ const App: React.FC = () => {
                   <Skeleton h="16px" w="120px" mb={4} />
                   <VStack gap={3} align="stretch">
                     {[0, 1, 2].map((j) => (
-                      <Box
-                        key={j}
-                        bg="bg.panel"
-                        borderRadius="xl"
-                        border="1px solid"
-                        borderColor="border.muted"
-                        p={3}
-                      >
-                        <Skeleton h="14px" w="70%" mb={2} />
-                        <SkeletonText noOfLines={2} />
-                      </Box>
+                      <SkeletonCard key={j} />
                     ))}
                   </VStack>
                 </Box>
@@ -879,17 +867,7 @@ const AuthenticatedApp: React.FC = () => {
                   <Skeleton h="16px" w="120px" mb={4} />
                   <VStack gap={3} align="stretch">
                     {[0, 1, 2].map((j) => (
-                      <Box
-                        key={j}
-                        bg="bg.panel"
-                        borderRadius="xl"
-                        border="1px solid"
-                        borderColor="border.muted"
-                        p={3}
-                      >
-                        <Skeleton h="14px" w="70%" mb={2} />
-                        <SkeletonText noOfLines={2} />
-                      </Box>
+                      <SkeletonCard key={j} />
                     ))}
                   </VStack>
                 </Box>
@@ -906,7 +884,31 @@ const AuthenticatedApp: React.FC = () => {
       <ContentContainer>
         <AppToaster />
         <Panel>
-          <BoardHeader
+          <BoardView
+            cards={cards}
+            cardsLoading={cardsLoading}
+            counts={counts}
+            searchQuery={searchQuery}
+            activeFilter={activeFilter}
+            priorityFilter={priorityFilter}
+            sortBy={sortBy}
+            hasActiveFilters={hasActiveFilters}
+            dragOver={dragOver}
+            cardsByStatus={cardsByStatus}
+            onSearch={handleSearch}
+            onFilterChange={handleFilterChange}
+            onPriorityChange={handlePriorityChange}
+            onSortChange={handleSortChange}
+            onClearFilters={clearFilters}
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+            onDragLeave={handleDragLeave}
+            onCardClick={openDetailsModal}
+            onEdit={openEditModal}
+            onRemove={handleRemoveCard}
+            onDragStart={handleDragStart}
+            onArchive={handleArchiveCard}
+            onCreate={openCreateModal}
             onCreateBoard={openBoardModal}
             onOpenArchive={openArchiveModal}
             onOpenExportImport={openExportImportModal}
@@ -915,125 +917,6 @@ const AuthenticatedApp: React.FC = () => {
             onOpenOrganizationMembers={openOrganizationMembersModal}
             onDeleteBoard={handleDeleteBoard}
           />
-          {cardsLoading ? (
-            <Box mb={8}>
-              <Grid
-                templateColumns={{ base: "1fr", lg: "1.4fr auto" }}
-                gap={4}
-                alignItems="center"
-                mb={4}
-              >
-                <Skeleton h="44px" borderRadius="lg" />
-                <HStack gap={3} justify="flex-end">
-                  <Skeleton h="44px" w="150px" borderRadius="lg" />
-                  <Skeleton h="44px" w="130px" borderRadius="lg" />
-                  <Skeleton h="44px" w="100px" borderRadius="lg" />
-                </HStack>
-              </Grid>
-              <SimpleGrid columns={{ base: 2, md: 4 }} gap={3}>
-                {[0, 1, 2, 3].map((tile) => (
-                  <Box
-                    key={tile}
-                    bg="bg.muted"
-                    borderRadius="xl"
-                    p={3}
-                    border="1px solid"
-                    borderColor="border.muted"
-                  >
-                    <Skeleton h="10px" w="60%" mb={2} />
-                    <Skeleton h="20px" w="40%" />
-                  </Box>
-                ))}
-              </SimpleGrid>
-            </Box>
-          ) : (
-            <BoardToolbar
-              total={cards.length}
-              todo={counts.todo}
-              inprogress={counts.inprogress}
-              done={counts.done}
-              searchQuery={searchQuery}
-              activeFilter={activeFilter}
-              priorityFilter={priorityFilter}
-              sortBy={sortBy}
-              hasActiveFilters={hasActiveFilters}
-              onSearch={handleSearch}
-              onFilterChange={handleFilterChange}
-              onPriorityChange={handlePriorityChange}
-              onSortChange={handleSortChange}
-              onClearFilters={clearFilters}
-            />
-          )}
-          {cardsLoading ? (
-            <Grid
-              templateColumns={{ base: "1fr", lg: "repeat(3, 1fr)" }}
-              gap={4}
-            >
-              {COLUMNS.map((column) => (
-                <Box
-                  key={column.id}
-                  bg="bg.muted"
-                  border="2px solid"
-                  borderColor="border.muted"
-                  borderRadius="2xl"
-                  p={4}
-                  minH="560px"
-                >
-                  <HStack justify="space-between" mb={4}>
-                    <HStack gap={2}>
-                      <Skeleton w="10px" h="10px" borderRadius="full" />
-                      <Skeleton h="14px" w="120px" />
-                    </HStack>
-                    <Skeleton h="18px" w="28px" borderRadius="full" />
-                  </HStack>
-                  <Skeleton h="12px" w="75%" mb={4} />
-                  <VStack gap={3} align="stretch" minH="400px">
-                    {[0, 1, 2, 3].map((card) => (
-                      <Box
-                        key={card}
-                        bg="bg.panel"
-                        borderRadius="xl"
-                        border="1px solid"
-                        borderColor="border.muted"
-                        p={3}
-                      >
-                        <Skeleton h="14px" w="65%" mb={2} />
-                        <SkeletonText noOfLines={2} />
-                        <HStack mt={3} justify="space-between">
-                          <Skeleton h="10px" w="80px" />
-                          <Skeleton h="20px" w="20px" borderRadius="full" />
-                        </HStack>
-                      </Box>
-                    ))}
-                  </VStack>
-                </Box>
-              ))}
-            </Grid>
-          ) : (
-            <Grid
-              templateColumns={{ base: "1fr", lg: "repeat(3, 1fr)" }}
-              gap={4}
-            >
-              {COLUMNS.map((column) => (
-                <BoardColumn
-                  key={column.id}
-                  column={column}
-                  cards={cardsByStatus[column.id]}
-                  count={counts[column.id]}
-                  dragOver={dragOver}
-                  onDragOver={handleDragOver}
-                  onDrop={handleDrop}
-                  onDragLeave={handleDragLeave}
-                  onCardClick={openDetailsModal}
-                  onEdit={openEditModal}
-                  onRemove={handleRemoveCard}
-                  onDragStart={handleDragStart}
-                  onArchive={handleArchiveCard}
-                  onCreate={() => openCreateModal(column.id)}
-                />
-              ))}
-            </Grid>
-          )}
         </Panel>
 
         <TaskModal

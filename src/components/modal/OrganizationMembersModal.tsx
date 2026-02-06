@@ -108,7 +108,7 @@ const OrganizationMembersModal: React.FC<Props> = ({
   const handleRemoveMember = async (userId: string, userName: string) => {
     if (!canManage) return;
 
-    if (!confirm(`Remove ${userName} from the organization?`)) return;
+    if (!window.confirm(`Remove ${userName} from the organization?`)) return;
 
     try {
       await removeMember({

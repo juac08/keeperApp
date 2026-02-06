@@ -1,6 +1,6 @@
 import React from "react";
 import { Box, HStack, VStack, Text, Dialog, Stack } from "@chakra-ui/react";
-import { FiArchive, FiRotateCcw, FiTrash2, FiX } from "react-icons/fi";
+import { FiArchive, FiRotateCcw, FiTrash2 } from "react-icons/fi";
 import { useArchiveStore } from "@/state/ArchiveStore";
 import { AppButton, AppIconButton, ModalHeader } from "@/ui";
 import type { Card } from "@/types";

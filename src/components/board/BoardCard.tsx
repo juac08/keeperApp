@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Box } from "@chakra-ui/react";
 import type { Card } from "@/types";
 import { CardHeader, CardMeta } from "@/components/board/card";
 import { useDensityStore } from "@/state/DensityStore";

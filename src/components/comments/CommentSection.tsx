@@ -96,10 +96,6 @@ const CommentSection: React.FC<Props> = ({ comments, onAddComment }) => {
               : null;
             const displayName =
               author?.name || comment.authorName || "Unknown";
-            const initialsSource = author?.name || comment.authorName;
-            const initial = initialsSource
-              ? initialsSource.charAt(0).toUpperCase()
-              : "?";
             return (
               <Box
                 key={comment.id}

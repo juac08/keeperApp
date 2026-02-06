@@ -11,5 +11,5 @@ export function ColorModeProvider({ children }: { children: React.ReactNode }) {
     root.setAttribute("data-theme", colorMode);
   }, [colorMode]);
 
-  return <>{children}</>;
+  return children as JSX.Element;
 }

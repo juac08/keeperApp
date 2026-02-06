@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { Box, HStack, Text, Dialog, Stack } from "@chakra-ui/react";
-import { FiDownload, FiUpload, FiX } from "react-icons/fi";
+import { FiDownload, FiUpload } from "react-icons/fi";
 import { AppButton, ModalHeader } from "@/ui";
 import { exportBoardToJSON, importBoardFromJSON } from "@/utils/exportImport";
 import type { Card } from "@/types";

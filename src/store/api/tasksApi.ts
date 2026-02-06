@@ -16,7 +16,65 @@ const normalizePriority = (value: unknown): Priority => {
   return "Medium";
 };
 
-const mapCommentFromApi = (comment: any): Comment => {
+type ApiComment = {
+  id?: string;
+  text?: string;
+  body?: string;
+  authorId?: string;
+  userId?: string;
+  author?: { id?: string; name?: string };
+  user?: { id?: string; name?: string };
+  authorName?: string;
+  userName?: string;
+  createdAt?: string;
+  created_at?: string;
+};
+
+type ApiSubtask = {
+  id?: string;
+  title?: string;
+  text?: string;
+  completed?: boolean;
+};
+
+type ApiActivity = {
+  id?: string | number;
+  type?: Activity["type"];
+  authorId?: string;
+  timestamp?: string;
+  metadata?: Record<string, any>;
+};
+
+type ApiTask = {
+  id?: string;
+  title?: string;
+  description?: string;
+  content?: string;
+  status?: Status;
+  priority?: string | Priority;
+  blocked?: boolean;
+  isBlocked?: boolean;
+  is_blocked?: boolean;
+  blockedStatus?: boolean;
+  blockedReason?: string;
+  blocked_reason?: string;
+  blockedReasonText?: string;
+  dueDate?: string;
+  tags?: Array<{ id?: string } | string>;
+  assigneeId?: string;
+  subtasks?: ApiSubtask[];
+  comments?: ApiComment[];
+  activities?: ApiActivity[];
+  createdAt?: string;
+  updatedAt?: string;
+  archived?: boolean;
+};
+
+type ApiBoard = {
+  tasks?: ApiTask[];
+};
+
+const mapCommentFromApi = (comment: ApiComment): Comment => {
   const createdAt =
     comment?.createdAt ??
     comment?.created_at ??
@@ -46,9 +104,9 @@ const mapCommentFromApi = (comment: any): Comment => {
   };
 };
 
-const mapTaskFromApi = (task: any): Card => {
+const mapTaskFromApi = (task: ApiTask): Card => {
   const normalizeSubtasks = Array.isArray(task?.subtasks)
-    ? task.subtasks.map((subtask: any) => ({
+    ? task.subtasks.map((subtask: ApiSubtask) => ({
         id:
           subtask.id ??
           `subtask-${Math.random().toString(16).slice(2)}-${Date.now()}`,
@@ -58,21 +116,28 @@ const mapTaskFromApi = (task: any): Card => {
     : [];
 
   const normalizeComments = Array.isArray(task?.comments)
-    ? task.comments.map((comment: any) => mapCommentFromApi(comment))
+    ? task.comments.map((comment: ApiComment) => mapCommentFromApi(comment))
     : [];
 
   const normalizeActivities = Array.isArray(task?.activities)
-    ? task.activities.map((activity: any) => ({
-        id: activity.id ?? String(activity?.id ?? Date.now()),
-        type: (activity.type ?? "created") as Activity["type"],
-        authorId: activity.authorId,
-        timestamp: activity.timestamp ?? new Date().toISOString(),
-        metadata: activity.metadata ?? {},
-      }))
+    ? task.activities.map((activity: ApiActivity): Activity => {
+        const createdAt = activity.timestamp ?? new Date().toISOString();
+        return {
+          id: String(activity.id ?? Date.now()),
+          type: String(activity.type ?? "created"),
+          taskId: String(task.id ?? ""),
+          userId: String(activity.authorId ?? ""),
+          createdAt,
+          updatedAt: createdAt,
+          authorId: activity.authorId,
+          timestamp: activity.timestamp ?? createdAt,
+          metadata: activity.metadata ?? {},
+        };
+      })
     : [];
 
   const normalizeTags = Array.isArray(task?.tags)
-    ? task.tags.map((tag: any) => (typeof tag === "string" ? tag : tag.id))
+    ? task.tags.map((tag) => (typeof tag === "string" ? tag : tag?.id ?? ""))
     : [];
 
   const blockedValue =
@@ -232,11 +297,9 @@ export const tasksApi = apiSlice.injectEndpoints({
           return { error: response.error };
         }
 
-        const board = response.data as any;
+        const board = response.data as ApiBoard;
         const tasks = Array.isArray(board?.tasks)
-          ? board.tasks
-              .filter((task: any) => !task?.archived)
-              .map(mapTaskFromApi)
+          ? board.tasks.filter((task) => !task?.archived).map(mapTaskFromApi)
           : [];
 
         return { data: tasks };
@@ -251,7 +314,7 @@ export const tasksApi = apiSlice.injectEndpoints({
     }),
     getTask: builder.query<Card, string>({
       query: (id) => `/tasks/${id}`,
-      transformResponse: (response: any) => mapTaskFromApi(response),
+      transformResponse: (response: ApiTask) => mapTaskFromApi(response),
       providesTags: (_result, _error, id) => [{ type: "Task", id }],
     }),
     createTask: builder.mutation<Card, Partial<Card> & { boardId?: string }>({
@@ -539,7 +602,7 @@ export const tasksApi = apiSlice.injectEndpoints({
         { type: "Task", id: taskId },
       ],
     }),
-    getTaskActivities: builder.query<any[], string>({
+    getTaskActivities: builder.query<Activity[], string>({
       query: (taskId) => `/tasks/${taskId}/activities`,
     }),
   }),

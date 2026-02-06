@@ -13,7 +13,7 @@ import {
   SkeletonText,
 } from "@chakra-ui/react";
 import { FiUserPlus, FiSearch, FiTrash2, FiUsers } from "react-icons/fi";
-import { AppButton, AppIconButton, AppSelect, ModalHeader } from "@/ui";
+import { AppButton, AppSelect, ModalHeader } from "@/ui";
 import {
   useGetBoardMembersQuery,
   useAddBoardMemberMutation,

@@ -4,7 +4,7 @@ import { FiRotateCcw } from "react-icons/fi";
 import { FilterButtons, SearchBar, StatTiles } from "@/components/toolbar";
 import { SortSelect } from "@/components/toolbar/SortSelect";
 import type { SortOption } from "@/components/toolbar/SortSelect";
-import { AppButton } from "@/ui";
+import { AppButton, Pill } from "@/ui";
 import type { Priority } from "@/types";
 import type { FilterType } from "@/hooks/useCardFilters";
 
@@ -59,9 +59,9 @@ const BoardToolbar: React.FC<Props> = ({
         position="sticky"
         top={0}
         zIndex={2}
-        bg="bg.panel"
         pt={2}
         pb={3}
+        bg="bg.panel"
         borderBottom="1px solid"
         borderColor="border.muted"
         boxShadow="0 8px 20px rgba(15, 23, 42, 0.06)"
@@ -99,19 +99,11 @@ const BoardToolbar: React.FC<Props> = ({
         {chips.length > 0 && (
           <HStack gap={2} flexWrap="wrap">
             {chips.map((chip) => (
-              <Box
-                key={chip}
-                px={3}
-                py={1}
-                bg="bg.muted"
-                borderRadius="full"
-                border="1px solid"
-                borderColor="border.muted"
-              >
+              <Pill key={chip}>
                 <Text fontSize="xs" color="text.secondary">
                   {chip}
                 </Text>
-              </Box>
+              </Pill>
             ))}
           </HStack>
         )}

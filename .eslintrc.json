@@ -1,0 +1,7 @@
+{
+  "extends": ["react-app", "react-app/jest"],
+  "rules": {
+    "react/style-prop-object": "error",
+    "react/jsx-no-useless-fragment": "warn"
+  }
+}

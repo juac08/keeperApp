@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Dialog, Grid, HStack, Text, VStack } from "@chakra-ui/react";
+import { Box, Dialog, Grid, Text, VStack } from "@chakra-ui/react";
 import { FiLayers } from "react-icons/fi";
 import { CARD_TEMPLATES, type CardTemplate } from "@/config/cardTemplates";
 import { ModalHeader } from "@/ui";
