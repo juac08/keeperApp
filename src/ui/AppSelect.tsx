@@ -25,13 +25,14 @@ const AppSelect: React.FC<Props> = ({
         onChange={onChange}
         bg="bg.panel"
         borderColor="border.muted"
-        borderRadius="control"
-        h="48px"
+        borderRadius="xl"
+        h="44px"
         px={4}
         fontSize="sm"
         color="text.primary"
         minW="160px"
         w="full"
+        boxShadow="0 8px 18px rgba(15, 23, 42, 0.04)"
         _hover={{ borderColor: "blue.300" }}
         _focusVisible={{
           borderColor: "brand.500",
@@ -41,7 +42,7 @@ const AppSelect: React.FC<Props> = ({
       >
         {children}
       </NativeSelect.Field>
-      <NativeSelect.Indicator />
+      <NativeSelect.Indicator color="text.muted" />
     </NativeSelect.Root>
   );
 };

@@ -16,6 +16,7 @@ import { AppIconButton, TooltipWrap } from "@/ui";
 import { useGetMeQuery, useLogoutMutation } from "@/store";
 import { ThemeToggle } from "./ThemeToggle";
 import { DensityToggle } from "./DensityToggle";
+import { appToaster } from "@/shared";
 
 type Props = {
   onCreateBoard: () => void;
@@ -42,8 +43,16 @@ const HeaderActions: React.FC<Props> = ({
   const menuRef = useRef<HTMLDivElement>(null);
 
   const handleLogout = async () => {
-    await logout();
-    window.location.reload();
+    try {
+      await logout().unwrap();
+      appToaster.success({ title: "Logged out" });
+      window.dispatchEvent(new Event("auth:logout"));
+    } catch (error: any) {
+      appToaster.error({
+        title: "Logout failed",
+        description: error?.data?.error || error?.message || "Please try again",
+      });
+    }
   };
 
   useEffect(() => {
@@ -79,6 +88,16 @@ const HeaderActions: React.FC<Props> = ({
         align="center"
         overflow="visible"
       >
+        <TooltipWrap label="Add task">
+          <AppIconButton aria-label="Add task" onClick={onOpenTemplates}>
+            <Box as={FiPlus} fontSize="16px" />
+          </AppIconButton>
+        </TooltipWrap>
+        <TooltipWrap label="Board members">
+          <AppIconButton aria-label="Board members" onClick={onOpenMembers}>
+            <Box as={FiUsers} fontSize="16px" />
+          </AppIconButton>
+        </TooltipWrap>
         {user?.isSuperAdmin && (
           <TooltipWrap label="Organization members">
             <AppIconButton
@@ -89,16 +108,6 @@ const HeaderActions: React.FC<Props> = ({
             </AppIconButton>
           </TooltipWrap>
         )}
-        <TooltipWrap label="Board members">
-          <AppIconButton aria-label="Board members" onClick={onOpenMembers}>
-            <Box as={FiUsers} fontSize="16px" />
-          </AppIconButton>
-        </TooltipWrap>
-        <TooltipWrap label="Add task">
-          <AppIconButton aria-label="Add task" onClick={onOpenTemplates}>
-            <Box as={FiPlus} fontSize="16px" />
-          </AppIconButton>
-        </TooltipWrap>
         <TooltipWrap label="Archive">
           <AppIconButton aria-label="Archive" onClick={onOpenArchive}>
             <Box as={FiArchive} fontSize="16px" />

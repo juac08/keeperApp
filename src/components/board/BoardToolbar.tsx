@@ -1,10 +1,10 @@
 import React from "react";
-import { Box, Grid, HStack, Stack, Text } from "@chakra-ui/react";
+import { Box, Grid, HStack, Stack } from "@chakra-ui/react";
 import { FiRotateCcw } from "react-icons/fi";
 import { FilterButtons, SearchBar, StatTiles } from "@/components/toolbar";
 import { SortSelect } from "@/components/toolbar/SortSelect";
 import type { SortOption } from "@/components/toolbar/SortSelect";
-import { AppButton, Pill } from "@/ui";
+import { AppButton } from "@/ui";
 import type { Priority } from "@/types";
 import type { FilterType } from "@/hooks/useCardFilters";
 
@@ -54,25 +54,18 @@ const BoardToolbar: React.FC<Props> = ({
 
   return (
     <Box mb={8}>
-      <Stack
-        gap={3}
-        position="sticky"
-        top={0}
-        zIndex={2}
-        pt={2}
-        pb={3}
-        bg="bg.panel"
-        borderBottom="1px solid"
-        borderColor="border.muted"
-        boxShadow="0 8px 20px rgba(15, 23, 42, 0.06)"
-      >
+      <Stack gap={3} pt={2} pb={3}>
         <Grid
           templateColumns={{ base: "1fr", lg: "1.4fr auto" }}
           gap={4}
           alignItems="center"
         >
           <SearchBar value={searchQuery} onChange={onSearch} />
-          <HStack gap={3} flexWrap="wrap" justify="flex-end">
+          <HStack
+            gap={3}
+            flexWrap={{ base: "wrap", lg: "nowrap" }}
+            justify={{ base: "flex-start", lg: "flex-end" }}
+          >
             <SortSelect value={sortBy} onChange={onSortChange} />
             <FilterButtons
               activeFilter={activeFilter}
@@ -96,17 +89,6 @@ const BoardToolbar: React.FC<Props> = ({
             )}
           </HStack>
         </Grid>
-        {chips.length > 0 && (
-          <HStack gap={2} flexWrap="wrap">
-            {chips.map((chip) => (
-              <Pill key={chip}>
-                <Text fontSize="xs" color="text.secondary">
-                  {chip}
-                </Text>
-              </Pill>
-            ))}
-          </HStack>
-        )}
       </Stack>
       <StatTiles
         total={total}

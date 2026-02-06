@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Box, HStack, Text } from "@chakra-ui/react";
-import { FiCheck, FiUser, FiX } from "react-icons/fi";
+import { FiCheck, FiChevronDown, FiUser, FiX } from "react-icons/fi";
 import { useAssigneesStore } from "@/state/AssigneesStore";
 import type { Assignee } from "@/types";
 
@@ -65,19 +65,26 @@ const AssigneeSelect: React.FC<Props> = ({ value, onChange }) => {
           flex="1"
           minW="200px"
         >
-          <HStack gap={2}>
-            {selectedAssignee ? (
-              <Text fontSize="sm" fontWeight="600" color="text.primary">
-                {selectedAssignee.name}
-              </Text>
-            ) : (
-              <>
-                <Box as={FiUser} fontSize="16px" color="text.muted" />
-                <Text fontSize="sm" color="text.muted">
-                  Unassigned
+          <HStack gap={2} justify="space-between">
+            <HStack gap={2}>
+              {selectedAssignee ? (
+                <Text fontSize="sm" fontWeight="600" color="text.primary">
+                  {selectedAssignee.name}
                 </Text>
-              </>
-            )}
+              ) : (
+                <>
+                  <Box as={FiUser} fontSize="16px" color="text.muted" />
+                  <Text fontSize="sm" color="text.muted">
+                    Unassigned
+                  </Text>
+                </>
+              )}
+            </HStack>
+            <Box
+              as={FiChevronDown}
+              fontSize="16px"
+              color={isOpen ? "blue.500" : "text.muted"}
+            />
           </HStack>
         </Box>
         {value && (

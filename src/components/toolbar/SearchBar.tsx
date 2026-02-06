@@ -17,6 +17,20 @@ const SearchBar: React.FC<Props> = ({
   const hasValue = value.trim().length > 0;
   const [isFocused, setIsFocused] = React.useState(false);
 
+  const handleFocus = () => {
+    setIsFocused(true);
+    if (typeof document !== "undefined") {
+      document.body.classList.add("no-scroll");
+    }
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    if (typeof document !== "undefined") {
+      document.body.classList.remove("no-scroll");
+    }
+  };
+
   return (
     <HStack
       gap={3}
@@ -54,13 +68,13 @@ const SearchBar: React.FC<Props> = ({
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         bg="transparent"
         border="none"
         px={0}
         h="44px"
-        fontSize="sm"
+        fontSize={{ base: "16px", md: "sm" }}
         color="text.primary"
         _focusVisible={{ boxShadow: "none" }}
         _placeholder={{ color: "text.muted", fontWeight: "400" }}

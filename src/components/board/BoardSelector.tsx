@@ -63,7 +63,7 @@ const BoardSelector: React.FC<Props> = ({ onCreateBoard }) => {
     }
   };
 
-  const resolveBoardIcon = (board: typeof boards[number] | undefined) => {
+  const resolveBoardIcon = (board: (typeof boards)[number] | undefined) => {
     if (!board) return "📋";
     if (board.icon) return board.icon;
     const storedIcon = getStoredValue("keeper.boardIcons", board.id);
@@ -114,21 +114,27 @@ const BoardSelector: React.FC<Props> = ({ onCreateBoard }) => {
       <Box
         onClick={() => setIsOpen(!isOpen)}
         cursor="pointer"
-        px={3.5}
-        py={2.5}
+        px={2}
+        py={2}
+        h="50px"
+        minW="190px"
         bg="bg.panel"
         border="1px solid"
         borderColor={isOpen ? "blue.400" : "border.muted"}
-        boxShadow={isOpen ? "0 0 0 1px #4299e1" : "0 8px 20px rgba(15, 23, 42, 0.06)"}
-        borderRadius="xl"
+        boxShadow={
+          isOpen
+            ? "0 0 0 2px rgba(59, 130, 246, 0.15)"
+            : "0 8px 18px rgba(15, 23, 42, 0.04)"
+        }
+        borderRadius="full"
         _hover={{ borderColor: isOpen ? "blue.400" : "border.muted" }}
         transition="all 0.2s"
       >
-        <HStack gap={2.5}>
+        <HStack gap={2} align="center" w="full">
           <Box
-            w="36px"
-            h="36px"
-            borderRadius="12px"
+            w="32px"
+            h="32px"
+            borderRadius="10px"
             bg="bg.muted"
             border="1px solid"
             borderColor="border.muted"
@@ -140,12 +146,21 @@ const BoardSelector: React.FC<Props> = ({ onCreateBoard }) => {
               {resolveBoardIcon(activeBoard)}
             </Text>
           </Box>
-          <Text fontSize="md" fontWeight="700" color="text.primary">
+          <Text
+            fontSize="sm"
+            fontWeight="600"
+            color="text.primary"
+            flex="1"
+            mr={1}
+            overflow="hidden"
+            textOverflow="ellipsis"
+            whiteSpace="nowrap"
+          >
             {activeBoard?.name || "Select Board"}
           </Text>
           <Box
             as={FiChevronDown}
-            fontSize="16px"
+            fontSize="14px"
             color="text.muted"
             transform={isOpen ? "rotate(180deg)" : "rotate(0)"}
             transition="transform 0.2s"

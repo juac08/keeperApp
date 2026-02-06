@@ -136,59 +136,66 @@ const App: React.FC = () => {
     setIsAuthenticated(true);
   };
 
-  // Show login form if not authenticated
-  if (!isAuthenticated) {
-    return <LoginForm onSuccess={handleLoginSuccess} />;
-  }
+  useEffect(() => {
+    const handleLogout = () => {
+      setIsAuthenticated(false);
+    };
+    window.addEventListener("auth:logout", handleLogout);
+    return () => window.removeEventListener("auth:logout", handleLogout);
+  }, []);
 
-  // Show loading state while checking authentication
-  if (userLoading) {
-    return (
-      <PageShell>
-        <ContentContainer>
-          <Panel w="full" minH="calc(100vh - 64px)">
-            <HStack justify="space-between" mb={8}>
-              <HStack gap={3}>
-                <Skeleton w="44px" h="44px" borderRadius="12px" />
-                <Box>
-                  <Skeleton h="18px" w="160px" mb={2} />
-                  <Skeleton h="12px" w="220px" />
-                </Box>
+  return (
+    <>
+      <AppToaster />
+      {!isAuthenticated ? (
+        <LoginForm onSuccess={handleLoginSuccess} />
+      ) : userLoading ? (
+        <PageShell>
+          <ContentContainer>
+            <Panel w="full" minH="calc(100vh - 64px)">
+              <HStack justify="space-between" mb={8}>
+                <HStack gap={3}>
+                  <Skeleton w="44px" h="44px" borderRadius="12px" />
+                  <Box>
+                    <Skeleton h="18px" w="160px" mb={2} />
+                    <Skeleton h="12px" w="220px" />
+                  </Box>
+                </HStack>
+                <HStack gap={3}>
+                  <Skeleton h="40px" w="160px" borderRadius="lg" />
+                  <Skeleton h="40px" w="40px" borderRadius="full" />
+                  <Skeleton h="40px" w="40px" borderRadius="full" />
+                </HStack>
               </HStack>
-              <HStack gap={3}>
-                <Skeleton h="40px" w="160px" borderRadius="lg" />
-                <Skeleton h="40px" w="40px" borderRadius="full" />
-                <Skeleton h="40px" w="40px" borderRadius="full" />
+              <HStack gap={4} align="stretch">
+                {[0, 1, 2].map((i) => (
+                  <Box
+                    key={i}
+                    flex="1"
+                    bg="bg.muted"
+                    borderRadius="2xl"
+                    border="1px solid"
+                    borderColor="border.muted"
+                    p={4}
+                    minH="520px"
+                  >
+                    <Skeleton h="16px" w="120px" mb={4} />
+                    <VStack gap={3} align="stretch">
+                      {[0, 1, 2].map((j) => (
+                        <SkeletonCard key={j} />
+                      ))}
+                    </VStack>
+                  </Box>
+                ))}
               </HStack>
-            </HStack>
-            <HStack gap={4} align="stretch">
-              {[0, 1, 2].map((i) => (
-                <Box
-                  key={i}
-                  flex="1"
-                  bg="bg.muted"
-                  borderRadius="2xl"
-                  border="1px solid"
-                  borderColor="border.muted"
-                  p={4}
-                  minH="520px"
-                >
-                  <Skeleton h="16px" w="120px" mb={4} />
-                  <VStack gap={3} align="stretch">
-                    {[0, 1, 2].map((j) => (
-                      <SkeletonCard key={j} />
-                    ))}
-                  </VStack>
-                </Box>
-              ))}
-            </HStack>
-          </Panel>
-        </ContentContainer>
-      </PageShell>
-    );
-  }
-
-  return <AuthenticatedApp />;
+            </Panel>
+          </ContentContainer>
+        </PageShell>
+      ) : (
+        <AuthenticatedApp />
+      )}
+    </>
+  );
 };
 
 const AuthenticatedApp: React.FC = () => {
@@ -898,7 +905,6 @@ const AuthenticatedApp: React.FC = () => {
   return (
     <PageShell>
       <ContentContainer>
-        <AppToaster />
         <Panel>
           <BoardView
             cards={cards}

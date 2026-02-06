@@ -1,6 +1,7 @@
 import React from "react";
-import { Badge, Box, Heading, HStack, Text } from "@chakra-ui/react";
+import { Box, Heading, HStack, Text } from "@chakra-ui/react";
 import type { Column } from "@/types";
+import { TagPill } from "@/ui";
 
 type Props = {
   column: Column;
@@ -35,16 +36,9 @@ const ColumnHeader: React.FC<Props> = ({ column, count }) => {
           {column.hint}
         </Text>
       </Box>
-      <Badge
-        borderRadius="full"
-        px={2.5}
-        py={1}
-        fontSize="xs"
-        bg="bg.muted"
-        color="text.secondary"
-      >
+      <TagPill color="text.secondary">
         {count}
-      </Badge>
+      </TagPill>
     </HStack>
   );
 };

@@ -9,6 +9,42 @@ body {
   overflow-x: hidden;
 }
 
-#root {
-  min-height: 100vh;
+body.no-scroll {
+  overflow: hidden;
+}
+
+@keyframes floatA {
+  0% {
+    transform: translateY(0px) translateX(0px);
+  }
+  50% {
+    transform: translateY(12px) translateX(-10px);
+  }
+  100% {
+    transform: translateY(0px) translateX(0px);
+  }
+}
+
+@keyframes floatB {
+  0% {
+    transform: translateY(0px) translateX(0px);
+  }
+  50% {
+    transform: translateY(-14px) translateX(12px);
+  }
+  100% {
+    transform: translateY(0px) translateX(0px);
+  }
+}
+
+@keyframes floatC {
+  0% {
+    transform: translateY(0px) translateX(0px);
+  }
+  50% {
+    transform: translateY(10px) translateX(-6px);
+  }
+  100% {
+    transform: translateY(0px) translateX(0px);
+  }
 }

@@ -1,6 +1,7 @@
 import React from "react";
-import { Flex } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { HeaderActions, ProjectInfo } from "@/components/header";
+import { HeaderCard } from "@/ui";
 
 type Props = {
   onCreateBoard: () => void;
@@ -22,29 +23,18 @@ const BoardHeader: React.FC<Props> = ({
   onDeleteBoard,
 }) => {
   return (
-    <Flex
-      align="center"
-      justify="space-between"
-      direction={{ base: "column", lg: "row" }}
-      gap={{ base: 4, md: 6 }}
+    <HeaderCard
       mb={8}
-      px={{ base: 5, md: 7 }}
-      py={{ base: 4, md: 5 }}
-      bg="bg.panel"
-      borderRadius="2xl"
-      border="1px solid"
-      borderColor="border.muted"
-      boxShadow="0 18px 40px rgba(15, 23, 42, 0.08)"
       position="sticky"
       top={4}
       zIndex={100}
       backdropFilter="blur(12px)"
       backgroundColor="rgba(255, 255, 255, 0.92)"
-      _dark={{
-        backgroundColor: "rgba(15, 23, 42, 0.92)",
-      }}
+      _dark={{ backgroundColor: "rgba(15, 23, 42, 0.92)" }}
     >
-      <ProjectInfo />
+      <Box flex="1">
+        <ProjectInfo />
+      </Box>
       <HeaderActions
         onCreateBoard={onCreateBoard}
         onOpenArchive={onOpenArchive}
@@ -54,7 +44,7 @@ const BoardHeader: React.FC<Props> = ({
         onOpenOrganizationMembers={onOpenOrganizationMembers}
         onDeleteBoard={onDeleteBoard}
       />
-    </Flex>
+    </HeaderCard>
   );
 };
 

@@ -5,7 +5,6 @@ import {
   Stack,
   Text,
   HStack,
-  Input,
   Badge,
   IconButton,
   Spinner,
@@ -13,7 +12,7 @@ import {
   SkeletonText,
 } from "@chakra-ui/react";
 import { FiUserPlus, FiSearch, FiTrash2, FiUsers } from "react-icons/fi";
-import { AppButton, AppSelect, ModalHeader } from "@/ui";
+import { AppButton, AppInput, AppSelect, ModalHeader } from "@/ui";
 import {
   useGetBoardMembersQuery,
   useAddBoardMemberMutation,
@@ -167,20 +166,11 @@ const BoardMembersModal: React.FC<Props> = ({ boardId, isOpen, onClose }) => {
                   </Text>
                   <Stack gap={3}>
                     <Box position="relative">
-                      <Input
+                      <AppInput
                         placeholder="Search by email..."
                         value={searchEmail}
                         onChange={(e) => setSearchEmail(e.target.value)}
-                        bg="bg.panel"
-                        borderColor="border.muted"
-                        color="text.primary"
-                        px={4}
-                        _placeholder={{ color: "text.muted" }}
-                        _hover={{ borderColor: "border.muted" }}
-                        _focus={{
-                          borderColor: "brand.500",
-                          _hover: { borderColor: "brand.500" },
-                        }}
+                        pr="44px"
                       />
                       <Box
                         position="absolute"

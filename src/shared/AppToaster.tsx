@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Toast, Toaster, createToaster } from "@chakra-ui/react";
 import type { ToastOptions } from "@ark-ui/react/toast";
 import { motion } from "framer-motion";
-import { FiCheckCircle, FiInfo, FiX } from "react-icons/fi";
+import { FiAlertTriangle, FiCheckCircle, FiInfo, FiX } from "react-icons/fi";
 
 const MotionBox = motion(Box);
 
@@ -16,12 +16,32 @@ const AppToaster: React.FC = () => {
   return (
     <Toaster toaster={appToaster} zIndex={9999} mt={4}>
       {(toast: ToastOptions) => {
-        const isInfo = toast.type === "info";
-        const iconColor = isInfo ? "blue.500" : "green.500";
+        const rawType =
+          toast.type ||
+          (toast as { status?: string }).status ||
+          (toast as { variant?: string }).variant ||
+          "info";
+        const type = rawType.toLowerCase();
+        const isInfo = type === "info";
+        const isError = type === "error";
+        const isWarning = type === "warning";
+        const iconColor = isError
+          ? "red.500"
+          : isWarning
+            ? "orange.400"
+            : isInfo
+              ? "blue.500"
+              : "green.500";
         const isDark =
           typeof document !== "undefined" &&
           document.documentElement.getAttribute("data-theme") === "dark";
-        const Icon = isInfo ? FiInfo : FiCheckCircle;
+        const Icon = isError
+          ? FiAlertTriangle
+          : isWarning
+            ? FiAlertTriangle
+            : isInfo
+              ? FiInfo
+              : FiCheckCircle;
 
         return (
           <MotionBox
