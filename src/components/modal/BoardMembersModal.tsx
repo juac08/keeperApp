@@ -12,7 +12,7 @@ import {
   SkeletonText,
 } from "@chakra-ui/react";
 import { FiUserPlus, FiSearch, FiTrash2, FiUsers } from "react-icons/fi";
-import { AppButton, AppInput, AppSelect, ModalHeader } from "@/ui";
+import { AppButton, AppInput, AppMenuSelect, ModalHeader } from "@/ui";
 import {
   useGetBoardMembersQuery,
   useAddBoardMemberMutation,
@@ -245,20 +245,13 @@ const BoardMembersModal: React.FC<Props> = ({ boardId, isOpen, onClose }) => {
                     {selectedUserId && (
                       <HStack gap={2}>
                         <Box flex="1" minW="140px">
-                          <AppSelect
-                            name="role"
+                          <AppMenuSelect
                             value={selectedRole}
-                            onChange={(e) =>
-                              setSelectedRole(e.target.value as BoardMemberRole)
+                            options={ROLES}
+                            onChange={(value) =>
+                              setSelectedRole(value as BoardMemberRole)
                             }
-                            rootProps={{ size: "md" }}
-                          >
-                            {ROLES.map((role) => (
-                              <option key={role.value} value={role.value}>
-                                {role.label}
-                              </option>
-                            ))}
-                          </AppSelect>
+                          />
                         </Box>
                         <AppButton
                           variantStyle="primary"
@@ -361,45 +354,38 @@ const BoardMembersModal: React.FC<Props> = ({ boardId, isOpen, onClose }) => {
                                 {member.user.email}
                               </Text>
                             </Box>
-                            <HStack gap={2}>
+                            <HStack gap={3} align="center">
                               {canChangeRole && (
-                                <Box width="120px">
-                                  <AppSelect
-                                    name="memberRole"
+                                <Box minW="150px">
+                                  <AppMenuSelect
                                     value={member.role}
-                                    onChange={(e) =>
+                                    options={ROLES.filter(
+                                      (r) => r.value !== "owner",
+                                    )}
+                                    onChange={(value) =>
                                       handleUpdateRole(
                                         member.userId,
-                                        e.target.value as BoardMemberRole,
+                                        value as BoardMemberRole,
                                       )
                                     }
-                                  >
-                                    {ROLES.filter(
-                                      (r) => r.value !== "owner",
-                                    ).map((role) => (
-                                      <option
-                                        key={role.value}
-                                        value={role.value}
-                                      >
-                                        {role.label}
-                                      </option>
-                                    ))}
-                                  </AppSelect>
+                                  />
                                 </Box>
                               )}
                               {canRemove && (
-                                <IconButton
-                                  aria-label="Remove member"
-                                  size="sm"
-                                  variant="ghost"
-                                  colorScheme="red"
-                                  onClick={() =>
-                                    handleRemoveMember(member.userId)
-                                  }
-                                  disabled={removing}
-                                >
-                                  <FiTrash2 />
-                                </IconButton>
+                                <Box ml={1}>
+                                  <IconButton
+                                    aria-label="Remove member"
+                                    size="sm"
+                                    variant="ghost"
+                                    colorScheme="red"
+                                    onClick={() =>
+                                      handleRemoveMember(member.userId)
+                                    }
+                                    disabled={removing}
+                                  >
+                                    <FiTrash2 />
+                                  </IconButton>
+                                </Box>
                               )}
                             </HStack>
                           </HStack>
