@@ -2,7 +2,7 @@ import React from "react";
 import { Box, HStack, VStack, Text, Dialog, Stack } from "@chakra-ui/react";
 import { FiArchive, FiRotateCcw, FiTrash2, FiX } from "react-icons/fi";
 import { useArchiveStore } from "@/state/ArchiveStore";
-import { AppButton, AppIconButton } from "@/ui";
+import { AppButton, AppIconButton, ModalHeader } from "@/ui";
 import type { Card } from "@/types";
 
 type Props = {
@@ -38,49 +38,14 @@ export const ArchiveModal: React.FC<Props> = ({
           boxShadow="0 24px 60px rgba(15, 23, 42, 0.18)"
           bg="bg.panel"
         >
-          <Dialog.Header
-            py={5}
-            px={{ base: 6, md: 8 }}
-            borderBottom="1px solid"
-            borderColor="border.muted"
-          >
-            <HStack justify="space-between">
-              <HStack gap={3} align="center">
-                <Box
-                  w="40px"
-                  h="40px"
-                  borderRadius="14px"
-                  bg="linear-gradient(135deg, #6366f1 0%, #a855f7 100%)"
-                  color="white"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  boxShadow="0 10px 20px rgba(99, 102, 241, 0.25)"
-                >
-                  <FiArchive size={18} />
-                </Box>
-                <Box>
-                  <Text
-                    fontSize="xs"
-                    fontWeight="700"
-                    color="text.muted"
-                    textTransform="uppercase"
-                    letterSpacing="0.12em"
-                  >
-                    Archive
-                  </Text>
-                  <Dialog.Title fontSize="lg" fontWeight="700">
-                    Archived tasks ({archivedCards.length})
-                  </Dialog.Title>
-                </Box>
-              </HStack>
-              <Dialog.CloseTrigger asChild>
-                <AppIconButton aria-label="Close" size="sm" onClick={onClose}>
-                  <FiX size={18} />
-                </AppIconButton>
-              </Dialog.CloseTrigger>
-            </HStack>
-          </Dialog.Header>
+          <ModalHeader
+            label="Archive"
+            title={`Archived tasks (${archivedCards.length})`}
+            icon={<FiArchive size={18} />}
+            iconGradient="linear-gradient(135deg, #6366f1 0%, #a855f7 100%)"
+            iconShadow="0 10px 20px rgba(99, 102, 241, 0.25)"
+            onClose={onClose}
+          />
 
           <Dialog.Body px={{ base: 6, md: 8 }} py={6} overflowY="auto">
             {archivedCards.length === 0 ? (
@@ -88,10 +53,15 @@ export const ArchiveModal: React.FC<Props> = ({
                 <Text fontSize="5xl" mb={4}>
                   📦
                 </Text>
-                <Text fontSize="lg" fontWeight="500" color="gray.700" mb={2}>
+                <Text
+                  fontSize="lg"
+                  fontWeight="500"
+                  color="text.primary"
+                  mb={2}
+                >
                   Archive is empty
                 </Text>
-                <Text fontSize="sm" color="gray.500">
+                <Text fontSize="sm" color="text.muted">
                   Completed tasks will appear here when archived
                 </Text>
               </Box>
@@ -113,11 +83,11 @@ export const ArchiveModal: React.FC<Props> = ({
                           {card.title || "Untitled"}
                         </Text>
                         {card.content && (
-                          <Text fontSize="xs" color="gray.600" lineClamp={2}>
+                          <Text fontSize="xs" color="text.secondary" lineClamp={2}>
                             {card.content}
                           </Text>
                         )}
-                        <Text fontSize="2xs" color="gray.400">
+                        <Text fontSize="2xs" color="text.muted">
                           Archived{" "}
                           {new Date(
                             (card as any).archivedAt || card.updatedAt,

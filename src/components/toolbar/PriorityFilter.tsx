@@ -35,7 +35,7 @@ const PriorityFilter: React.FC<Props> = ({ selected, onSelect }) => {
           px={4}
           py={2}
           cursor="pointer"
-          _hover={{ bg: "gray.50" }}
+          _hover={{ bg: "bg.muted" }}
           onClick={() => onSelect(priority.value)}
         >
           <HStack justify="space-between">

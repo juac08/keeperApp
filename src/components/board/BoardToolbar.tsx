@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Grid, HStack } from "@chakra-ui/react";
+import { Box, Grid, HStack, Stack, Text } from "@chakra-ui/react";
 import { FiRotateCcw } from "react-icons/fi";
 import { FilterButtons, SearchBar, StatTiles } from "@/components/toolbar";
 import { SortSelect } from "@/components/toolbar/SortSelect";
@@ -41,38 +41,81 @@ const BoardToolbar: React.FC<Props> = ({
   onSortChange,
   onClearFilters,
 }) => {
+  const chips: string[] = [];
+  if (searchQuery.trim()) {
+    chips.push(`Search: ${searchQuery.trim()}`);
+  }
+  if (activeFilter === "blocked") {
+    chips.push("Blocked");
+  }
+  if (activeFilter === "priority" && priorityFilter) {
+    chips.push(`Priority: ${priorityFilter}`);
+  }
+
   return (
     <Box mb={8}>
-      <Grid
-        templateColumns={{ base: "1fr", lg: "1.4fr auto" }}
-        gap={4}
-        alignItems="center"
+      <Stack
+        gap={3}
+        position="sticky"
+        top={0}
+        zIndex={2}
+        bg="bg.panel"
+        pt={2}
+        pb={3}
+        borderBottom="1px solid"
+        borderColor="border.muted"
+        boxShadow="0 8px 20px rgba(15, 23, 42, 0.06)"
       >
-        <SearchBar value={searchQuery} onChange={onSearch} />
-        <HStack gap={3}>
-          <SortSelect value={sortBy} onChange={onSortChange} />
-          <FilterButtons
-            activeFilter={activeFilter}
-            priorityFilter={priorityFilter}
-            onFilterChange={onFilterChange}
-            onPriorityChange={onPriorityChange}
-          />
-          {hasActiveFilters && (
-            <AppButton
-              size="sm"
-              h="40px"
-              px={4}
-              variantStyle="ghost"
-              icon={<FiRotateCcw />}
-              onClick={onClearFilters}
-              color="text.secondary"
-              _hover={{ color: "text.primary", bg: "bg.muted" }}
-            >
-              Clear
-            </AppButton>
-          )}
-        </HStack>
-      </Grid>
+        <Grid
+          templateColumns={{ base: "1fr", lg: "1.4fr auto" }}
+          gap={4}
+          alignItems="center"
+        >
+          <SearchBar value={searchQuery} onChange={onSearch} />
+          <HStack gap={3} flexWrap="wrap" justify="flex-end">
+            <SortSelect value={sortBy} onChange={onSortChange} />
+            <FilterButtons
+              activeFilter={activeFilter}
+              priorityFilter={priorityFilter}
+              onFilterChange={onFilterChange}
+              onPriorityChange={onPriorityChange}
+            />
+            {hasActiveFilters && (
+              <AppButton
+                size="sm"
+                h="40px"
+                px={4}
+                variantStyle="ghost"
+                icon={<FiRotateCcw />}
+                onClick={onClearFilters}
+                color="text.secondary"
+                _hover={{ color: "text.primary", bg: "bg.muted" }}
+              >
+                Clear
+              </AppButton>
+            )}
+          </HStack>
+        </Grid>
+        {chips.length > 0 && (
+          <HStack gap={2} flexWrap="wrap">
+            {chips.map((chip) => (
+              <Box
+                key={chip}
+                px={3}
+                py={1}
+                bg="bg.muted"
+                borderRadius="full"
+                border="1px solid"
+                borderColor="border.muted"
+              >
+                <Text fontSize="xs" color="text.secondary">
+                  {chip}
+                </Text>
+              </Box>
+            ))}
+          </HStack>
+        )}
+      </Stack>
       <StatTiles
         total={total}
         todo={todo}

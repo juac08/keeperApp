@@ -17,6 +17,7 @@ type Props = {
   onRemove: (id: string) => void;
   onDragStart: (event: React.DragEvent<HTMLDivElement>, id: string) => void;
   onArchive: (id: string) => void;
+  onCreate?: () => void;
 };
 
 const BoardColumn: React.FC<Props> = ({
@@ -32,14 +33,15 @@ const BoardColumn: React.FC<Props> = ({
   onRemove,
   onDragStart,
   onArchive,
+  onCreate,
 }) => {
   return (
     <Box
-      bg={dragOver === column.id ? "blue.50" : "bg.muted"}
+      bg={dragOver === column.id ? "blue.50" : "bg.panel"}
       border="1px solid"
       borderColor={dragOver === column.id ? "blue.300" : "border.muted"}
       _dark={{
-        bg: dragOver === column.id ? "blue.900" : "bg.muted",
+        bg: dragOver === column.id ? "blue.900" : "bg.panel",
         borderColor: dragOver === column.id ? "blue.700" : "border.muted",
       }}
       borderRadius="card"
@@ -68,10 +70,16 @@ const BoardColumn: React.FC<Props> = ({
             onArchive={onArchive}
           />
         ))}
-        {cards.length === 0 && <EmptyColumn />}
+        {cards.length === 0 && (
+          <EmptyColumn
+            title={`No ${column.title.toLowerCase()} tasks yet`}
+            description="Drag cards here or create a new one"
+            onCreate={onCreate}
+          />
+        )}
       </Stack>
     </Box>
   );
 };
 
-export default BoardColumn;
+export default React.memo(BoardColumn);

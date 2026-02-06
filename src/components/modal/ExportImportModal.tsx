@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { Box, HStack, Text, Dialog, Stack } from "@chakra-ui/react";
 import { FiDownload, FiUpload, FiX } from "react-icons/fi";
-import { AppButton, AppIconButton } from "@/ui";
+import { AppButton, ModalHeader } from "@/ui";
 import { exportBoardToJSON, importBoardFromJSON } from "@/utils/exportImport";
 import type { Card } from "@/types";
 import { appToaster } from "@/shared";
@@ -77,49 +77,14 @@ export const ExportImportModal: React.FC<Props> = ({
           boxShadow="0 24px 60px rgba(15, 23, 42, 0.18)"
           bg="bg.panel"
         >
-          <Dialog.Header
-            py={5}
-            px={{ base: 6, md: 8 }}
-            borderBottom="1px solid"
-            borderColor="border.muted"
-          >
-            <HStack justify="space-between" align="center">
-              <HStack gap={3} align="center">
-                <Box
-                  w="40px"
-                  h="40px"
-                  borderRadius="14px"
-                  bg="linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%)"
-                  color="white"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  boxShadow="0 10px 20px rgba(14, 165, 233, 0.25)"
-                >
-                  <FiDownload size={18} />
-                </Box>
-                <Box>
-                  <Text
-                    fontSize="xs"
-                    fontWeight="700"
-                    color="text.muted"
-                    textTransform="uppercase"
-                    letterSpacing="0.12em"
-                  >
-                    Transfer
-                  </Text>
-                  <Dialog.Title fontSize="lg" fontWeight="700">
-                    Export & import board
-                  </Dialog.Title>
-                </Box>
-              </HStack>
-              <Dialog.CloseTrigger asChild>
-                <AppIconButton aria-label="Close" size="sm" onClick={onClose}>
-                  <FiX size={18} />
-                </AppIconButton>
-              </Dialog.CloseTrigger>
-            </HStack>
-          </Dialog.Header>
+          <ModalHeader
+            label="Transfer"
+            title="Export & import board"
+            icon={<FiDownload size={18} />}
+            iconGradient="linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%)"
+            iconShadow="0 10px 20px rgba(14, 165, 233, 0.25)"
+            onClose={onClose}
+          />
 
           <Dialog.Body px={{ base: 6, md: 8 }} py={6}>
             <Stack gap={4}>
@@ -140,9 +105,9 @@ export const ExportImportModal: React.FC<Props> = ({
                     w="48px"
                     h="48px"
                     borderRadius="16px"
-                    bg="white"
+                    bg="bg.panel"
                     border="1px solid"
-                    borderColor="blue.100"
+                    borderColor="border.muted"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
@@ -178,9 +143,9 @@ export const ExportImportModal: React.FC<Props> = ({
                     w="48px"
                     h="48px"
                     borderRadius="16px"
-                    bg="white"
+                    bg="bg.panel"
                     border="1px solid"
-                    borderColor="green.100"
+                    borderColor="border.muted"
                     display="flex"
                     alignItems="center"
                     justifyContent="center"

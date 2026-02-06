@@ -25,12 +25,13 @@ const ColumnHeader: React.FC<Props> = ({ column, count }) => {
             borderRadius="full"
             bg={dotColor}
             boxShadow="0 0 0 4px rgba(255, 255, 255, 0.6)"
+            _dark={{ boxShadow: "0 0 0 4px rgba(15, 23, 42, 0.7)" }}
           />
-          <Heading size="sm" fontWeight="700">
+          <Heading size="sm" fontWeight="700" color="text.primary">
             {column.title}
           </Heading>
         </HStack>
-        <Text fontSize="sm" color="text.muted" mt={1}>
+        <Text fontSize="sm" color="text.secondary" mt={1}>
           {column.hint}
         </Text>
       </Box>

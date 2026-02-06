@@ -8,9 +8,9 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { FiEdit2, FiPlus, FiX } from "react-icons/fi";
+import { FiEdit2, FiPlus } from "react-icons/fi";
 import type { Priority, Status, Subtask } from "@/types";
-import { AppButton, AppIconButton, AppInput, AppTextarea } from "@/ui";
+import { AppButton, AppInput, AppTextarea, ModalHeader } from "@/ui";
 import {
   PrioritySelect,
   StatusSelect,
@@ -76,55 +76,14 @@ const TaskModal: React.FC<Props> = ({
           boxShadow="0 24px 60px rgba(15, 23, 42, 0.18)"
           bg="bg.panel"
         >
-          <Dialog.Header
-            bg="bg.panel"
-            py={5}
-            px={{ base: 6, md: 8 }}
-            borderBottom="1px solid"
-            borderColor="border.muted"
-          >
-            <HStack justify="space-between">
-              <HStack gap={3} align="center">
-                <Box
-                  w="40px"
-                  h="40px"
-                  borderRadius="14px"
-                  bg="linear-gradient(135deg, #2563eb 0%, #38bdf8 100%)"
-                  color="white"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  boxShadow="0 10px 20px rgba(37, 99, 235, 0.25)"
-                >
-                  <Box as={editingId ? FiEdit2 : FiPlus} fontSize="18px" />
-                </Box>
-                <Box>
-                  <Text
-                    fontSize="xs"
-                    fontWeight="700"
-                    color="text.muted"
-                    textTransform="uppercase"
-                    letterSpacing="0.12em"
-                  >
-                    Task
-                  </Text>
-                  <Text fontSize="lg" fontWeight="700" color="text.primary">
-                    {editingId ? "Edit task" : "Create task"}
-                  </Text>
-                </Box>
-              </HStack>
-              <Dialog.CloseTrigger asChild>
-                <AppIconButton
-                  aria-label="Close"
-                  size="sm"
-                  w="40px"
-                  h="40px"
-                >
-                  <FiX />
-                </AppIconButton>
-              </Dialog.CloseTrigger>
-            </HStack>
-          </Dialog.Header>
+          <ModalHeader
+            label="Task"
+            title={editingId ? "Edit task" : "Create task"}
+            icon={<Box as={editingId ? FiEdit2 : FiPlus} fontSize="18px" />}
+            iconGradient="linear-gradient(135deg, #2563eb 0%, #38bdf8 100%)"
+            iconShadow="0 10px 20px rgba(37, 99, 235, 0.25)"
+            onClose={onClose}
+          />
 
           <Dialog.Body bg="bg.panel" px={{ base: 6, md: 8 }} pt={6} pb={6}>
             <Stack gap={6}>
@@ -159,7 +118,7 @@ const TaskModal: React.FC<Props> = ({
                 <Field.Label
                   fontSize="xs"
                   fontWeight="600"
-                  color="gray.600"
+                  color="text.secondary"
                   mb={2}
                 >
                   DESCRIPTION
@@ -182,7 +141,7 @@ const TaskModal: React.FC<Props> = ({
                     <Field.Label
                       fontSize="xs"
                       fontWeight="600"
-                      color="gray.600"
+                      color="text.secondary"
                       mb={2}
                     >
                       STATUS
@@ -201,7 +160,7 @@ const TaskModal: React.FC<Props> = ({
                     <Field.Label
                       fontSize="xs"
                       fontWeight="600"
-                      color="gray.600"
+                      color="text.secondary"
                       mb={2}
                     >
                       PRIORITY
@@ -220,7 +179,7 @@ const TaskModal: React.FC<Props> = ({
                     <Field.Label
                       fontSize="xs"
                       fontWeight="600"
-                      color="gray.600"
+                      color="text.secondary"
                       mb={2}
                     >
                       ASSIGNEE
@@ -242,7 +201,7 @@ const TaskModal: React.FC<Props> = ({
                     <Field.Label
                       fontSize="xs"
                       fontWeight="600"
-                      color="gray.600"
+                      color="text.secondary"
                       mb={2}
                     >
                       DUE DATE
@@ -273,7 +232,7 @@ const TaskModal: React.FC<Props> = ({
                       <Field.Label
                         fontSize="xs"
                         fontWeight="600"
-                        color="gray.600"
+                        color="text.secondary"
                         mb={2}
                     >
                       BLOCKED REASON (OPTIONAL)

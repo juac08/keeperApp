@@ -2,10 +2,17 @@ import React from "react";
 import { Box, Text, VStack } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { FiInbox } from "react-icons/fi";
+import { AppButton } from "@/ui";
 
 const MotionBox = motion(Box);
 
-const EmptyColumn: React.FC = () => {
+type Props = {
+  title: string;
+  description: string;
+  onCreate?: () => void;
+};
+
+const EmptyColumn: React.FC<Props> = ({ title, description, onCreate }) => {
   return (
     <MotionBox
       border="2px dashed"
@@ -26,14 +33,19 @@ const EmptyColumn: React.FC = () => {
         damping: 20,
       }}
     >
-      <VStack gap={2}>
+      <VStack gap={3}>
         <Box as={FiInbox} fontSize="52px" color="text.muted" mb={1} />
         <Text fontWeight="700" color="text.secondary" fontSize="md">
-          No tasks yet
+          {title}
         </Text>
         <Text fontSize="sm" color="text.muted">
-          Drag cards here or create a new one
+          {description}
         </Text>
+        {onCreate && (
+          <AppButton size="sm" variantStyle="outline" onClick={onCreate}>
+            Create task
+          </AppButton>
+        )}
       </VStack>
     </MotionBox>
   );

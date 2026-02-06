@@ -2,6 +2,7 @@ import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { ChakraProvider } from "@chakra-ui/react";
 import { ColorModeProvider } from "@/components/ui/color-mode";
+import "./index.css";
 import "@fontsource/manrope/400.css";
 import "@fontsource/manrope/500.css";
 import "@fontsource/manrope/600.css";

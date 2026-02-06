@@ -14,6 +14,7 @@ import {
   FiEdit2,
   FiCalendar,
   FiAlertCircle,
+  FiActivity,
   FiArrowUp,
   FiMinus,
   FiArrowDown,
@@ -22,15 +23,13 @@ import {
   FiCircle,
   FiLayers,
   FiStar,
-  FiActivity,
   FiFileText,
   FiMessageCircle,
   FiCheckSquare,
   FiSquare,
-  FiX,
 } from "react-icons/fi";
 import type { Card } from "@/types";
-import { AppButton, AppIconButton, AvatarCircle } from "@/ui";
+import { AppButton, AvatarCircle, ModalHeader } from "@/ui";
 import { useTagsStore } from "@/state/TagsStore";
 import { getTagMeta } from "@/utils/tagHelpers";
 import { useAssigneesStore } from "@/state/AssigneesStore";
@@ -87,7 +86,7 @@ const TaskDetailsModal: React.FC<Props> = ({
       case "comment":
         return <FiMessageCircle size={12} />;
       default:
-        return <Box w="6px" h="6px" borderRadius="full" bg="white" />;
+        return <Box w="6px" h="6px" borderRadius="full" bg="text.primary" />;
     }
   };
 
@@ -133,44 +132,15 @@ const TaskDetailsModal: React.FC<Props> = ({
           boxShadow="0 24px 60px rgba(15, 23, 42, 0.18)"
           bg="bg.panel"
         >
-          <Dialog.Header
-            bg="bg.panel"
-            py={5}
-            px={{ base: 6, md: 8 }}
-            borderBottom="1px solid"
-            borderColor="border.muted"
-          >
-            <HStack justify="space-between" align="center">
-              <HStack gap={3} align="center">
-                <Box
-                  w="40px"
-                  h="40px"
-                  borderRadius="14px"
-                  bg="linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%)"
-                  color="white"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  boxShadow="0 10px 20px rgba(14, 165, 233, 0.25)"
-                >
-                  <FiFileText size={18} />
-                </Box>
-                <Box>
-                  <Text
-                    fontSize="xs"
-                    fontWeight="700"
-                    color="text.muted"
-                    textTransform="uppercase"
-                    letterSpacing="0.12em"
-                  >
-                    Task
-                  </Text>
-                  <Text fontSize="lg" fontWeight="700" color="text.primary">
-                    Task details
-                  </Text>
-                </Box>
-              </HStack>
-              <HStack gap={3}>
+          <ModalHeader
+            label="Task"
+            title="Task details"
+            icon={<FiFileText size={18} />}
+            iconGradient="linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%)"
+            iconShadow="0 10px 20px rgba(14, 165, 233, 0.25)"
+            onClose={onClose}
+            rightSlot={
+              <>
                 <Badge
                   colorScheme={
                     card.status === "done"
@@ -202,19 +172,9 @@ const TaskDetailsModal: React.FC<Props> = ({
                     {card.priority}
                   </Text>
                 </HStack>
-                <Dialog.CloseTrigger asChild>
-                  <AppIconButton
-                    aria-label="Close"
-                    size="sm"
-                    w="40px"
-                    h="40px"
-                  >
-                    <FiX />
-                  </AppIconButton>
-                </Dialog.CloseTrigger>
-              </HStack>
-            </HStack>
-          </Dialog.Header>
+              </>
+            }
+          />
 
           <Dialog.Body
             bg="bg.panel"
@@ -321,7 +281,7 @@ const TaskDetailsModal: React.FC<Props> = ({
                             ? "orange.50"
                             : dueDateStatus.color === "yellow"
                               ? "yellow.50"
-                              : "gray.50"
+                              : "bg.muted"
                       }
                       color={
                         dueDateStatus.color === "red"
@@ -330,7 +290,7 @@ const TaskDetailsModal: React.FC<Props> = ({
                             ? "orange.700"
                             : dueDateStatus.color === "yellow"
                               ? "yellow.700"
-                              : "gray.600"
+                              : "text.secondary"
                       }
                       px={2}
                       py={1}
@@ -406,7 +366,11 @@ const TaskDetailsModal: React.FC<Props> = ({
                 <Box pt={4} borderTop="1px solid" borderColor="border.muted">
                   <HStack mb={3} justify="space-between">
                     <HStack gap={2} align="center">
-                      <Box as={FiCheckSquare} fontSize="16px" color="gray.600" />
+                      <Box
+                        as={FiCheckSquare}
+                        fontSize="16px"
+                        color="text.secondary"
+                      />
                       <Text fontSize="sm" fontWeight="700" color="text.primary">
                         Subtasks
                       </Text>
@@ -446,7 +410,9 @@ const TaskDetailsModal: React.FC<Props> = ({
                           _hover={{ bg: "bg.muted" }}
                         >
                           <Box
-                            color={subtask.completed ? "gray.500" : "gray.400"}
+                            color={
+                              subtask.completed ? "text.muted" : "text.secondary"
+                            }
                             fontSize="14px"
                             flexShrink={0}
                           >
@@ -458,7 +424,9 @@ const TaskDetailsModal: React.FC<Props> = ({
                           </Box>
                           <Text
                             fontSize="sm"
-                            color={subtask.completed ? "gray.500" : "gray.700"}
+                            color={
+                              subtask.completed ? "text.muted" : "text.primary"
+                            }
                             textDecoration={
                               subtask.completed ? "line-through" : "none"
                             }

@@ -45,6 +45,7 @@ const BoardCard: React.FC<Props> = ({
   return (
     <Box
       role="group"
+      data-group
       draggable
       onDragStart={(e) => handleDragStart(e)}
       onDragEnd={handleDragEnd}
@@ -77,4 +78,4 @@ const BoardCard: React.FC<Props> = ({
   );
 };
 
-export default BoardCard;
+export default React.memo(BoardCard);

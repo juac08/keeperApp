@@ -4,14 +4,13 @@ import {
   Dialog,
   Field,
   Grid,
-  Heading,
   HStack,
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { FiColumns, FiX } from "react-icons/fi";
+import { FiColumns } from "react-icons/fi";
 import type { Priority, Status } from "../types";
-import { AppButton, AppIconButton, AppInput, AppTextarea } from "@/ui";
+import { AppButton, AppInput, AppTextarea, ModalHeader } from "@/ui";
 import {
   PrioritySelect,
   StatusSelect,
@@ -72,64 +71,14 @@ const TaskModal: React.FC<Props> = ({
           border="1px solid"
           borderColor="border.muted"
         >
-          <Dialog.Header
-            bg="bg.panel"
-            py={6}
-            px={{ base: 6, md: 10 }}
-            pr={{ base: 16, md: 18 }}
-            borderBottom="1px solid"
-            borderColor="border.muted"
-          >
-            <HStack gap={3} alignItems="center">
-              <Box
-                w="52px"
-                h="52px"
-                borderRadius="18px"
-                bg="linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)"
-                color="white"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                boxShadow="lg"
-                flexShrink={0}
-              >
-                <Box as={FiColumns} fontSize="24px" />
-              </Box>
-              <Box flex="1">
-                <Text
-                  fontSize="xs"
-                  color="text.muted"
-                  fontWeight="600"
-                  letterSpacing="wider"
-                  textTransform="uppercase"
-                  mb={1}
-                >
-                  Task Editor
-                </Text>
-                <Heading
-                  size="xl"
-                  fontWeight="700"
-                  color="text.primary"
-                  letterSpacing="tight"
-                >
-                  {editingId ? "Edit task" : "New task"}
-                </Heading>
-              </Box>
-            </HStack>
-            <Dialog.CloseTrigger asChild>
-              <AppIconButton
-                aria-label="Close"
-                size="sm"
-                position="absolute"
-                right="20px"
-                top="20px"
-                w="40px"
-                h="40px"
-              >
-                <FiX />
-              </AppIconButton>
-            </Dialog.CloseTrigger>
-          </Dialog.Header>
+          <ModalHeader
+            label="Task editor"
+            title={editingId ? "Edit task" : "New task"}
+            icon={<Box as={FiColumns} fontSize="20px" />}
+            iconGradient="linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)"
+            iconShadow="lg"
+            onClose={onClose}
+          />
           <Dialog.Body bg="bg.panel" px={{ base: 6, md: 10 }} pt={8} pb={10}>
             <Grid templateColumns={{ base: "1fr", md: "1.8fr 1fr" }} gap={8}>
               <Stack gap={6}>

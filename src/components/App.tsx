@@ -528,6 +528,16 @@ const AuthenticatedApp: React.FC = () => {
     setIsOpen(true);
   };
 
+  const openCreateModal = (status?: Status) => {
+    setForm({
+      ...emptyForm,
+      status: status ?? "todo",
+    });
+    setTaskErrors({});
+    setEditingId(null);
+    setIsOpen(true);
+  };
+
   const openEditModal = (card: Card) => {
     setForm({
       title: card.title,
@@ -941,7 +951,13 @@ const AuthenticatedApp: React.FC = () => {
   }
 
   return (
-    <Box minH="100vh" bg="bg.canvas" position="relative" overflow="hidden">
+    <Box
+      minH="100vh"
+      w="full"
+      bg="bg.canvas"
+      position="relative"
+      overflow="hidden"
+    >
       <Box
         position="absolute"
         inset={0}
@@ -1088,6 +1104,7 @@ const AuthenticatedApp: React.FC = () => {
                   onRemove={handleRemoveCard}
                   onDragStart={handleDragStart}
                   onArchive={handleArchiveCard}
+                  onCreate={() => openCreateModal(column.id)}
                 />
               ))}
             </Grid>

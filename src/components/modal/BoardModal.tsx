@@ -8,8 +8,8 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { FiX, FiLayout } from "react-icons/fi";
-import { AppButton, AppInput, AppTextarea } from "@/ui";
+import { FiLayout } from "react-icons/fi";
+import { AppButton, AppInput, AppTextarea, ModalHeader } from "@/ui";
 import { useCreateBoardMutation, useCreateTagMutation } from "@/store";
 import { BOARD_TEMPLATES, getTemplateConfig } from "@/config/boardTemplates";
 import type { BoardTemplate } from "@/types";
@@ -109,53 +109,14 @@ const BoardModal: React.FC<Props> = ({ isOpen, onClose }) => {
           boxShadow="0 24px 60px rgba(15, 23, 42, 0.18)"
           bg="bg.panel"
         >
-          <Dialog.Header
-            bg="bg.panel"
-            py={5}
-            px={{ base: 6, md: 8 }}
-            borderBottom="1px solid"
-            borderColor="border.muted"
-          >
-            <HStack justify="space-between">
-              <HStack gap={3} align="center">
-                <Box
-                  w="40px"
-                  h="40px"
-                  borderRadius="14px"
-                  bg="linear-gradient(135deg, #2563eb 0%, #38bdf8 100%)"
-                  color="white"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  boxShadow="0 10px 20px rgba(37, 99, 235, 0.25)"
-                >
-                  <FiLayout size={18} />
-                </Box>
-                <Box>
-                  <Text
-                    fontSize="xs"
-                    fontWeight="700"
-                    color="text.muted"
-                    textTransform="uppercase"
-                    letterSpacing="0.12em"
-                  >
-                    Board
-                  </Text>
-                  <Text fontSize="lg" fontWeight="700" color="text.primary">
-                    Create new board
-                  </Text>
-                </Box>
-              </HStack>
-              <Dialog.CloseTrigger
-                borderRadius="full"
-                w="40px"
-                h="40px"
-                _hover={{ bg: "bg.muted" }}
-              >
-                <FiX size={18} />
-              </Dialog.CloseTrigger>
-            </HStack>
-          </Dialog.Header>
+          <ModalHeader
+            label="Board"
+            title="Create new board"
+            icon={<FiLayout size={18} />}
+            iconGradient="linear-gradient(135deg, #2563eb 0%, #38bdf8 100%)"
+            iconShadow="0 10px 20px rgba(37, 99, 235, 0.25)"
+            onClose={handleClose}
+          />
 
           <Dialog.Body bg="bg.panel" px={{ base: 6, md: 8 }} py={6}>
             <Stack gap={6}>
@@ -199,7 +160,7 @@ const BoardModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 <Field.Label
                   fontSize="xs"
                   fontWeight="600"
-                  color="gray.600"
+                  color="text.secondary"
                   mb={3}
                 >
                   CHOOSE TEMPLATE
@@ -213,18 +174,20 @@ const BoardModal: React.FC<Props> = ({ isOpen, onClose }) => {
                       key={key}
                       as="button"
                       p={4}
-                      bg={selectedTemplate === key ? "blue.50" : "white"}
+                      bg={
+                        selectedTemplate === key ? "blue.50" : "bg.panel"
+                      }
                       border="2px solid"
                       borderColor={
-                        selectedTemplate === key ? "blue.400" : "gray.200"
+                        selectedTemplate === key ? "blue.400" : "border.muted"
                       }
                       borderRadius="md"
                       cursor="pointer"
                       onClick={() => setSelectedTemplate(key as BoardTemplate)}
                       _hover={{
                         borderColor:
-                          selectedTemplate === key ? "blue.500" : "gray.300",
-                        bg: selectedTemplate === key ? "blue.100" : "gray.50",
+                          selectedTemplate === key ? "blue.500" : "text.muted",
+                        bg: selectedTemplate === key ? "blue.100" : "bg.muted",
                       }}
                       transition="all 0.2s"
                       textAlign="left"

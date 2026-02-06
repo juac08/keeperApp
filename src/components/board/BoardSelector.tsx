@@ -93,10 +93,6 @@ const BoardSelector: React.FC<Props> = ({ onCreateBoard }) => {
           h="44px"
           px={6}
           borderRadius="full"
-          bg="gray.900"
-          color="white"
-          _hover={{ bg: "gray.800" }}
-          _active={{ bg: "gray.700" }}
           boxShadow="0 10px 24px rgba(15, 23, 42, 0.22)"
         >
           Create Board
@@ -125,7 +121,7 @@ const BoardSelector: React.FC<Props> = ({ onCreateBoard }) => {
         borderColor={isOpen ? "blue.400" : "border.muted"}
         boxShadow={isOpen ? "0 0 0 1px #4299e1" : "0 8px 20px rgba(15, 23, 42, 0.06)"}
         borderRadius="xl"
-        _hover={{ borderColor: isOpen ? "blue.400" : "gray.300" }}
+        _hover={{ borderColor: isOpen ? "blue.400" : "border.muted" }}
         transition="all 0.2s"
       >
         <HStack gap={2.5}>

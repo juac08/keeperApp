@@ -80,7 +80,7 @@ const CardMeta: React.FC<Props> = ({ card, density = "comfortable" }) => {
             ? "orange.50"
             : dueDateStatus.color === "yellow"
               ? "yellow.50"
-              : "gray.50"
+              : "bg.muted"
       }
       color={
         dueDateStatus.color === "red"
@@ -89,7 +89,7 @@ const CardMeta: React.FC<Props> = ({ card, density = "comfortable" }) => {
             ? "orange.600"
             : dueDateStatus.color === "yellow"
               ? "yellow.700"
-              : "gray.600"
+              : "text.secondary"
       }
       px={2}
       py={0.5}

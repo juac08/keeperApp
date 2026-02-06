@@ -9,13 +9,14 @@ import {
   Skeleton,
   SkeletonText,
 } from "@chakra-ui/react";
-import { FiX, FiUserPlus, FiTrash2, FiShield } from "react-icons/fi";
+import { FiUserPlus, FiTrash2, FiShield } from "react-icons/fi";
 import {
   AppButton,
   AppIconButton,
   AppInput,
   AppSelect,
   AvatarCircle,
+  ModalHeader,
 } from "@/ui";
 import {
   useGetOrganizationMembersQuery,
@@ -159,45 +160,14 @@ const OrganizationMembersModal: React.FC<Props> = ({
           boxShadow="0 24px 60px rgba(15, 23, 42, 0.2)"
           bg="bg.panel"
         >
-          <Dialog.Header
-            bg="bg.panel"
-            py={5}
-            px={7}
-            borderBottom="1px solid"
-            borderColor="border.muted"
-          >
-            <HStack justify="space-between">
-              <HStack gap={2}>
-                <Box
-                  w="40px"
-                  h="40px"
-                  borderRadius="12px"
-                  bg="bg.muted"
-                  border="1px solid"
-                  borderColor="border.muted"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                >
-                  <FiShield size={18} />
-                </Box>
-                <Text fontSize="xl" fontWeight="700" color="text.primary">
-                  Organization Members
-                </Text>
-              </HStack>
-              <Dialog.CloseTrigger
-                borderRadius="full"
-                w="40px"
-                h="40px"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                _hover={{ bg: "bg.muted" }}
-              >
-                <FiX size={18} />
-              </Dialog.CloseTrigger>
-            </HStack>
-          </Dialog.Header>
+          <ModalHeader
+            label="Organization"
+            title="Organization members"
+            icon={<FiShield size={18} />}
+            iconBg="bg.muted"
+            iconColor="text.primary"
+            onClose={onClose}
+          />
 
           <Dialog.Body bg="bg.panel" px={7} py={6}>
             {!organizationId ? (

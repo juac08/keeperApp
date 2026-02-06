@@ -71,7 +71,7 @@ export const SortSelect: React.FC<Props> = ({ value, onChange }) => {
         bg="bg.panel"
         minW="180px"
         transition="all 0.2s"
-        _hover={{ borderColor: isOpen ? "blue.400" : "gray.300" }}
+        _hover={{ borderColor: isOpen ? "blue.400" : "border.muted" }}
       >
         <HStack justify="space-between">
           <Text fontSize="sm" fontWeight="500" color="text.primary">

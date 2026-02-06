@@ -1,8 +1,8 @@
 import React from "react";
 import { Box, Dialog, Grid, HStack, Text, VStack } from "@chakra-ui/react";
-import { FiX, FiLayers } from "react-icons/fi";
+import { FiLayers } from "react-icons/fi";
 import { CARD_TEMPLATES, type CardTemplate } from "@/config/cardTemplates";
-import { AppIconButton } from "@/ui";
+import { ModalHeader } from "@/ui";
 
 type Props = {
   isOpen: boolean;
@@ -31,49 +31,14 @@ export const TemplateModal: React.FC<Props> = ({
           boxShadow="0 24px 60px rgba(15, 23, 42, 0.18)"
           bg="bg.panel"
         >
-          <Dialog.Header
-            py={5}
-            px={{ base: 6, md: 8 }}
-            borderBottom="1px solid"
-            borderColor="border.muted"
-          >
-            <HStack justify="space-between">
-              <HStack gap={3} align="center">
-                <Box
-                  w="40px"
-                  h="40px"
-                  borderRadius="14px"
-                  bg="linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)"
-                  color="white"
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  boxShadow="0 10px 20px rgba(124, 58, 237, 0.25)"
-                >
-                  <FiLayers size={18} />
-                </Box>
-                <Box>
-                  <Text
-                    fontSize="xs"
-                    fontWeight="700"
-                    color="text.muted"
-                    textTransform="uppercase"
-                    letterSpacing="0.12em"
-                  >
-                    Templates
-                  </Text>
-                  <Dialog.Title fontSize="lg" fontWeight="700">
-                    Choose a template
-                  </Dialog.Title>
-                </Box>
-              </HStack>
-              <Dialog.CloseTrigger asChild>
-                <AppIconButton aria-label="Close" size="sm" onClick={onClose}>
-                  <FiX size={18} />
-                </AppIconButton>
-              </Dialog.CloseTrigger>
-            </HStack>
-          </Dialog.Header>
+          <ModalHeader
+            label="Templates"
+            title="Choose a template"
+            icon={<FiLayers size={18} />}
+            iconGradient="linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)"
+            iconShadow="0 10px 20px rgba(124, 58, 237, 0.25)"
+            onClose={onClose}
+          />
 
           <Dialog.Body px={{ base: 6, md: 8 }} py={6}>
             <Grid
@@ -88,7 +53,7 @@ export const TemplateModal: React.FC<Props> = ({
                 <Box
                   key={template.id}
                   border="2px solid"
-                  borderColor="gray.200"
+                  borderColor="border.muted"
                   borderRadius="xl"
                   p={5}
                   cursor="pointer"
