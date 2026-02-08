@@ -78,6 +78,9 @@ export const authApi = apiSlice.injectEndpoints({
         localStorage.removeItem("auth_token");
         return { data: undefined };
       },
+      async onQueryStarted(_arg, { dispatch }) {
+        dispatch(apiSlice.util.resetApiState());
+      },
     }),
   }),
 });
