@@ -191,8 +191,10 @@ const SubtaskList: React.FC<Props> = ({ subtasks, onChange }) => {
                     bg="white"
                     _focusVisible={{
                       borderColor: "blue.400",
-                      boxShadow: "0 0 0 3px rgba(59, 130, 246, 0.15)",
+                      boxShadow: "none",
+                      outline: "none",
                     }}
+                    _focus={{ outline: "none", boxShadow: "none" }}
                   />
                 ) : (
                   <Text
@@ -261,8 +263,9 @@ const SubtaskList: React.FC<Props> = ({ subtasks, onChange }) => {
                 _focusVisible={{
                   outline: "none",
                   borderColor: "blue.400",
-                  boxShadow: "0 0 0 3px rgba(59, 130, 246, 0.15)",
+                  boxShadow: "none",
                 }}
+                _focus={{ outline: "none", boxShadow: "none" }}
                 _placeholder={{ color: "gray.400" }}
               />
             </Box>

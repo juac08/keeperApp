@@ -43,7 +43,6 @@ export const DensityToggle: React.FC = () => {
       <AppIconButton
         aria-label="Change card density"
         onClick={() => setIsOpen(!isOpen)}
-        size="md"
       >
         <Box
           w="10px"

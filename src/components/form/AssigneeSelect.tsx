@@ -58,7 +58,7 @@ const AssigneeSelect: React.FC<Props> = ({ value, onChange }) => {
           borderRadius="xl"
           border="1px solid"
           borderColor={isOpen ? "blue.400" : "border.muted"}
-          boxShadow={isOpen ? "0 0 0 3px rgba(59, 130, 246, 0.15)" : "none"}
+          boxShadow="none"
           bg="bg.panel"
           _hover={{ borderColor: isOpen ? "blue.400" : "blue.200" }}
           transition="all 0.2s"

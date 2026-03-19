@@ -17,8 +17,10 @@ const AppInput: React.FC<InputProps> = (props) => {
       _hover={{ borderColor: "blue.300" }}
       _focusVisible={{
         borderColor: "blue.500",
-        boxShadow: "0 0 0 3px rgba(59, 130, 246, 0.12)",
+        boxShadow: "none",
+        outline: "none",
       }}
+      _focus={{ outline: "none", boxShadow: "none" }}
       transition="all 0.15s ease"
       {...props}
     />

@@ -11,9 +11,8 @@ export const ThemeToggle: React.FC = () => {
     <AppIconButton
       aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
       onClick={toggleColorMode}
-      size="md"
     >
-      {isDark ? <FiSun size={18} /> : <FiMoon size={18} />}
+      {isDark ? <FiSun size={16} /> : <FiMoon size={16} />}
     </AppIconButton>
   );
 };

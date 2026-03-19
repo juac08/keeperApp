@@ -33,7 +33,7 @@ const DatePicker: React.FC<Props> = ({
 
   return (
     <Box>
-      <HStack gap={2}>
+      <HStack gap={2} align="stretch">
         <Box position="relative" flex="1" className="custom-datepicker-wrapper">
           <style>
             {`
@@ -57,7 +57,7 @@ const DatePicker: React.FC<Props> = ({
               }
               .custom-datepicker-wrapper input:focus {
                 border-color: #4299e1;
-                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+                box-shadow: none;
               }
               .react-datepicker {
                 font-family: inherit;
@@ -142,20 +142,20 @@ const DatePicker: React.FC<Props> = ({
             as="button"
             onClick={() => onChange(undefined)}
             p={2}
-            borderRadius="md"
+            borderRadius="xl"
             border="1px solid"
             borderColor="border.muted"
             bg="bg.panel"
             color="text.secondary"
             _hover={{
-              bg: "bg.muted",
-              borderColor: "text.muted",
-              color: "text.primary",
+              bg: "red.50",
+              borderColor: "red.300",
+              color: "red.600",
             }}
             transition="all 0.2s"
             aria-label="Clear date"
           >
-            <FiX size={16} />
+            <FiX size={18} />
           </Box>
         )}
       </HStack>

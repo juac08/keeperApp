@@ -4,6 +4,13 @@ html,
 body {
   margin: 0;
   padding: 0;
+  font-family:
+    "Inter",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
   background-color: var(--chakra-colors-bg-canvas);
   color: var(--chakra-colors-text-primary);
   width: 100%;
@@ -12,6 +19,18 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+}
+
+/* Remove default browser focus outline — custom ring is applied via boxShadow */
+input:focus,
+input:focus-visible,
+textarea:focus,
+textarea:focus-visible,
+select:focus,
+select:focus-visible,
+button:focus-visible {
+  outline: none !important;
+  box-shadow: none;
 }
 
 body.no-scroll {
@@ -27,10 +46,19 @@ body.no-scroll {
   color: inherit;
 }
 
-/* Smooth scrollbar */
+/* Modern thin scrollbar — auto-hides like macOS native */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+*:hover {
+  scrollbar-color: rgba(100, 116, 139, 0.3) transparent;
+}
+
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -38,12 +66,17 @@ body.no-scroll {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(100, 116, 139, 0.25);
+  background: transparent;
   border-radius: 999px;
+  transition: background 0.3s;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 116, 139, 0.4);
+*:hover::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.25);
+}
+
+*:hover::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.45);
 }
 
 @keyframes floatA {

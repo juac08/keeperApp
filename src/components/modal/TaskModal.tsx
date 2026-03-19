@@ -101,9 +101,8 @@ const TaskModal: React.FC<Props> = ({
                   borderColor={errors?.title ? "red.300" : undefined}
                   _focusVisible={{
                     borderColor: errors?.title ? "red.400" : "blue.400",
-                    boxShadow: errors?.title
-                      ? "0 0 0 3px rgba(248, 113, 113, 0.2)"
-                      : "0 0 0 3px rgba(59, 130, 246, 0.15)",
+                    boxShadow: "none",
+                    outline: "none",
                   }}
                 />
                 {errors?.title && (
@@ -234,9 +233,9 @@ const TaskModal: React.FC<Props> = ({
                         fontWeight="600"
                         color="text.secondary"
                         mb={2}
-                    >
-                      BLOCKED REASON (OPTIONAL)
-                    </Field.Label>
+                      >
+                        BLOCKED REASON (OPTIONAL)
+                      </Field.Label>
                       <AppInput
                         name="blockedReason"
                         value={form.blockedReason}
@@ -255,11 +254,7 @@ const TaskModal: React.FC<Props> = ({
 
               {/* Subtasks (only after task exists) */}
               {editingId && (
-                <Box
-                  pt={4}
-                  borderTop="1px solid"
-                  borderColor="border.muted"
-                >
+                <Box pt={4} borderTop="1px solid" borderColor="border.muted">
                   <SubtaskList
                     subtasks={form.subtasks}
                     onChange={(subtasks) =>

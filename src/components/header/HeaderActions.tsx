@@ -77,7 +77,7 @@ const HeaderActions: React.FC<Props> = ({
       <HStack
         gap={0.5}
         px={1.5}
-        py={1}
+        h="44px"
         borderRadius="control"
         border="1px solid"
         borderColor="border.muted"

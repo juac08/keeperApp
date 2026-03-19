@@ -42,11 +42,7 @@ const SearchBar: React.FC<Props> = ({
       borderColor={
         isFocused ? "blue.400" : hasValue ? "blue.300" : "border.muted"
       }
-      boxShadow={
-        isFocused
-          ? "0 0 0 2px rgba(59, 130, 246, 0.15)"
-          : "0 8px 18px rgba(15, 23, 42, 0.04)"
-      }
+      boxShadow="none"
       align="center"
       transition="all 0.2s"
     >

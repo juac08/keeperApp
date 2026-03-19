@@ -115,16 +115,17 @@ const BoardSelector: React.FC<Props> = ({ onCreateBoard }) => {
         onClick={() => setIsOpen(!isOpen)}
         cursor="pointer"
         px={2}
-        py={2}
         h="44px"
         minW="190px"
         bg="bg.panel"
         border="1px solid"
         borderColor={isOpen ? "blue.400" : "border.muted"}
-        boxShadow={isOpen ? "0 0 0 3px rgba(59, 130, 246, 0.12)" : "none"}
+        boxShadow="none"
         borderRadius="control"
         _hover={{ borderColor: isOpen ? "blue.400" : "border.muted" }}
         transition="all 0.2s"
+        display="flex"
+        alignItems="center"
       >
         <HStack gap={2} align="center" w="full">
           <Box
