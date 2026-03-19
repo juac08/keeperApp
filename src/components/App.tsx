@@ -120,9 +120,12 @@ const App: React.FC = () => {
   );
 
   // Skip auth check if no token
-  const { error: authError, isLoading: userLoading } = useGetMeQuery(undefined, {
-    skip: !isAuthenticated,
-  });
+  const { error: authError, isLoading: userLoading } = useGetMeQuery(
+    undefined,
+    {
+      skip: !isAuthenticated,
+    },
+  );
 
   // If auth fails, clear token and show login
   useEffect(() => {
@@ -466,14 +469,37 @@ const AuthenticatedApp: React.FC = () => {
     }
   };
 
-  const handleImport = (importedCards: Card[]) => {
-    importedCards.forEach((card) => {
-      void addCard(card);
-    });
-    appToaster.success({
-      title: `Imported ${importedCards.length} tasks`,
-      duration: 2000,
-    });
+  const handleImport = async (importedCards: Card[]) => {
+    let successCount = 0;
+    for (const card of importedCards) {
+      try {
+        // Strip server-generated fields so each card is created fresh
+        const {
+          id,
+          createdAt,
+          updatedAt,
+          comments,
+          activities,
+          subtasks,
+          ...rest
+        } = card;
+        await addCard({
+          ...rest,
+          subtasks: [],
+          comments: [],
+          activities: [],
+        });
+        successCount++;
+      } catch (error) {
+        console.error("Failed to import card:", card.title, error);
+      }
+    }
+    if (successCount < importedCards.length) {
+      appToaster.warning({
+        title: `Imported ${successCount} of ${importedCards.length} tasks`,
+        duration: 3000,
+      });
+    }
   };
 
   const activeBoard = boards.find((b) => b.id === activeBoardId);
@@ -1003,7 +1029,10 @@ const AuthenticatedApp: React.FC = () => {
             !details.open && setIsDeleteDialogOpen(false)
           }
         >
-          <Dialog.Backdrop bg="rgba(0, 0, 0, 0.6)" backdropFilter="blur(10px)" />
+          <Dialog.Backdrop
+            bg="rgba(0, 0, 0, 0.6)"
+            backdropFilter="blur(10px)"
+          />
           <Dialog.Positioner>
             <Dialog.Content
               maxW="420px"
@@ -1060,7 +1089,13 @@ const AuthenticatedApp: React.FC = () => {
                 </Text>
               </Dialog.Body>
 
-              <Dialog.Footer gap={3} px={6} pb={6} pt={2} flexDirection="column">
+              <Dialog.Footer
+                gap={3}
+                px={6}
+                pb={6}
+                pt={2}
+                flexDirection="column"
+              >
                 <Button
                   onClick={confirmDeleteBoard}
                   size="lg"

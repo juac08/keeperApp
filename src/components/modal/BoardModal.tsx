@@ -174,9 +174,7 @@ const BoardModal: React.FC<Props> = ({ isOpen, onClose }) => {
                       key={key}
                       as="button"
                       p={4}
-                      bg={
-                        selectedTemplate === key ? "blue.50" : "bg.panel"
-                      }
+                      bg={selectedTemplate === key ? "bg.subtle" : "bg.panel"}
                       border="2px solid"
                       borderColor={
                         selectedTemplate === key ? "blue.400" : "border.muted"
@@ -187,7 +185,7 @@ const BoardModal: React.FC<Props> = ({ isOpen, onClose }) => {
                       _hover={{
                         borderColor:
                           selectedTemplate === key ? "blue.500" : "text.muted",
-                        bg: selectedTemplate === key ? "blue.100" : "bg.muted",
+                        bg: selectedTemplate === key ? "bg.subtle" : "bg.muted",
                       }}
                       transition="all 0.2s"
                       textAlign="left"

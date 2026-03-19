@@ -93,8 +93,7 @@ export const ExportImportModal: React.FC<Props> = ({
                 borderColor="border.muted"
                 borderRadius="xl"
                 p={{ base: 5, md: 6 }}
-                bg="linear-gradient(180deg, #f5f8ff 0%, #eef3ff 100%)"
-                boxShadow="0 12px 26px rgba(37, 99, 235, 0.12)"
+                bg="bg.muted"
                 cursor="pointer"
                 transition="all 0.2s"
                 _hover={{ transform: "translateY(-2px)" }}
@@ -111,12 +110,17 @@ export const ExportImportModal: React.FC<Props> = ({
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
-                    color="blue.600"
+                    color="blue.400"
                   >
                     <FiDownload size={20} />
                   </Box>
                   <Box>
-                    <Text fontSize="md" fontWeight="700" mb={1}>
+                    <Text
+                      fontSize="md"
+                      fontWeight="700"
+                      mb={1}
+                      color="text.primary"
+                    >
                       Export board
                     </Text>
                     <Text fontSize="sm" color="text.muted">
@@ -131,8 +135,7 @@ export const ExportImportModal: React.FC<Props> = ({
                 borderColor="border.muted"
                 borderRadius="xl"
                 p={{ base: 5, md: 6 }}
-                bg="linear-gradient(180deg, #f0fdf4 0%, #ecfdf5 100%)"
-                boxShadow="0 12px 26px rgba(16, 185, 129, 0.12)"
+                bg="bg.muted"
                 cursor="pointer"
                 transition="all 0.2s"
                 _hover={{ transform: "translateY(-2px)" }}
@@ -149,12 +152,17 @@ export const ExportImportModal: React.FC<Props> = ({
                     display="flex"
                     alignItems="center"
                     justifyContent="center"
-                    color="green.600"
+                    color="green.400"
                   >
                     <FiUpload size={20} />
                   </Box>
                   <Box>
-                    <Text fontSize="md" fontWeight="700" mb={1}>
+                    <Text
+                      fontSize="md"
+                      fontWeight="700"
+                      mb={1}
+                      color="text.primary"
+                    >
                       Import board
                     </Text>
                     <Text fontSize="sm" color="text.muted">
