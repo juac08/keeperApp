@@ -176,6 +176,7 @@ const TaskModal: React.FC<Props> = ({
                 </HStack>
                 {isPreview ? (
                   <Box
+                    w="100%"
                     bg="bg.panel"
                     border="1px solid"
                     borderColor="border.muted"
