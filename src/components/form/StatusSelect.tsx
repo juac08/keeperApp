@@ -71,7 +71,11 @@ const StatusSelect: React.FC<Props> = ({ value, onChange, size = "md" }) => {
                 bg={`${selectedStatus.color}.500`}
               />
             )}
-            <Text fontSize={size === "sm" ? "sm" : "md"} fontWeight="600">
+            <Text
+              fontSize={size === "sm" ? "sm" : "md"}
+              fontWeight="600"
+              color="text.primary"
+            >
               {selectedStatus?.label || "Select status"}
             </Text>
           </HStack>
@@ -117,7 +121,12 @@ const StatusSelect: React.FC<Props> = ({ value, onChange, size = "md" }) => {
                     borderRadius="full"
                     bg={`${status.color}.500`}
                   />
-                  <Text fontSize="sm" fontWeight="500" whiteSpace="nowrap">
+                  <Text
+                    fontSize="sm"
+                    fontWeight="500"
+                    whiteSpace="nowrap"
+                    color="text.primary"
+                  >
                     {status.label}
                   </Text>
                 </HStack>

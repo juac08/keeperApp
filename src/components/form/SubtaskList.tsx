@@ -97,7 +97,7 @@ const SubtaskList: React.FC<Props> = ({ subtasks, onChange }) => {
     <Box>
       <HStack justify="space-between" mb={3}>
         <HStack gap={2} align="center">
-          <Box as={FiCheckSquare} fontSize="16px" color="gray.600" />
+          <Box as={FiCheckSquare} fontSize="16px" color="text.muted" />
           <Text fontSize="sm" fontWeight="600" color="text.primary">
             Subtasks
           </Text>
@@ -107,8 +107,8 @@ const SubtaskList: React.FC<Props> = ({ subtasks, onChange }) => {
             borderRadius="full"
             fontSize="xs"
             fontWeight="700"
-            bg="blue.50"
-            color="blue.700"
+            bg="bg.subtle"
+            color="blue.400"
           >
             {completedCount}/{subtasks.length}
           </Badge>
@@ -188,7 +188,8 @@ const SubtaskList: React.FC<Props> = ({ subtasks, onChange }) => {
                     borderRadius="lg"
                     border="1px solid"
                     borderColor="blue.300"
-                    bg="white"
+                    bg="bg.panel"
+                    color="text.primary"
                     _focusVisible={{
                       borderColor: "blue.400",
                       boxShadow: "none",
@@ -201,7 +202,7 @@ const SubtaskList: React.FC<Props> = ({ subtasks, onChange }) => {
                     flex="1"
                     fontSize="sm"
                     textDecoration={subtask.completed ? "line-through" : "none"}
-                    color={subtask.completed ? "gray.400" : "gray.700"}
+                    color={subtask.completed ? "text.muted" : "text.primary"}
                   >
                     {subtask.text}
                   </Text>
@@ -213,7 +214,7 @@ const SubtaskList: React.FC<Props> = ({ subtasks, onChange }) => {
                     variant="ghost"
                     onClick={() => startEdit(subtask)}
                     color="text.muted"
-                    _hover={{ color: "blue.600", bg: "blue.50" }}
+                    _hover={{ color: "blue.400", bg: "bg.muted" }}
                   >
                     <FiEdit2 size={14} />
                   </IconButton>
@@ -223,7 +224,7 @@ const SubtaskList: React.FC<Props> = ({ subtasks, onChange }) => {
                     variant="ghost"
                     onClick={() => removeSubtask(subtask.id)}
                     color="text.muted"
-                    _hover={{ color: "red.600", bg: "red.50" }}
+                    _hover={{ color: "red.400", bg: "bg.muted" }}
                   >
                     <FiTrash2 size={14} />
                   </IconButton>
@@ -258,7 +259,8 @@ const SubtaskList: React.FC<Props> = ({ subtasks, onChange }) => {
                 border="1px solid"
                 borderColor="border.muted"
                 borderRadius="lg"
-                bg="white"
+                bg="bg.panel"
+                color="text.primary"
                 _hover={{ borderColor: "blue.200" }}
                 _focusVisible={{
                   outline: "none",
@@ -266,7 +268,7 @@ const SubtaskList: React.FC<Props> = ({ subtasks, onChange }) => {
                   boxShadow: "none",
                 }}
                 _focus={{ outline: "none", boxShadow: "none" }}
-                _placeholder={{ color: "gray.400" }}
+                _placeholder={{ color: "text.muted" }}
               />
             </Box>
           )}

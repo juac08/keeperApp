@@ -71,7 +71,11 @@ const PrioritySelect: React.FC<Props> = ({ value, onChange, size = "md" }) => {
                 bg={`${selectedPriority.color}.500`}
               />
             )}
-            <Text fontSize={size === "sm" ? "sm" : "md"} fontWeight="600">
+            <Text
+              fontSize={size === "sm" ? "sm" : "md"}
+              fontWeight="600"
+              color="text.primary"
+            >
               {selectedPriority?.label || "Select priority"}
             </Text>
           </HStack>
@@ -117,7 +121,7 @@ const PrioritySelect: React.FC<Props> = ({ value, onChange, size = "md" }) => {
                     borderRadius="full"
                     bg={`${priority.color}.500`}
                   />
-                  <Text fontSize="sm" fontWeight="500">
+                  <Text fontSize="sm" fontWeight="500" color="text.primary">
                     {priority.label}
                   </Text>
                 </HStack>

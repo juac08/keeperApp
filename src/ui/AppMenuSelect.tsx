@@ -70,7 +70,7 @@ const AppMenuSelect = <T extends string>({
           <Box
             as={FiChevronDown}
             fontSize="14px"
-            color="text.muted"
+            color="text.secondary"
             transform={isOpen ? "rotate(180deg)" : "rotate(0)"}
             transition="transform 0.2s"
           />
@@ -97,13 +97,13 @@ const AppMenuSelect = <T extends string>({
               px={4}
               py={2.5}
               cursor="pointer"
-              bg={value === option.value ? "blue.50" : "bg.panel"}
-              color={value === option.value ? "blue.600" : "text.primary"}
+              bg={value === option.value ? "bg.subtle" : "bg.panel"}
+              color={value === option.value ? "blue.400" : "text.primary"}
               fontWeight={value === option.value ? "600" : "400"}
               fontSize="sm"
               transition="all 0.15s"
               _hover={{
-                bg: value === option.value ? "blue.50" : "bg.muted",
+                bg: value === option.value ? "bg.subtle" : "bg.muted",
               }}
               onClick={() => {
                 onChange(option.value);

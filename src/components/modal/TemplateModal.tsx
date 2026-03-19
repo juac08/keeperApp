@@ -60,7 +60,7 @@ export const TemplateModal: React.FC<Props> = ({
                   transition="all 0.2s"
                   _hover={{
                     borderColor: "blue.400",
-                    bg: "blue.50",
+                    bg: "bg.subtle",
                     transform: "translateY(-2px)",
                     boxShadow: "md",
                   }}
@@ -68,7 +68,7 @@ export const TemplateModal: React.FC<Props> = ({
                 >
                   <VStack align="flex-start" gap={2}>
                     <Text fontSize="3xl">{template.icon}</Text>
-                    <Text fontSize="md" fontWeight="600">
+                    <Text fontSize="md" fontWeight="600" color="text.primary">
                       {template.name}
                     </Text>
                     <Text fontSize="xs" color="text.muted">

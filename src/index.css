@@ -11,8 +11,8 @@ body {
     "Segoe UI",
     Roboto,
     sans-serif;
-  background-color: var(--chakra-colors-bg-canvas);
-  color: var(--chakra-colors-text-primary);
+  background-color: var(--chakra-colors-bg\.canvas);
+  color: var(--chakra-colors-text\.primary);
   width: 100%;
   min-height: 100%;
   overflow-x: hidden;

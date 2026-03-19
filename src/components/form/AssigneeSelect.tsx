@@ -98,9 +98,9 @@ const AssigneeSelect: React.FC<Props> = ({ value, onChange }) => {
             bg="bg.panel"
             color="text.secondary"
             _hover={{
-              bg: "red.50",
-              borderColor: "red.300",
-              color: "red.600",
+              bg: "bg.muted",
+              borderColor: "red.400",
+              color: "red.400",
             }}
             transition="all 0.2s"
             aria-label="Clear assignee"
@@ -153,14 +153,14 @@ const AssigneeSelect: React.FC<Props> = ({ value, onChange }) => {
               onClick={() => handleSelect(assignee.id)}
             >
               <HStack justify="space-between">
-                <Text fontSize="sm" fontWeight="500">
+                <Text fontSize="sm" fontWeight="500" color="text.primary">
                   {assignee.name}
                 </Text>
                 {value === assignee.id && (
                   <Box
                     as={FiCheck}
                     fontSize="16px"
-                    color="blue.600"
+                    color="blue.400"
                     fontWeight="bold"
                   />
                 )}

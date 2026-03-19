@@ -45,9 +45,9 @@ const DatePicker: React.FC<Props> = ({
                 padding: 12px 16px;
                 padding-left: 38px;
                 border-radius: 12px;
-                border: 1px solid ${isOverdue ? "#fc8181" : isDueToday ? "#f6ad55" : "#cbd5e0"};
-                background-color: var(--chakra-colors-bg-panel);
-                color: var(--chakra-colors-text-primary);
+                border: 1px solid ${isOverdue ? "#fc8181" : isDueToday ? "#f6ad55" : "var(--chakra-colors-border\\.muted)"};
+                background-color: var(--chakra-colors-bg\\.panel);
+                color: var(--chakra-colors-text\\.primary);
                 font-size: 14px;
                 outline: none;
                 transition: all 0.2s;
@@ -61,52 +61,70 @@ const DatePicker: React.FC<Props> = ({
               }
               .react-datepicker {
                 font-family: inherit;
-                background-color: var(--chakra-colors-bg-panel);
-                border: 1px solid var(--chakra-colors-border-muted);
+                background-color: var(--chakra-colors-bg\\.panel);
+                border: 1px solid var(--chakra-colors-border\\.muted);
                 border-radius: 12px;
-                box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+                box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
               }
               .react-datepicker__header {
-                background-color: var(--chakra-colors-bg-muted);
-                border-bottom: 1px solid var(--chakra-colors-border-muted);
+                background-color: var(--chakra-colors-bg\\.muted);
+                border-bottom: 1px solid var(--chakra-colors-border\\.muted);
                 border-radius: 12px 12px 0 0;
                 padding-top: 8px;
               }
               .react-datepicker__current-month {
                 font-size: 14px;
                 font-weight: 600;
-                color: var(--chakra-colors-text-primary);
+                color: var(--chakra-colors-text\\.primary);
               }
               .react-datepicker__day-name {
-                color: var(--chakra-colors-text-secondary);
+                color: var(--chakra-colors-text\\.secondary);
                 font-size: 12px;
                 font-weight: 600;
               }
               .react-datepicker__day {
-                color: var(--chakra-colors-text-primary);
+                color: var(--chakra-colors-text\\.primary);
                 border-radius: 4px;
               }
               .react-datepicker__day:hover {
-                background-color: var(--chakra-colors-bg-muted);
+                background-color: var(--chakra-colors-bg\\.muted);
               }
-              .react-datepicker__day--selected {
-                background-color: #4299e1;
+              .react-datepicker__day--selected,
+              .react-datepicker__day--selected:hover {
+                background-color: #3b82f6;
                 color: white;
               }
               .react-datepicker__day--keyboard-selected {
-                background-color: #bee3f8;
-                color: var(--chakra-colors-text-primary);
+                background-color: var(--chakra-colors-bg\\.subtle);
+                color: var(--chakra-colors-text\\.primary);
               }
               .react-datepicker__day--today {
                 font-weight: 600;
-                color: #4299e1;
+                color: #60a5fa;
+              }
+              .react-datepicker__day--disabled {
+                color: var(--chakra-colors-text\\.muted) !important;
+                opacity: 0.4;
+              }
+              .react-datepicker__day--outside-month {
+                color: var(--chakra-colors-text\\.muted);
+                opacity: 0.5;
+              }
+              .react-datepicker__navigation {
+                top: 8px;
               }
               .react-datepicker__navigation-icon::before {
-                border-color: var(--chakra-colors-text-primary);
+                border-color: var(--chakra-colors-text\\.secondary);
+              }
+              .react-datepicker__navigation:hover .react-datepicker__navigation-icon::before {
+                border-color: var(--chakra-colors-text\\.primary);
               }
               .react-datepicker__month-text,
               .react-datepicker__year-text {
-                color: var(--chakra-colors-text-primary);
+                color: var(--chakra-colors-text\\.primary);
+              }
+              .react-datepicker__triangle {
+                display: none;
               }
             `}
           </style>
@@ -126,12 +144,12 @@ const DatePicker: React.FC<Props> = ({
             pointerEvents="none"
             color={
               isOverdue
-                ? "red.500"
+                ? "red.400"
                 : isDueToday
-                  ? "orange.500"
+                  ? "orange.400"
                   : isDueSoon
-                    ? "yellow.600"
-                    : "gray.400"
+                    ? "yellow.400"
+                    : "text.muted"
             }
           >
             <FiCalendar size={16} />
@@ -148,9 +166,9 @@ const DatePicker: React.FC<Props> = ({
             bg="bg.panel"
             color="text.secondary"
             _hover={{
-              bg: "red.50",
-              borderColor: "red.300",
-              color: "red.600",
+              bg: "bg.muted",
+              borderColor: "red.400",
+              color: "red.400",
             }}
             transition="all 0.2s"
             aria-label="Clear date"
@@ -163,7 +181,7 @@ const DatePicker: React.FC<Props> = ({
         <Text
           fontSize="xs"
           color={
-            isOverdue ? "red.600" : isDueToday ? "orange.600" : "yellow.700"
+            isOverdue ? "red.400" : isDueToday ? "orange.400" : "yellow.400"
           }
           mt={1}
         >

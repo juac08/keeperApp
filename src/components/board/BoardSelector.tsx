@@ -184,13 +184,13 @@ const BoardSelector: React.FC<Props> = ({ onCreateBoard }) => {
             <Box
               key={board.id}
               onClick={() => handleSelect(board.id)}
-              bg={board.id === activeBoardId ? "blue.50" : "transparent"}
+              bg={board.id === activeBoardId ? "bg.subtle" : "transparent"}
               borderRadius="md"
               px={3}
               py={2.5}
               cursor="pointer"
               _hover={{
-                bg: board.id === activeBoardId ? "blue.100" : "bg.muted",
+                bg: board.id === activeBoardId ? "bg.subtle" : "bg.muted",
               }}
             >
               <HStack gap={2.5} w="100%">
@@ -238,9 +238,9 @@ const BoardSelector: React.FC<Props> = ({ onCreateBoard }) => {
                 px={3}
                 py={2.5}
                 cursor="pointer"
-                _hover={{ bg: "blue.50" }}
+                _hover={{ bg: "bg.muted" }}
               >
-                <HStack gap={2} color="blue.600">
+                <HStack gap={2} color="blue.400">
                   <FiPlus size={16} />
                   <Text fontSize="sm" fontWeight="600">
                     Create New Board

@@ -41,6 +41,12 @@ const AppSelect: React.FC<Props> = ({
         }}
         _focus={{ outline: "none", boxShadow: "none" }}
         transition="all 0.15s ease"
+        css={{
+          "& option": {
+            background: "var(--chakra-colors-bg\\.panel)",
+            color: "var(--chakra-colors-text\\.primary)",
+          },
+        }}
       >
         {children}
       </NativeSelect.Field>
