@@ -342,6 +342,8 @@ const AuthenticatedApp: React.FC = () => {
   const [selectedCard, setSelectedCard] = useState<Card | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isSavingTask, setIsSavingTask] = useState(false);
+  const [taskToDelete, setTaskToDelete] = useState<string | null>(null);
+  const [isTaskDeleteDialogOpen, setIsTaskDeleteDialogOpen] = useState(false);
   const [taskErrors, setTaskErrors] = useState<
     Partial<Record<keyof TaskForm, string>>
   >({});
@@ -577,8 +579,21 @@ const AuthenticatedApp: React.FC = () => {
   };
 
   const handleRemoveCard = (id: string) => {
-    removeCard(id);
+    setTaskToDelete(id);
+    setIsTaskDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteTask = () => {
+    if (!taskToDelete) return;
+    removeCard(taskToDelete);
     appToaster.success({ title: "Task deleted successfully", duration: 2000 });
+    setIsTaskDeleteDialogOpen(false);
+    setTaskToDelete(null);
+  };
+
+  const cancelDeleteTask = () => {
+    setIsTaskDeleteDialogOpen(false);
+    setTaskToDelete(null);
   };
 
   const handleAddComment = async (cardId: string, text: string) => {
@@ -881,6 +896,42 @@ const AuthenticatedApp: React.FC = () => {
     return latestFromBoard ?? selectedCard;
   }, [selectedCard, detailedTask, cards]);
 
+  // --- Keyboard shortcuts ---
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const isMod = e.metaKey || e.ctrlKey;
+      const tag = (e.target as HTMLElement)?.tagName?.toLowerCase();
+      const isInput = tag === "input" || tag === "textarea" || tag === "select";
+
+      // Cmd/Ctrl+K → Focus search
+      if (isMod && e.key === "k") {
+        e.preventDefault();
+        const searchInput = document.querySelector<HTMLInputElement>(
+          "[data-search-input]",
+        );
+        searchInput?.focus();
+        return;
+      }
+
+      // Cmd/Ctrl+N → New task (only when not inside an input)
+      if (isMod && e.key === "n" && !isInput) {
+        e.preventDefault();
+        openCreateModal();
+        return;
+      }
+
+      // Cmd/Ctrl+E → Export/Import (only when not inside an input)
+      if (isMod && e.key === "e" && !isInput) {
+        e.preventDefault();
+        openExportImportModal();
+        return;
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   // Show loading state while boards are loading
   if (boardsLoading) {
     return (
@@ -1116,6 +1167,100 @@ const AuthenticatedApp: React.FC = () => {
                   width="full"
                   color="gray.600"
                   _hover={{ bg: "gray.100" }}
+                  borderRadius="lg"
+                  fontWeight="medium"
+                >
+                  Cancel
+                </Button>
+              </Dialog.Footer>
+            </Dialog.Content>
+          </Dialog.Positioner>
+        </Dialog.Root>
+
+        {/* Task Delete Confirmation Dialog */}
+        <Dialog.Root
+          open={isTaskDeleteDialogOpen}
+          onOpenChange={(details) => !details.open && cancelDeleteTask()}
+        >
+          <Dialog.Backdrop
+            bg="rgba(0, 0, 0, 0.6)"
+            backdropFilter="blur(10px)"
+          />
+          <Dialog.Positioner>
+            <Dialog.Content
+              maxW="400px"
+              borderRadius="xl"
+              overflow="hidden"
+              boxShadow="0 20px 60px rgba(0, 0, 0, 0.3)"
+              bg="bg.panel"
+            >
+              <Dialog.CloseTrigger asChild>
+                <AppIconButton
+                  aria-label="Close"
+                  size="sm"
+                  position="absolute"
+                  top={3}
+                  right={3}
+                >
+                  <FiX />
+                </AppIconButton>
+              </Dialog.CloseTrigger>
+
+              <Box px={6} pt={6} pb={4}>
+                <VStack gap={3} align="center">
+                  <Box p={3} borderRadius="full" bg="red.500/10">
+                    <FiAlertTriangle size={28} color="#DC2626" />
+                  </Box>
+                  <Dialog.Title
+                    fontSize="lg"
+                    fontWeight="semibold"
+                    color="text.primary"
+                    textAlign="center"
+                  >
+                    Delete Task?
+                  </Dialog.Title>
+                </VStack>
+              </Box>
+
+              <Dialog.Body px={6} py={3}>
+                <Text
+                  fontSize="sm"
+                  lineHeight="relaxed"
+                  color="text.secondary"
+                  textAlign="center"
+                >
+                  This action will permanently delete this task and all its
+                  subtasks, comments, and activity. This cannot be undone.
+                </Text>
+              </Dialog.Body>
+
+              <Dialog.Footer
+                gap={3}
+                px={6}
+                pb={6}
+                pt={2}
+                flexDirection="column"
+              >
+                <Button
+                  onClick={confirmDeleteTask}
+                  size="lg"
+                  width="full"
+                  bg="red.600"
+                  color="white"
+                  _hover={{ bg: "red.700" }}
+                  _active={{ bg: "red.800" }}
+                  borderRadius="lg"
+                  fontWeight="medium"
+                >
+                  Delete Task
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={cancelDeleteTask}
+                  size="lg"
+                  width="full"
+                  color="text.secondary"
+                  _hover={{ bg: "bg.muted" }}
                   borderRadius="lg"
                   fontWeight="medium"
                 >

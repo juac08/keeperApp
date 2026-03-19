@@ -74,6 +74,7 @@ const SearchBar: React.FC<Props> = ({
         color="text.primary"
         _focusVisible={{ boxShadow: "none" }}
         _placeholder={{ color: "text.muted", fontWeight: "400" }}
+        data-search-input
       />
       {hasValue && (
         <IconButton

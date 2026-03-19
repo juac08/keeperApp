@@ -29,7 +29,7 @@ import {
   FiSquare,
 } from "react-icons/fi";
 import type { Card } from "@/types";
-import { AppButton, AvatarCircle, ModalHeader } from "@/ui";
+import { AppButton, AvatarCircle, MarkdownRenderer, ModalHeader } from "@/ui";
 import { useTagsStore } from "@/state/TagsStore";
 import { getTagMeta } from "@/utils/tagHelpers";
 import { useAssigneesStore } from "@/state/AssigneesStore";
@@ -204,14 +204,7 @@ const TaskDetailsModal: React.FC<Props> = ({
                   >
                     DESCRIPTION
                   </Text>
-                  <Text
-                    fontSize="sm"
-                    color="text.secondary"
-                    lineHeight="1.6"
-                    whiteSpace="pre-wrap"
-                  >
-                    {card.content}
-                  </Text>
+                  <MarkdownRenderer content={card.content} />
                 </Box>
               )}
 
@@ -411,7 +404,9 @@ const TaskDetailsModal: React.FC<Props> = ({
                         >
                           <Box
                             color={
-                              subtask.completed ? "text.muted" : "text.secondary"
+                              subtask.completed
+                                ? "text.muted"
+                                : "text.secondary"
                             }
                             fontSize="14px"
                             flexShrink={0}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Dialog,
@@ -8,9 +8,15 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { FiEdit2, FiPlus } from "react-icons/fi";
+import { FiEdit2, FiEye, FiEdit3, FiPlus } from "react-icons/fi";
 import type { Priority, Status, Subtask } from "@/types";
-import { AppButton, AppInput, AppTextarea, ModalHeader } from "@/ui";
+import {
+  AppButton,
+  AppInput,
+  AppTextarea,
+  MarkdownRenderer,
+  ModalHeader,
+} from "@/ui";
 import {
   PrioritySelect,
   StatusSelect,
@@ -62,6 +68,8 @@ const TaskModal: React.FC<Props> = ({
   onChange,
   onToggleBlocked,
 }) => {
+  const [isPreview, setIsPreview] = useState(false);
+
   return (
     <Dialog.Root
       open={isOpen}
@@ -114,22 +122,85 @@ const TaskModal: React.FC<Props> = ({
 
               {/* Description */}
               <Field.Root>
-                <Field.Label
-                  fontSize="xs"
-                  fontWeight="600"
-                  color="text.secondary"
-                  mb={2}
-                >
-                  DESCRIPTION
-                </Field.Label>
-                <AppTextarea
-                  name="content"
-                  value={form.content}
-                  onChange={onChange}
-                  placeholder="Add a description..."
-                  rows={5}
-                  borderRadius="xl"
-                />
+                <HStack justify="space-between" mb={2}>
+                  <Field.Label
+                    fontSize="xs"
+                    fontWeight="600"
+                    color="text.secondary"
+                    mb={0}
+                  >
+                    DESCRIPTION
+                  </Field.Label>
+                  <HStack gap={0} bg="bg.muted" borderRadius="lg" p={0.5}>
+                    <Box
+                      as="button"
+                      px={3}
+                      py={1}
+                      borderRadius="md"
+                      fontSize="xs"
+                      fontWeight="600"
+                      bg={!isPreview ? "bg.panel" : "transparent"}
+                      color={!isPreview ? "text.primary" : "text.muted"}
+                      boxShadow={!isPreview ? "sm" : "none"}
+                      cursor="pointer"
+                      transition="all 0.15s"
+                      onClick={() => setIsPreview(false)}
+                      display="flex"
+                      alignItems="center"
+                      gap={1.5}
+                    >
+                      <Box as={FiEdit3} fontSize="11px" />
+                      Write
+                    </Box>
+                    <Box
+                      as="button"
+                      px={3}
+                      py={1}
+                      borderRadius="md"
+                      fontSize="xs"
+                      fontWeight="600"
+                      bg={isPreview ? "bg.panel" : "transparent"}
+                      color={isPreview ? "text.primary" : "text.muted"}
+                      boxShadow={isPreview ? "sm" : "none"}
+                      cursor="pointer"
+                      transition="all 0.15s"
+                      onClick={() => setIsPreview(true)}
+                      display="flex"
+                      alignItems="center"
+                      gap={1.5}
+                    >
+                      <Box as={FiEye} fontSize="11px" />
+                      Preview
+                    </Box>
+                  </HStack>
+                </HStack>
+                {isPreview ? (
+                  <Box
+                    bg="bg.panel"
+                    border="1px solid"
+                    borderColor="border.muted"
+                    borderRadius="xl"
+                    p={4}
+                    minH="140px"
+                  >
+                    {form.content.trim() ? (
+                      <MarkdownRenderer content={form.content} />
+                    ) : (
+                      <Text fontSize="sm" color="text.muted" fontStyle="italic">
+                        Nothing to preview
+                      </Text>
+                    )}
+                  </Box>
+                ) : (
+                  <AppTextarea
+                    name="content"
+                    value={form.content}
+                    onChange={onChange}
+                    placeholder="Add a description... (supports **Markdown**)"
+                    rows={5}
+                    borderRadius="xl"
+                  />
+                )}
               </Field.Root>
 
               {/* Two Column Layout */}

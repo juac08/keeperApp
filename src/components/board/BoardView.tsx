@@ -1,5 +1,12 @@
 import React from "react";
-import { Box, Grid, HStack, SimpleGrid, Skeleton, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Grid,
+  HStack,
+  SimpleGrid,
+  Skeleton,
+  VStack,
+} from "@chakra-ui/react";
 import type { Card, Status } from "@/types";
 import { COLUMNS } from "@/config";
 import { BoardHeader, BoardToolbar, BoardColumn } from "@/components/board";

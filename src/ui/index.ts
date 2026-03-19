@@ -11,6 +11,7 @@ export { default as ContentContainer } from "./ContentContainer";
 export { default as EmptyState } from "./EmptyState";
 export { default as ErrorState } from "./ErrorState";
 export { default as HeaderCard } from "./HeaderCard";
+export { default as MarkdownRenderer } from "./MarkdownRenderer";
 export { default as MetaRow } from "./MetaRow";
 export { default as ModalHeader } from "./ModalHeader";
 export { default as PageShell } from "./PageShell";
