@@ -51,20 +51,16 @@ const AppMenuSelect = <T extends string>({
         onClick={() => setIsOpen((prev) => !prev)}
         cursor="pointer"
         px={3.5}
-        h="40px"
+        h="38px"
         display="flex"
         alignItems="center"
-        borderRadius="xl"
+        borderRadius="control"
         border="1px solid"
         borderColor={isOpen ? "blue.400" : "border.muted"}
-        boxShadow={
-          isOpen
-            ? "0 0 0 2px rgba(59, 130, 246, 0.15)"
-            : "0 8px 18px rgba(15, 23, 42, 0.04)"
-        }
+        boxShadow={isOpen ? "0 0 0 3px rgba(59, 130, 246, 0.12)" : "none"}
         bg="bg.panel"
         minW={minW}
-        transition="all 0.2s"
+        transition="all 0.15s"
         _hover={{ borderColor: isOpen ? "blue.400" : "border.muted" }}
       >
         <HStack justify="space-between" w="full">
@@ -90,8 +86,8 @@ const AppMenuSelect = <T extends string>({
           bg="bg.panel"
           border="1px solid"
           borderColor="border.muted"
-          borderRadius="lg"
-          boxShadow="lg"
+          borderRadius="control"
+          boxShadow="0 4px 24px rgba(0, 0, 0, 0.1)"
           zIndex={10}
           overflow="hidden"
         >

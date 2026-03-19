@@ -8,7 +8,7 @@ const AppTextarea: React.FC<TextareaProps> = (props) => {
       bg="bg.panel"
       borderColor="border.muted"
       borderRadius="control"
-      px={4}
+      px={3.5}
       py={3}
       fontSize="sm"
       color="text.primary"
@@ -16,9 +16,9 @@ const AppTextarea: React.FC<TextareaProps> = (props) => {
       _hover={{ borderColor: "blue.300" }}
       _focusVisible={{
         borderColor: "blue.500",
-        boxShadow: "0 0 0 3px rgba(31, 134, 220, 0.2)",
+        boxShadow: "0 0 0 3px rgba(59, 130, 246, 0.12)",
       }}
-      transition="all 0.18s ease"
+      transition="all 0.15s ease"
       {...props}
     />
   );

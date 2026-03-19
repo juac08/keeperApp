@@ -8,8 +8,8 @@ const Section: React.FC<BoxProps> = ({ children, ...props }) => {
       bg="bg.panel"
       border="1px solid"
       borderColor="border.muted"
-      borderRadius="2xl"
-      boxShadow="0 18px 40px rgba(15, 23, 42, 0.08)"
+      borderRadius="xl"
+      boxShadow="0 1px 3px rgba(0, 0, 0, 0.04)"
       {...props}
     >
       {children}

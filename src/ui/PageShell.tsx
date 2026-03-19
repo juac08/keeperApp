@@ -24,7 +24,7 @@ const PageShell: React.FC<Props> = ({
         <Box
           position="absolute"
           inset={0}
-          bgGradient="radial(circle at 10% 15%, rgba(31, 134, 220, 0.18), transparent 45%), radial(circle at 90% 25%, rgba(114, 187, 255, 0.18), transparent 40%), radial(circle at 55% 85%, rgba(31, 134, 220, 0.12), transparent 50%)"
+          bgGradient="radial(circle at 0% 0%, rgba(59, 130, 246, 0.06), transparent 50%), radial(circle at 100% 0%, rgba(99, 102, 241, 0.04), transparent 50%)"
         />
       )}
       <Box position="relative" zIndex={1}>

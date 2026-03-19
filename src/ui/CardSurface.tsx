@@ -12,8 +12,12 @@ const CardSurface: React.FC<Props> = ({ children, isDragging, ...props }) => {
       bg="bg.panel"
       border="1px solid"
       borderColor="border.muted"
-      borderRadius="xl"
-      boxShadow={isDragging ? "soft" : "0 10px 22px rgba(15, 23, 42, 0.08)"}
+      borderRadius="card"
+      boxShadow={
+        isDragging
+          ? "soft"
+          : "0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03)"
+      }
       transition="all 0.15s ease"
       {...props}
     >

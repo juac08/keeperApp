@@ -5,13 +5,13 @@ import type { BoxProps } from "@chakra-ui/react";
 const HeaderCard: React.FC<BoxProps> = ({ children, ...props }) => {
   return (
     <Box
-      px={{ base: 5, md: 7 }}
-      py={{ base: 4, md: 5 }}
+      px={{ base: 4, md: 6 }}
+      py={{ base: 3, md: 4 }}
       bg="bg.panel"
-      borderRadius="2xl"
+      borderRadius="xl"
       border="1px solid"
       borderColor="border.muted"
-      boxShadow="0 18px 40px rgba(15, 23, 42, 0.08)"
+      boxShadow="0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 16px rgba(0, 0, 0, 0.04)"
       {...props}
     >
       <HStack

@@ -29,20 +29,20 @@ const TooltipWrap: React.FC<Props> = ({ label, children }) => (
       bottom="calc(100% + 8px)"
       left="50%"
       transform="translateX(-50%)"
-      bg="white"
-      color="gray.800"
-      px={3}
-      py={1.5}
+      bg="bg.panel"
+      color="text.primary"
+      px={2.5}
+      py={1}
       borderRadius="md"
       border="1px solid"
-      borderColor="gray.200"
-      boxShadow="0 10px 24px rgba(15, 23, 42, 0.12)"
+      borderColor="border.muted"
+      boxShadow="0 4px 12px rgba(0, 0, 0, 0.08)"
       fontSize="xs"
-      fontWeight="600"
+      fontWeight="500"
       whiteSpace="nowrap"
       opacity={0}
       pointerEvents="none"
-      transition="all 0.03s ease"
+      transition="all 0.1s ease"
       zIndex={2000}
     >
       {label}

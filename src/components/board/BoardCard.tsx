@@ -55,10 +55,10 @@ const BoardCard: React.FC<Props> = ({
       cursor={isDragging ? "grabbing" : "pointer"}
       opacity={isDragging ? 0.9 : 1}
       position="relative"
-      transform={isDragging ? "rotate(2deg)" : "translateY(0)"}
+      transform={isDragging ? "rotate(1.5deg)" : "translateY(0)"}
       _hover={{
-        transform: isDragging ? "rotate(2deg)" : "translateY(-2px)",
-        boxShadow: isDragging ? "soft" : "0 18px 36px rgba(15, 23, 42, 0.16)",
+        transform: isDragging ? "rotate(1.5deg)" : "translateY(-1px)",
+        boxShadow: isDragging ? "soft" : "0 4px 16px rgba(0, 0, 0, 0.08)",
         borderColor: "blue.200",
       }}
     >

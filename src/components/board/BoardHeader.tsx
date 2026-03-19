@@ -24,13 +24,13 @@ const BoardHeader: React.FC<Props> = ({
 }) => {
   return (
     <HeaderCard
-      mb={8}
+      mb={6}
       position="sticky"
       top={4}
       zIndex={100}
-      backdropFilter="blur(12px)"
-      backgroundColor="rgba(255, 255, 255, 0.92)"
-      _dark={{ backgroundColor: "rgba(15, 23, 42, 0.92)" }}
+      backdropFilter="blur(16px) saturate(180%)"
+      backgroundColor="rgba(255, 255, 255, 0.85)"
+      _dark={{ backgroundColor: "rgba(17, 24, 39, 0.85)" }}
     >
       <Box flex="1">
         <ProjectInfo />

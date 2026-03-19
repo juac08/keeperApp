@@ -6,12 +6,12 @@ const Panel: React.FC<BoxProps> = ({ children, ...props }) => {
   return (
     <Box
       bg="bg.panel"
-      borderRadius={{ base: "2xl", md: "3xl" }}
-      border="2px solid"
+      borderRadius={{ base: "xl", md: "2xl" }}
+      border="1px solid"
       borderColor="border.muted"
-      boxShadow="soft"
-      px={{ base: 5, md: 8 }}
-      py={{ base: 6, md: 8 }}
+      boxShadow="0 1px 3px rgba(0, 0, 0, 0.04)"
+      px={{ base: 5, md: 7 }}
+      py={{ base: 5, md: 7 }}
       {...props}
     >
       {children}

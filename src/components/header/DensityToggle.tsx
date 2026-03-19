@@ -61,10 +61,10 @@ export const DensityToggle: React.FC = () => {
           right="0"
           minW="180px"
           bg="bg.panel"
-          border="2px solid"
+          border="1px solid"
           borderColor="border.muted"
-          borderRadius="lg"
-          boxShadow="lg"
+          borderRadius="control"
+          boxShadow="0 4px 24px rgba(0, 0, 0, 0.1)"
           zIndex={10}
           overflow="hidden"
         >

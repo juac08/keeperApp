@@ -8,7 +8,7 @@ const ToolbarSurface: React.FC<BoxProps> = ({ children, ...props }) => {
       bg="bg.panel"
       borderBottom="1px solid"
       borderColor="border.muted"
-      boxShadow="0 8px 20px rgba(15, 23, 42, 0.06)"
+      boxShadow="0 1px 2px rgba(0, 0, 0, 0.03)"
       {...props}
     >
       {children}

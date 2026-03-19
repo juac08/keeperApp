@@ -116,17 +116,13 @@ const BoardSelector: React.FC<Props> = ({ onCreateBoard }) => {
         cursor="pointer"
         px={2}
         py={2}
-        h="50px"
+        h="44px"
         minW="190px"
         bg="bg.panel"
         border="1px solid"
         borderColor={isOpen ? "blue.400" : "border.muted"}
-        boxShadow={
-          isOpen
-            ? "0 0 0 2px rgba(59, 130, 246, 0.15)"
-            : "0 8px 18px rgba(15, 23, 42, 0.04)"
-        }
-        borderRadius="full"
+        boxShadow={isOpen ? "0 0 0 3px rgba(59, 130, 246, 0.12)" : "none"}
+        borderRadius="control"
         _hover={{ borderColor: isOpen ? "blue.400" : "border.muted" }}
         transition="all 0.2s"
       >
@@ -176,11 +172,11 @@ const BoardSelector: React.FC<Props> = ({ onCreateBoard }) => {
           minW="280px"
           maxW="320px"
           bg="bg.panel"
-          borderRadius="lg"
-          border="2px solid"
+          borderRadius="control"
+          border="1px solid"
           borderColor="border.muted"
-          boxShadow="0 4px 12px rgba(0, 0, 0, 0.1)"
-          p={2}
+          boxShadow="0 4px 24px rgba(0, 0, 0, 0.1)"
+          p={1.5}
           zIndex={10}
         >
           {boards.map((board) => (

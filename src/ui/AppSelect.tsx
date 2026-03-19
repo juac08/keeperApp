@@ -25,20 +25,20 @@ const AppSelect: React.FC<Props> = ({
         onChange={onChange}
         bg="bg.panel"
         borderColor="border.muted"
-        borderRadius="xl"
-        h="44px"
-        px={4}
+        borderRadius="control"
+        h="40px"
+        px={3.5}
         fontSize="sm"
         color="text.primary"
         minW="160px"
         w="full"
-        boxShadow="0 8px 18px rgba(15, 23, 42, 0.04)"
+        boxShadow="none"
         _hover={{ borderColor: "blue.300" }}
         _focusVisible={{
           borderColor: "brand.500",
-          boxShadow: "0 0 0 3px rgba(31, 134, 220, 0.2)",
+          boxShadow: "0 0 0 3px rgba(59, 130, 246, 0.12)",
         }}
-        transition="all 0.18s ease"
+        transition="all 0.15s ease"
       >
         {children}
       </NativeSelect.Field>

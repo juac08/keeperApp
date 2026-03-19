@@ -9,21 +9,18 @@ type Props = BoxProps & {
 const ColumnSurface: React.FC<Props> = ({ children, isActive, ...props }) => {
   return (
     <Box
-      bg={isActive ? "blue.50" : "bg.panel"}
+      bg={isActive ? "blue.50" : "bg.muted"}
       border="1px solid"
-      borderColor={isActive ? "blue.300" : "border.muted"}
+      borderColor={isActive ? "blue.200" : "border.subtle"}
       _dark={{
-        bg: isActive ? "blue.900" : "bg.panel",
+        bg: isActive ? "blue.900" : "bg.muted",
         borderColor: isActive ? "blue.700" : "border.muted",
       }}
       borderRadius="card"
       p={4}
       minH="560px"
       transition="all 0.2s ease"
-      boxShadow={
-        isActive ? "soft" : "0 10px 26px rgba(15, 23, 42, 0.06)"
-      }
-      transform={isActive ? "scale(1.02)" : "scale(1)"}
+      boxShadow="none"
       {...props}
     >
       {children}

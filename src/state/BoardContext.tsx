@@ -96,7 +96,24 @@ export const BoardProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const moveCard = async (id: string, status: Status) => {
     try {
-      await updateTask({ id, updates: { status } }).unwrap();
+      // Include all existing card fields so the backend doesn't
+      // null-out omitted nullable columns (dueDate, assigneeId, etc.)
+      const existing = cards.find((c) => c.id === id);
+      const updates: Partial<Card> = { status };
+
+      if (existing) {
+        updates.title = existing.title;
+        updates.content = existing.content;
+        updates.priority = existing.priority;
+        updates.blocked = existing.blocked;
+        updates.blockedReason = existing.blockedReason;
+        updates.dueDate = existing.dueDate;
+        updates.tags = existing.tags;
+        updates.assigneeId = existing.assigneeId;
+        updates.subtasks = existing.subtasks;
+      }
+
+      await updateTask({ id, updates }).unwrap();
     } catch (error: any) {
       console.error("Failed to move task:", error);
       throw error;

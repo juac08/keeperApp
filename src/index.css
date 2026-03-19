@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+
 html,
 body {
   margin: 0;
@@ -7,44 +9,89 @@ body {
   width: 100%;
   min-height: 100%;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 body.no-scroll {
   overflow: hidden;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: rgba(59, 130, 246, 0.2);
+  color: inherit;
+}
+
+/* Smooth scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.25);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.4);
+}
+
 @keyframes floatA {
-  0% {
+  0%,
+  100% {
     transform: translateY(0px) translateX(0px);
   }
   50% {
-    transform: translateY(12px) translateX(-10px);
-  }
-  100% {
-    transform: translateY(0px) translateX(0px);
+    transform: translateY(18px) translateX(-14px);
   }
 }
 
 @keyframes floatB {
-  0% {
+  0%,
+  100% {
     transform: translateY(0px) translateX(0px);
   }
   50% {
-    transform: translateY(-14px) translateX(12px);
-  }
-  100% {
-    transform: translateY(0px) translateX(0px);
+    transform: translateY(-20px) translateX(16px);
   }
 }
 
 @keyframes floatC {
-  0% {
+  0%,
+  100% {
     transform: translateY(0px) translateX(0px);
   }
   50% {
-    transform: translateY(10px) translateX(-6px);
+    transform: translateY(14px) translateX(-8px);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
   }
   100% {
-    transform: translateY(0px) translateX(0px);
+    background-position: 200% 0;
   }
 }

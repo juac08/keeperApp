@@ -19,14 +19,14 @@ const EmptyState: React.FC<Props> = ({
   return (
     <Box
       textAlign="center"
-      border="2px dashed"
+      border="1.5px dashed"
       borderColor="border.muted"
-      borderRadius="2xl"
-      p={10}
-      bg="linear-gradient(180deg, rgba(248, 250, 252, 0.9) 0%, rgba(241, 245, 249, 0.9) 100%)"
+      borderRadius="xl"
+      p={8}
+      bg="bg.subtle"
       _dark={{
-        bg: "linear-gradient(180deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.7) 100%)",
-        borderColor: "rgba(148, 163, 184, 0.4)",
+        bg: "bg.subtle",
+        borderColor: "border.muted",
       }}
       {...props}
     >

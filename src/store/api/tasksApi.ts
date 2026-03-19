@@ -60,6 +60,7 @@ type ApiTask = {
   blocked_reason?: string;
   blockedReasonText?: string;
   dueDate?: string;
+  due_date?: string;
   tags?: Array<{ id?: string } | string>;
   assigneeId?: string;
   subtasks?: ApiSubtask[];
@@ -137,7 +138,7 @@ const mapTaskFromApi = (task: ApiTask): Card => {
     : [];
 
   const normalizeTags = Array.isArray(task?.tags)
-    ? task.tags.map((tag) => (typeof tag === "string" ? tag : tag?.id ?? ""))
+    ? task.tags.map((tag) => (typeof tag === "string" ? tag : (tag?.id ?? "")))
     : [];
 
   const blockedValue =
@@ -147,10 +148,7 @@ const mapTaskFromApi = (task: ApiTask): Card => {
     task.blockedStatus ??
     false;
   const blockedReasonValue =
-    task.blockedReason ??
-    task.blocked_reason ??
-    task.blockedReasonText ??
-    "";
+    task.blockedReason ?? task.blocked_reason ?? task.blockedReasonText ?? "";
 
   return {
     id: task.id ?? String(Date.now()),
@@ -160,7 +158,7 @@ const mapTaskFromApi = (task: ApiTask): Card => {
     priority: normalizePriority(task.priority),
     blocked: Boolean(blockedValue),
     blockedReason: blockedValue ? String(blockedReasonValue ?? "") : "",
-    dueDate: task.dueDate ?? "",
+    dueDate: task.dueDate ?? task.due_date ?? "",
     tags: normalizeTags,
     assigneeId: task.assigneeId ?? "",
     subtasks: normalizeSubtasks,
@@ -198,14 +196,10 @@ const mapCardToApiPayload = (
 
   if (task.blocked !== undefined) {
     payload.blocked = task.blocked;
-    payload.isBlocked = task.blocked;
-    payload.is_blocked = task.blocked;
   }
 
   if (task.blockedReason !== undefined || task.blocked !== undefined) {
-    const reason = task.blocked ? (task.blockedReason ?? "") : null;
-    payload.blockedReason = reason;
-    payload.blocked_reason = reason;
+    payload.blockedReason = task.blocked ? (task.blockedReason ?? "") : null;
   }
 
   if (task.dueDate !== undefined) {
@@ -250,7 +244,7 @@ const applyCardUpdates = (draft: Card, updates: Partial<Card>) => {
     draft.priority = normalizePriority(updates.priority);
   if (updates.blocked !== undefined) draft.blocked = updates.blocked;
   if (updates.blockedReason !== undefined || updates.blocked !== undefined) {
-    draft.blockedReason = draft.blocked ? updates.blockedReason ?? "" : "";
+    draft.blockedReason = draft.blocked ? (updates.blockedReason ?? "") : "";
   }
   if (updates.dueDate !== undefined) draft.dueDate = updates.dueDate ?? "";
   if (updates.tags !== undefined) draft.tags = updates.tags;
@@ -262,17 +256,14 @@ const applyCardUpdates = (draft: Card, updates: Partial<Card>) => {
   draft.updatedAt = new Date().toISOString();
 };
 
-const buildOptimisticCard = (
-  task: Partial<Card>,
-  id: string,
-): Card => ({
+const buildOptimisticCard = (task: Partial<Card>, id: string): Card => ({
   id,
   title: task.title ?? "Untitled",
   content: task.content ?? "",
   status: (task.status ?? "todo") as Status,
   priority: normalizePriority(task.priority),
   blocked: Boolean(task.blocked),
-  blockedReason: task.blocked ? task.blockedReason ?? "" : "",
+  blockedReason: task.blocked ? (task.blockedReason ?? "") : "",
   dueDate: task.dueDate ?? "",
   tags: task.tags ?? [],
   assigneeId: task.assigneeId ?? "",
@@ -333,13 +324,9 @@ export const tasksApi = apiSlice.injectEndpoints({
         const optimisticCard = buildOptimisticCard(task, tempId);
 
         const patchResult = dispatch(
-          updateQueryData(
-            "getTasks",
-            boardId,
-            (draft: Card[]) => {
-              draft.unshift(optimisticCard);
-            },
-          ),
+          updateQueryData("getTasks", boardId, (draft: Card[]) => {
+            draft.unshift(optimisticCard);
+          }),
         );
 
         try {
@@ -347,27 +334,17 @@ export const tasksApi = apiSlice.injectEndpoints({
           const normalized = mapTaskFromApi(data);
 
           dispatch(
-            updateQueryData(
-              "getTasks",
-              boardId,
-              (draft: Card[]) => {
-                const index = draft.findIndex((card) => card.id === tempId);
-                if (index >= 0) {
-                  draft[index] = normalized;
-                } else {
-                  draft.unshift(normalized);
-                }
-              },
-            ),
+            updateQueryData("getTasks", boardId, (draft: Card[]) => {
+              const index = draft.findIndex((card) => card.id === tempId);
+              if (index >= 0) {
+                draft[index] = normalized;
+              } else {
+                draft.unshift(normalized);
+              }
+            }),
           );
 
-          dispatch(
-            updateQueryData(
-              "getTask",
-              normalized.id,
-              () => normalized,
-            ),
-          );
+          dispatch(updateQueryData("getTask", normalized.id, () => normalized));
         } catch {
           patchResult.undo();
         }
@@ -398,16 +375,12 @@ export const tasksApi = apiSlice.injectEndpoints({
         if (boardId) {
           patchResults.push(
             dispatch(
-              updateQueryData(
-                "getTasks",
-                boardId,
-                (draft: Card[]) => {
-                  const card = draft.find((item) => item.id === id);
-                  if (card) {
-                    applyCardUpdates(card, updates);
-                  }
-                },
-              ),
+              updateQueryData("getTasks", boardId, (draft: Card[]) => {
+                const card = draft.find((item) => item.id === id);
+                if (card) {
+                  applyCardUpdates(card, updates);
+                }
+              }),
             ),
           );
         }
@@ -416,28 +389,18 @@ export const tasksApi = apiSlice.injectEndpoints({
           const { data } = await queryFulfilled;
           const normalized = mapTaskFromApi(data);
 
-          dispatch(
-            updateQueryData(
-              "getTask",
-              normalized.id,
-              () => normalized,
-            ),
-          );
+          dispatch(updateQueryData("getTask", normalized.id, () => normalized));
 
           if (boardId) {
             dispatch(
-              updateQueryData(
-                "getTasks",
-                boardId,
-                (draft: Card[]) => {
-                  const index = draft.findIndex(
-                    (item) => item.id === normalized.id,
-                  );
-                  if (index >= 0) {
-                    draft[index] = normalized;
-                  }
-                },
-              ),
+              updateQueryData("getTasks", boardId, (draft: Card[]) => {
+                const index = draft.findIndex(
+                  (item) => item.id === normalized.id,
+                );
+                if (index >= 0) {
+                  draft[index] = normalized;
+                }
+              }),
             );
           }
         } catch {
@@ -461,16 +424,12 @@ export const tasksApi = apiSlice.injectEndpoints({
         }
 
         const patchResult = dispatch(
-          updateQueryData(
-            "getTasks",
-            boardId,
-            (draft: Card[]) => {
-              const index = draft.findIndex((card) => card.id === id);
-              if (index >= 0) {
-                draft.splice(index, 1);
-              }
-            },
-          ),
+          updateQueryData("getTasks", boardId, (draft: Card[]) => {
+            const index = draft.findIndex((card) => card.id === id);
+            if (index >= 0) {
+              draft.splice(index, 1);
+            }
+          }),
         );
 
         try {
@@ -497,36 +456,26 @@ export const tasksApi = apiSlice.injectEndpoints({
         }
 
         const patchResult = dispatch(
-          updateQueryData(
-            "getTasks",
-            boardId,
-            (draft: Card[]) => {
-              if (archived) {
-                const index = draft.findIndex((card) => card.id === id);
-                if (index >= 0) {
-                  draft.splice(index, 1);
-                }
-                return;
+          updateQueryData("getTasks", boardId, (draft: Card[]) => {
+            if (archived) {
+              const index = draft.findIndex((card) => card.id === id);
+              if (index >= 0) {
+                draft.splice(index, 1);
               }
-              const card = draft.find((item) => item.id === id);
-              if (card) {
-                (card as any).archived = false;
-              }
-            },
-          ),
+              return;
+            }
+            const card = draft.find((item) => item.id === id);
+            if (card) {
+              (card as any).archived = false;
+            }
+          }),
         );
 
         try {
           const { data } = await queryFulfilled;
           const normalized = mapTaskFromApi(data);
 
-          dispatch(
-            updateQueryData(
-              "getTask",
-              normalized.id,
-              () => normalized,
-            ),
-          );
+          dispatch(updateQueryData("getTask", normalized.id, () => normalized));
         } catch {
           patchResult.undo();
         }

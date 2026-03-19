@@ -57,10 +57,7 @@ const HeaderActions: React.FC<Props> = ({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(event.target as Node)
-      ) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setIsMenuOpen(false);
       }
     };
@@ -78,10 +75,10 @@ const HeaderActions: React.FC<Props> = ({
     <HStack gap={2.5} wrap="wrap" justify={{ base: "center", md: "flex-end" }}>
       <BoardSelector onCreateBoard={onCreateBoard} />
       <HStack
-        gap={1}
-        px={2}
+        gap={0.5}
+        px={1.5}
         py={1}
-        borderRadius="full"
+        borderRadius="control"
         border="1px solid"
         borderColor="border.muted"
         bg="bg.panel"
@@ -149,8 +146,8 @@ const HeaderActions: React.FC<Props> = ({
               bg="bg.panel"
               border="1px solid"
               borderColor="border.muted"
-              borderRadius="lg"
-              boxShadow="lg"
+              borderRadius="control"
+              boxShadow="0 4px 24px rgba(0, 0, 0, 0.1)"
               minW="180px"
               zIndex={1000}
               overflow="hidden"

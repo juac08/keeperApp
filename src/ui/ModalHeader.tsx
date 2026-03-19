@@ -38,9 +38,9 @@ const ModalHeader: React.FC<Props> = ({
         <HStack gap={3} align="center">
           {icon && (
             <Box
-              w="40px"
-              h="40px"
-              borderRadius="14px"
+              w="36px"
+              h="36px"
+              borderRadius="12px"
               bg={iconGradient ? undefined : iconBg}
               bgGradient={iconGradient}
               color={iconColor}
