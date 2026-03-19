@@ -73,13 +73,13 @@ export const DensityToggle: React.FC = () => {
               px={4}
               py={2.5}
               cursor="pointer"
-              bg={density === option.value ? "blue.50" : "white"}
-              color={density === option.value ? "blue.600" : "gray.700"}
+              bg={density === option.value ? "bg.subtle" : "bg.panel"}
+              color={density === option.value ? "blue.400" : "text.primary"}
               fontWeight={density === option.value ? "600" : "400"}
               fontSize="sm"
               transition="all 0.15s"
               _hover={{
-                bg: density === option.value ? "blue.50" : "gray.50",
+                bg: density === option.value ? "bg.subtle" : "bg.muted",
               }}
               onClick={() => handleSelect(option.value)}
             >
