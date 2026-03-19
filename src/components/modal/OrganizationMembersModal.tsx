@@ -14,7 +14,7 @@ import {
   AppButton,
   AppIconButton,
   AppInput,
-  AppSelect,
+  AppMenuSelect,
   AvatarCircle,
   ModalHeader,
 } from "@/ui";
@@ -181,11 +181,11 @@ const OrganizationMembersModal: React.FC<Props> = ({
                 {canManage && (
                   <Box
                     p={5}
-                    bg="linear-gradient(180deg, #f5f8ff 0%, #f0f6ff 100%)"
+                    bg="bg.muted"
                     borderRadius="xl"
                     border="1px solid"
-                    borderColor="blue.200"
-                    boxShadow="inset 0 0 0 1px rgba(66, 153, 225, 0.08)"
+                    borderColor="border.muted"
+                    boxShadow="none"
                   >
                     <HStack justify="space-between" mb={3}>
                       <Text fontSize="sm" fontWeight="700" color="text.primary">
@@ -211,17 +211,17 @@ const OrganizationMembersModal: React.FC<Props> = ({
                         />
                       </Box>
                       <Box width="150px" minW="140px">
-                        <AppSelect
-                          name="role"
+                        <AppMenuSelect
                           value={selectedRole}
-                          onChange={(e) =>
-                            setSelectedRole(e.target.value as OrganizationRole)
+                          options={[
+                            { value: "member", label: "Member" },
+                            { value: "admin", label: "Admin" },
+                          ]}
+                          onChange={(val) =>
+                            setSelectedRole(val as OrganizationRole)
                           }
-                          rootProps={{ size: "md" }}
-                        >
-                          <option value="member">Member</option>
-                          <option value="admin">Admin</option>
-                        </AppSelect>
+                          minW="140px"
+                        />
                       </Box>
                       <AppButton
                         variantStyle="primary"
@@ -364,20 +364,20 @@ const OrganizationMembersModal: React.FC<Props> = ({
                                 <HStack gap={8}>
                                   {canModify ? (
                                     <Box>
-                                      <AppSelect
-                                        name="memberRole"
+                                      <AppMenuSelect
                                         value={member.role}
-                                        onChange={(e) =>
+                                        options={[
+                                          { value: "member", label: "Member" },
+                                          { value: "admin", label: "Admin" },
+                                        ]}
+                                        onChange={(val) =>
                                           handleRoleChange(
                                             member.userId,
-                                            e.target.value as OrganizationRole,
+                                            val as OrganizationRole,
                                           )
                                         }
-                                        rootProps={{ size: "sm" }}
-                                      >
-                                        <option value="member">Member</option>
-                                        <option value="admin">Admin</option>
-                                      </AppSelect>
+                                        minW="120px"
+                                      />
                                     </Box>
                                   ) : (
                                     <Badge
@@ -404,8 +404,8 @@ const OrganizationMembersModal: React.FC<Props> = ({
                                           member.user.name,
                                         )
                                       }
-                                      color="red.500"
-                                      _hover={{ bg: "red.50" }}
+                                      color="red.400"
+                                      _hover={{ bg: "bg.subtle" }}
                                     >
                                       <FiTrash2 size={16} />
                                     </AppIconButton>
