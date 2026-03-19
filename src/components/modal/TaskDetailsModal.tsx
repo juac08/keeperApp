@@ -211,7 +211,7 @@ const TaskDetailsModal: React.FC<Props> = ({
               {/* Blocked */}
               {card.blocked && (
                 <Box
-                  bg="red.50"
+                  bg="red.500/10"
                   border="2px solid"
                   borderColor="red.200"
                   borderRadius="md"
@@ -219,11 +219,11 @@ const TaskDetailsModal: React.FC<Props> = ({
                 >
                   <HStack gap={2} mb={1}>
                     <Box as={FiAlertCircle} color="red.500" />
-                    <Text fontSize="xs" fontWeight="700" color="red.700">
+                    <Text fontSize="xs" fontWeight="700" color="red.400">
                       BLOCKED
                     </Text>
                   </HStack>
-                  <Text fontSize="sm" color="red.700">
+                  <Text fontSize="sm" color="red.400">
                     {card.blockedReason || "No reason provided"}
                   </Text>
                 </Box>
@@ -269,20 +269,20 @@ const TaskDetailsModal: React.FC<Props> = ({
                     <Badge
                       bg={
                         dueDateStatus.color === "red"
-                          ? "red.50"
+                          ? "red.500/10"
                           : dueDateStatus.color === "orange"
-                            ? "orange.50"
+                            ? "orange.500/10"
                             : dueDateStatus.color === "yellow"
-                              ? "yellow.50"
+                              ? "yellow.500/10"
                               : "bg.muted"
                       }
                       color={
                         dueDateStatus.color === "red"
-                          ? "red.700"
+                          ? "red.400"
                           : dueDateStatus.color === "orange"
-                            ? "orange.700"
+                            ? "orange.400"
                             : dueDateStatus.color === "yellow"
-                              ? "yellow.700"
+                              ? "yellow.600"
                               : "text.secondary"
                       }
                       px={2}
@@ -373,8 +373,8 @@ const TaskDetailsModal: React.FC<Props> = ({
                         borderRadius="full"
                         fontSize="xs"
                         fontWeight="700"
-                        bg="blue.50"
-                        color="blue.700"
+                        bg="blue.500/10"
+                        color="blue.400"
                       >
                         {card.subtasks.filter((st) => st.completed).length}/
                         {card.subtasks.length}

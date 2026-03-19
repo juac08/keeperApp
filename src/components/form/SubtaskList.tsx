@@ -121,8 +121,8 @@ const SubtaskList: React.FC<Props> = ({ subtasks, onChange }) => {
           }}
           bg="blue.600"
           color="white"
-          _hover={{ bg: "blue.700" }}
-          _active={{ bg: "blue.800" }}
+          _hover={{ bg: "blue.500" }}
+          _active={{ bg: "blue.700" }}
           borderRadius="full"
         >
           <FiPlus size={16} />

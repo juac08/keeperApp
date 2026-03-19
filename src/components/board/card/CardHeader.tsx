@@ -32,7 +32,7 @@ const CardHeader: React.FC<Props> = ({ card, onEdit, onRemove, onArchive }) => {
           lineHeight="1.4"
           flex="1"
           lineClamp={2}
-          _hover={{ color: "blue.600" }}
+          _hover={{ color: "blue.400" }}
         >
           {card.title}
         </Heading>
@@ -53,7 +53,7 @@ const CardHeader: React.FC<Props> = ({ card, onEdit, onRemove, onArchive }) => {
               onEdit(card);
             }}
             color="text.muted"
-            _hover={{ color: "blue.600", bg: "blue.50" }}
+            _hover={{ color: "blue.400", bg: "blue.500/10" }}
           >
             <Box as={FiEdit2} fontSize="13px" />
           </AppIconButton>
@@ -67,7 +67,7 @@ const CardHeader: React.FC<Props> = ({ card, onEdit, onRemove, onArchive }) => {
               onRemove(card.id);
             }}
             color="text.muted"
-            _hover={{ color: "red.600", bg: "red.50" }}
+            _hover={{ color: "red.400", bg: "red.500/10" }}
           >
             <Box as={FiTrash2} fontSize="13px" />
           </AppIconButton>
@@ -82,7 +82,7 @@ const CardHeader: React.FC<Props> = ({ card, onEdit, onRemove, onArchive }) => {
                 onArchive(card.id);
               }}
               color="text.muted"
-              _hover={{ color: "green.600", bg: "green.50" }}
+              _hover={{ color: "green.400", bg: "green.500/10" }}
             >
               <Box as={FiArchive} fontSize="13px" />
             </AppIconButton>

@@ -13,13 +13,12 @@ type StatTileVariant = {
   bg: string;
   borderColor: string;
   boxShadow: string;
+  labelColor: string;
+  valueColor: string;
   _dark?: {
     bg?: string;
     borderColor?: string;
-    boxShadow?: string;
   };
-  labelColor: string;
-  valueColor: string;
   _darkLabel?: string;
   _darkValue?: string;
 };
@@ -27,24 +26,14 @@ type StatTileVariant = {
 const variants: Record<Variant, StatTileVariant> = {
   neutral: {
     bg: "bg.muted",
-    _dark: {
-      bg: "bg.muted",
-      borderColor: "border.muted",
-      boxShadow: "none",
-    },
     borderColor: "border.muted",
     boxShadow: "none",
     labelColor: "text.muted",
     valueColor: "text.primary",
   },
   todo: {
-    bg: "linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%)",
-    _dark: {
-      bg: "linear-gradient(180deg, #1e293b 0%, #172554 100%)",
-      borderColor: "rgba(59, 130, 246, 0.2)",
-      boxShadow: "none",
-    },
-    borderColor: "blue.100",
+    bg: "blue.500/8",
+    borderColor: "blue.500/20",
     boxShadow: "none",
     labelColor: "blue.600",
     valueColor: "blue.700",
@@ -52,13 +41,8 @@ const variants: Record<Variant, StatTileVariant> = {
     _darkValue: "blue.200",
   },
   inprogress: {
-    bg: "linear-gradient(180deg, #f5f3ff 0%, #ede9fe 100%)",
-    _dark: {
-      bg: "linear-gradient(180deg, #1e293b 0%, #1e1b4b 100%)",
-      borderColor: "rgba(139, 92, 246, 0.2)",
-      boxShadow: "none",
-    },
-    borderColor: "purple.100",
+    bg: "purple.500/8",
+    borderColor: "purple.500/20",
     boxShadow: "none",
     labelColor: "purple.600",
     valueColor: "purple.700",
@@ -66,15 +50,10 @@ const variants: Record<Variant, StatTileVariant> = {
     _darkValue: "purple.200",
   },
   done: {
-    bg: "linear-gradient(180deg, #ecfdf5 0%, #d1fae5 100%)",
-    _dark: {
-      bg: "linear-gradient(180deg, #1e293b 0%, #064e3b 100%)",
-      borderColor: "rgba(16, 185, 129, 0.2)",
-      boxShadow: "none",
-    },
-    borderColor: "green.100",
+    bg: "green.500/8",
+    borderColor: "green.500/20",
     boxShadow: "none",
-    labelColor: "green.700",
+    labelColor: "green.600",
     valueColor: "green.700",
     _darkLabel: "green.300",
     _darkValue: "green.200",
@@ -92,7 +71,6 @@ const StatTile: React.FC<Props> = ({ label, value, variant = "neutral" }) => {
       bg={styles.bg}
       borderColor={styles.borderColor}
       boxShadow={styles.boxShadow}
-      _dark={styles._dark}
     >
       <Box
         fontSize="xs"

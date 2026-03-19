@@ -137,13 +137,13 @@ const ActivityTimeline: React.FC<Props> = ({ activities }) => {
                 w="32px"
                 h="32px"
                 borderRadius="full"
-                bg={`${color}.100`}
+                bg={`${color}.500/15`}
                 border="2px solid"
                 borderColor={`${color}.400`}
                 display="flex"
                 alignItems="center"
                 justifyContent="center"
-                color={`${color}.600`}
+                color={`${color}.400`}
                 zIndex={1}
               >
                 <Icon size={14} />

@@ -75,11 +75,11 @@ const CardMeta: React.FC<Props> = ({ card, density = "comfortable" }) => {
     <Badge
       bg={
         dueDateStatus.color === "red"
-          ? "red.50"
+          ? "red.500/10"
           : dueDateStatus.color === "orange"
-            ? "orange.50"
+            ? "orange.500/10"
             : dueDateStatus.color === "yellow"
-              ? "yellow.50"
+              ? "yellow.500/10"
               : "bg.muted"
       }
       color={
@@ -88,7 +88,7 @@ const CardMeta: React.FC<Props> = ({ card, density = "comfortable" }) => {
           : dueDateStatus.color === "orange"
             ? "orange.600"
             : dueDateStatus.color === "yellow"
-              ? "yellow.700"
+              ? "yellow.600"
               : "text.secondary"
       }
       px={2}
@@ -109,13 +109,13 @@ const CardMeta: React.FC<Props> = ({ card, density = "comfortable" }) => {
     <>
       {card.blocked && (
         <Box
-          bg="purple.50"
+          bg="purple.500/10"
           borderLeft="2px solid"
           borderColor="purple.400"
           borderRadius="sm"
           p={density === "compact" ? 1.5 : 2}
           fontSize={spacing.fontSize}
-          color="purple.800"
+          color="purple.400"
           mb={spacing.mb}
         >
           <Text fontWeight="600" mb={0.5}>
@@ -124,7 +124,7 @@ const CardMeta: React.FC<Props> = ({ card, density = "comfortable" }) => {
           {card.blockedReason ? (
             <Text fontSize={spacing.fontSize}>{card.blockedReason}</Text>
           ) : (
-            <Text fontSize={spacing.fontSize} color="purple.700">
+            <Text fontSize={spacing.fontSize} color="purple.400">
               No reason provided
             </Text>
           )}

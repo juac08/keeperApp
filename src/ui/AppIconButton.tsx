@@ -15,7 +15,7 @@ const AppIconButton: React.FC<Props> = ({ children, ...props }) => {
       borderRadius="control"
       color="text.secondary"
       _hover={{ bg: "bg.muted", color: "text.primary" }}
-      _active={{ bg: "blue.50", color: "text.primary" }}
+      _active={{ bg: "blue.500/10", color: "text.primary" }}
       transition="all 0.18s ease"
       {...props}
     >

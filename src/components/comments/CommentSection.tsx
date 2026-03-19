@@ -67,8 +67,8 @@ const CommentSection: React.FC<Props> = ({ comments, onAddComment }) => {
             borderRadius="full"
             fontSize="xs"
             fontWeight="700"
-            bg="blue.50"
-            color="blue.700"
+            bg="blue.500/10"
+            color="blue.400"
           >
             {comments.length}
           </Box>
@@ -94,8 +94,7 @@ const CommentSection: React.FC<Props> = ({ comments, onAddComment }) => {
             const author = comment.authorId
               ? getAssignee(comment.authorId)
               : null;
-            const displayName =
-              author?.name || comment.authorName || "Unknown";
+            const displayName = author?.name || comment.authorName || "Unknown";
             return (
               <Box
                 key={comment.id}
@@ -104,7 +103,7 @@ const CommentSection: React.FC<Props> = ({ comments, onAddComment }) => {
                 borderRadius="lg"
                 border="1px solid"
                 borderColor="border.muted"
-                _hover={{ borderColor: "blue.100" }}
+                _hover={{ borderColor: "blue.400/30" }}
                 transition="all 0.15s"
               >
                 <HStack align="flex-start" gap={3}>

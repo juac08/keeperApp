@@ -1090,8 +1090,7 @@ const AuthenticatedApp: React.FC = () => {
               borderRadius="xl"
               overflow="hidden"
               boxShadow="0 20px 60px rgba(0, 0, 0, 0.3)"
-              bg="white"
-              _dark={{ bg: "gray.800" }}
+              bg="bg.panel"
             >
               <Dialog.CloseTrigger asChild>
                 <AppIconButton
@@ -1107,19 +1106,13 @@ const AuthenticatedApp: React.FC = () => {
 
               <Box px={6} pt={6} pb={4}>
                 <VStack gap={3} align="center">
-                  <Box
-                    p={3}
-                    borderRadius="full"
-                    bg="red.50"
-                    _dark={{ bg: "red.900/20" }}
-                  >
+                  <Box p={3} borderRadius="full" bg="red.500/10">
                     <FiAlertTriangle size={32} color="#DC2626" />
                   </Box>
                   <Dialog.Title
                     fontSize="xl"
                     fontWeight="semibold"
-                    color="gray.900"
-                    _dark={{ color: "white" }}
+                    color="text.primary"
                     textAlign="center"
                   >
                     Delete Board?
@@ -1131,8 +1124,7 @@ const AuthenticatedApp: React.FC = () => {
                 <Text
                   fontSize="sm"
                   lineHeight="relaxed"
-                  color="gray.600"
-                  _dark={{ color: "gray.400" }}
+                  color="text.secondary"
                   textAlign="center"
                 >
                   This action will permanently delete all tasks in this board
@@ -1165,8 +1157,8 @@ const AuthenticatedApp: React.FC = () => {
                   onClick={() => setIsDeleteDialogOpen(false)}
                   size="lg"
                   width="full"
-                  color="gray.600"
-                  _hover={{ bg: "gray.100" }}
+                  color="text.secondary"
+                  _hover={{ bg: "bg.muted" }}
                   borderRadius="lg"
                   fontWeight="medium"
                 >

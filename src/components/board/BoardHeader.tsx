@@ -29,8 +29,7 @@ const BoardHeader: React.FC<Props> = ({
       top={4}
       zIndex={100}
       backdropFilter="blur(16px) saturate(180%)"
-      backgroundColor="rgba(255, 255, 255, 0.85)"
-      _dark={{ backgroundColor: "rgba(17, 24, 39, 0.85)" }}
+      backgroundColor="color-mix(in srgb, var(--chakra-colors-bg\.panel) 85%, transparent)"
     >
       <Box flex="1">
         <ProjectInfo />

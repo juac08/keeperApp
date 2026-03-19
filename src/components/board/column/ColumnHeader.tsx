@@ -25,8 +25,7 @@ const ColumnHeader: React.FC<Props> = ({ column, count }) => {
             h="10px"
             borderRadius="full"
             bg={dotColor}
-            boxShadow="0 0 0 4px rgba(255, 255, 255, 0.6)"
-            _dark={{ boxShadow: "0 0 0 4px rgba(15, 23, 42, 0.7)" }}
+            boxShadow="0 0 0 4px color-mix(in srgb, var(--chakra-colors-bg\.muted) 80%, transparent)"
           />
           <Heading size="sm" fontWeight="700" color="text.primary">
             {column.title}
@@ -36,9 +35,7 @@ const ColumnHeader: React.FC<Props> = ({ column, count }) => {
           {column.hint}
         </Text>
       </Box>
-      <TagPill color="text.secondary">
-        {count}
-      </TagPill>
+      <TagPill color="text.secondary">{count}</TagPill>
     </HStack>
   );
 };

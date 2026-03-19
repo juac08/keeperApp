@@ -106,13 +106,13 @@ export const SortSelect: React.FC<Props> = ({ value, onChange }) => {
               px={4}
               py={2.5}
               cursor="pointer"
-              bg={value === option.value ? "blue.50" : "bg.panel"}
-              color={value === option.value ? "blue.600" : "text.primary"}
+              bg={value === option.value ? "blue.500/10" : "bg.panel"}
+              color={value === option.value ? "blue.400" : "text.primary"}
               fontWeight={value === option.value ? "600" : "400"}
               fontSize="sm"
               transition="all 0.15s"
               _hover={{
-                bg: value === option.value ? "blue.50" : "bg.muted",
+                bg: value === option.value ? "blue.500/10" : "bg.muted",
               }}
               onClick={() => handleSelect(option.value)}
             >

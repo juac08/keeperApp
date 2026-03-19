@@ -24,10 +24,6 @@ const EmptyState: React.FC<Props> = ({
       borderRadius="xl"
       p={8}
       bg="bg.subtle"
-      _dark={{
-        bg: "bg.subtle",
-        borderColor: "border.muted",
-      }}
       {...props}
     >
       <VStack gap={3}>
